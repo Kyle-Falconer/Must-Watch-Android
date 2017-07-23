@@ -22,4 +22,10 @@ public class LogEntry {
 
     @ColumnInfo(name = "batch_id")
     public long batchId;
+
+    @ColumnInfo(name = "acidity")
+    public Double acidity;
+
+    @ColumnInfo(name = "note")
+    public String note;
 }

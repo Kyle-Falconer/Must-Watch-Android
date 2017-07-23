@@ -1,6 +1,7 @@
 package com.fullmeadalchemist.mustwatch.util;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.Group;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 /**
@@ -15,6 +16,10 @@ public class TestUtil {
 
     public static Batch createBatch() {
         return new Batch();
+    }
+
+    public static Group createGroup(String name) {
+        return new Group(name);
     }
 
 //    public static List<Repo> createRepos(int count, String owner, String name,
