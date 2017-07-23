@@ -5,6 +5,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.Group;
+import com.fullmeadalchemist.mustwatch.vo.GroupMembership;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 
@@ -12,11 +15,15 @@ import com.fullmeadalchemist.mustwatch.vo.User;
  * Created by Kyle on 7/22/2017.
  */
 
-@Database(entities = {User.class, Batch.class}, version = 1)
+@Database(entities = {User.class, Batch.class, LogEntry.class, Group.class, GroupMembership.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
 
     public abstract BatchDao batchDao();
+
+    public abstract LogEntryDao logEntryDao();
+
+    public abstract GroupDao groupDao();
 }

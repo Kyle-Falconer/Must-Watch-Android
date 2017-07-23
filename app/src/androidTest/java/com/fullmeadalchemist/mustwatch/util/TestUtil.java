@@ -3,8 +3,6 @@ package com.fullmeadalchemist.mustwatch.util;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
-import java.util.ArrayList;
-
 /**
  * Created by Kyle on 7/22/2017.
  */
