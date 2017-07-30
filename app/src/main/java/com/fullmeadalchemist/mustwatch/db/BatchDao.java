@@ -6,7 +6,6 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
@@ -19,7 +18,7 @@ import java.util.List;
 @Dao
 public interface BatchDao {
     @Query("SELECT * FROM batch")
-    List<Batch> getAll();
+    LiveData<List<Batch>> getAll();
 
     @Query("SELECT * FROM batch WHERE id IN (:batchIds)")
     List<Batch> loadAllByIds(int[] batchIds);
