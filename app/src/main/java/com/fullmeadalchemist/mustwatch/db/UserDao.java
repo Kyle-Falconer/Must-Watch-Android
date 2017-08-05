@@ -30,7 +30,7 @@ import java.util.List;
 public interface UserDao {
 
     @Query("SELECT * FROM user WHERE id = :userId LIMIT 1")
-    LiveData<User> load(String userId);
+    LiveData<User> load(long userId);
 
     @Query("SELECT * FROM user")
     List<User> getAll();
@@ -42,7 +42,7 @@ public interface UserDao {
     LiveData<User> findByEmail(String email);
 
     @Insert
-    void insert(User user);
+    Long insert(User user);
 
     @Insert
     void insertAll(User... users);

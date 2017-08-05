@@ -32,10 +32,10 @@ public interface BatchDao {
     public LiveData<List<LogEntry>> loadLogEntriesForBatch(long batch_id);
 
     @Insert
-    void insert(Batch batch);
+    Long insert(Batch batch);
 
     @Insert
-    void insertAll(Batch... batches);
+    List<Long> insertAll(Batch... batches);
 
     @Insert
     void insert(LogEntry entry);

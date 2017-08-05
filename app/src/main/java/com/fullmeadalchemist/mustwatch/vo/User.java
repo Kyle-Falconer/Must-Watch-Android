@@ -18,6 +18,7 @@ package com.fullmeadalchemist.mustwatch.vo;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -39,8 +40,17 @@ public class User {
         this.email = email;
     }
 
+    @Ignore
+    public boolean isAnon() {
+        return id != null && name == null && email == null;
+    }
+
     @Override
     public String toString() {
-        return String.format("id: %s \nname: %s \nemail: %s \n#", id, name, email);
+        if (isAnon()) {
+            return String.format("id: %s, Anonymous", id);
+        } else {
+            return String.format("id: %s \nname: %s \nemail: %s \n", id, name, email);
+        }
     }
 }

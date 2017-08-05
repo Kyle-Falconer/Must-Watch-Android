@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "df578d5a87b21c8b5acbaff703c63124",
+    "identityHash": "00294df854b82d236e18e7bd8a0e73c5",
     "entities": [
       {
         "tableName": "User",
@@ -11,17 +11,20 @@
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "name",
             "columnName": "name",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "email",
             "columnName": "email",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -44,42 +47,55 @@
       },
       {
         "tableName": "batch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `status` TEXT, `create_date` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `output_volume` REAL, `status` TEXT, `create_date` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "userId",
             "columnName": "user_id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "targetSgStarting",
             "columnName": "target_sg_starting",
-            "affinity": "REAL"
+            "affinity": "REAL",
+            "notNull": false
           },
           {
             "fieldPath": "targetSgFinal",
             "columnName": "target_sg_final",
-            "affinity": "REAL"
+            "affinity": "REAL",
+            "notNull": false
           },
           {
             "fieldPath": "targetABV",
             "columnName": "target_abv",
-            "affinity": "REAL"
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outputVolume",
+            "columnName": "output_volume",
+            "affinity": "REAL",
+            "notNull": false
           },
           {
             "fieldPath": "status",
             "columnName": "status",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "createDate",
             "columnName": "create_date",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -114,27 +130,31 @@
       },
       {
         "tableName": "log_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `batch_id` INTEGER, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `batch_id` INTEGER NOT NULL, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "batchId",
             "columnName": "batch_id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "acidity",
             "columnName": "acidity",
-            "affinity": "REAL"
+            "affinity": "REAL",
+            "notNull": false
           },
           {
             "fieldPath": "note",
             "columnName": "note",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -169,17 +189,19 @@
       },
       {
         "tableName": "groups",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
             "columnName": "name",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -202,27 +224,31 @@
       },
       {
         "tableName": "group_membership",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` INTEGER, `user_id` INTEGER, `access_read` INTEGER, `access_admin` INTEGER, PRIMARY KEY(`group_id`, `user_id`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `access_read` INTEGER NOT NULL, `access_admin` INTEGER NOT NULL, PRIMARY KEY(`group_id`, `user_id`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "groupId",
             "columnName": "group_id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "userId",
             "columnName": "user_id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "accessRead",
             "columnName": "access_read",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "accessAdmin",
             "columnName": "access_admin",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -270,7 +296,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"df578d5a87b21c8b5acbaff703c63124\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"00294df854b82d236e18e7bd8a0e73c5\")"
     ]
   }
 }

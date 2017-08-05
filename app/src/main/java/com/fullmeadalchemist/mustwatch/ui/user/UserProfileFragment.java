@@ -29,7 +29,7 @@ public class UserProfileFragment extends LifecycleFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String userId = getArguments().getString(UID_KEY);
+        Long userId = getArguments().getLong(UID_KEY);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserProfileViewModel.class);
         viewModel.init(userId);
     }

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
         if (savedInstanceState == null) {
             navigationController.navigateToBatches();
         }
@@ -40,4 +41,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
     }
+
+
 }

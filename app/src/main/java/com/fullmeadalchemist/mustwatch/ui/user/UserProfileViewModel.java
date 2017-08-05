@@ -21,7 +21,7 @@ public class UserProfileViewModel extends ViewModel {
         this.userRepo = userRepo;
     }
 
-    public void init(String userId) {
+    public void init(long userId) {
         if (this.user != null) {
             // ViewModel is created per Fragment so
             // we know the userId won't change

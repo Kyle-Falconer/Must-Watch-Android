@@ -13,6 +13,8 @@ import dagger.android.HasActivityInjector;
 
 public class MustWatchApp extends Application implements HasActivityInjector {
 
+    public static final String MUST_WATCH_SHARED_PREFS = "MUST_WATCH_SHARED_PREFS";
+
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 

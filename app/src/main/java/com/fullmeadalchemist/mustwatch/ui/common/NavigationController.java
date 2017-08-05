@@ -38,7 +38,25 @@ public class NavigationController {
     }
 
     public void navigateToBatches() {
-        String tag = "batches";
+        String tag = "batch/list";
+        BatchListFragment batchesFragment = new BatchListFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, batchesFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToEditBatch(int batchId) {
+        String tag = "batch/edit/" + batchId;
+        BatchListFragment batchesFragment = new BatchListFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, batchesFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToAddBatch() {
+        String tag = "batch/add";
         BatchListFragment batchesFragment = new BatchListFragment();
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)

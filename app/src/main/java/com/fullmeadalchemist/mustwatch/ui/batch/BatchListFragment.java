@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
+import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import javax.inject.Inject;
 
@@ -33,14 +35,39 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
     @Inject
     NavigationController navigationController;
 
-    private BatchViewModel batchViewModel;
-
     private BatchViewModel viewModel;
     private FloatingActionButton fab;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        loadDatabase();
+    }
+
+
+    private void loadDatabase() {
+        viewModel.getCurrentUser().observe(this, user -> {
+            viewModel.getBatches().observe(this, batches -> {
+                if (batches == null || batches.size() == 0) {
+                    Log.d(TAG, "Got user with no batches; generating batches...");
+                    // FIXME: get only batches for current user
+                    for (int i = 0; i < 20; i++) {
+                        Batch b = new Batch();
+                        b.userId = user.id;
+                        viewModel.addBatch(b);
+                    }
+                }
+            });
+        });
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.batch_list, container, false);
+        rootView.setTag(TAG);
 
         mAdapter = new BatchRecyclerViewAdapter(null);
 
@@ -51,18 +78,42 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             mAdapter.notifyDataSetChanged();
         });
 
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.batch_list, container, false);
-        rootView.setTag(TAG);
 
         fab = rootView.findViewById(R.id.batches_fab);
-
         mRecyclerView = rootView.findViewById(R.id.recyclerView);
+
+        FloatingActionButton fab = rootView.findViewById(R.id.batches_fab);
+
+        // http://stackoverflow.com/a/35981886/940217
+        // https://code.google.com/p/android/issues/detail?id=230298
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //FloatingActionButton floater = recyclerView.findViewById(R.id.batches_fab);
+                if (fab == null) {
+                    Log.e(TAG, "The FloatingActionButton is null!");
+                    return;
+                }
+                if (dy > 0 && fab.isShown()) {
+                    Log.d(TAG, "hiding FAB");
+                    fab.hide();
+                } else if (dy < 20 && !fab.isShown()) {
+                    Log.d(TAG, "showing FAB");
+                    fab.show();
+                }
+            }
+        });
+
+        if (fab != null) {
+            fab.setOnClickListener(v -> {
+                Log.d(TAG, "Floating Action Button was clicked!");
+                navigationController.navigateToAddBatch();
+            });
+        } else {
+            Log.e(TAG, "FloatingActionButton at R.id.batches_fab is null!");
+        }
+
+
         mRecyclerView.setHasFixedSize(true);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());

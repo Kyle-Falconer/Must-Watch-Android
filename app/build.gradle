@@ -1,12 +1,17 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.fullmeadalchemist.mustwatch"
-        minSdkVersion 14
+
+        // FIXME: Change to 14 before building for release!
+        // minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 26
+
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -23,63 +28,83 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        preDexLibraries true
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    aaptOptions {
+        // FIXME: Change to 'true' before building for release!
+        cruncherEnabled = false
+    }
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            resConfigs "en", "xhdpi"
+        }
+        prod {
+            dimension "default"
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+        }
     }
 }
 
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$support_version"
     compile "com.android.support:design:$support_version"
     compile "com.android.support:appcompat-v7:$support_version"
     compile "com.android.support:recyclerview-v7:$support_version"
     compile "com.android.support:cardview-v7:$support_version"
     compile "com.android.support.constraint:constraint-layout:$constraint_layout_version"
-
     compile "android.arch.lifecycle:runtime:$arch_version"
     compile "android.arch.lifecycle:extensions:$arch_version"
     compile "android.arch.persistence.room:runtime:$arch_version"
     compile "android.arch.persistence.room:rxjava2:$arch_version"
-
-    compile "javax.inject:javax.inject:1"
-    compile "javax.annotation:javax.annotation-api:1.2"
+    compile 'javax.inject:javax.inject:1'
+    compile 'javax.annotation:javax.annotation-api:1.2'
     compile "com.github.bumptech.glide:glide:$glide_version"
 
+    // RxAndroid
+
+    // https://github.com/ReactiveX/RxAndroid
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
+
     // Dagger
+
     // https://google.github.io/dagger/
     compile "com.google.dagger:dagger:$dagger_version"
     compile "com.google.dagger:dagger-android:$dagger_version"
     compile "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
-
-
     testCompile "android.arch.persistence.room:testing:$arch_version"
     testCompile "junit:junit:$junit_version"
 
-//    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-//        exclude group: 'com.android.support', module: 'support-annotations'
-//    })
+    //    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
 
+    //        exclude group: 'com.android.support', module: 'support-annotations'
+
+    //    })
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestCompile "com.android.support.test:runner:1.0.0"
-    androidTestCompile "com.android.support.test:rules:1.0.0"
+    androidTestCompile 'com.android.support.test:runner:1.0.0'
+    androidTestCompile 'com.android.support.test:rules:1.0.0'
 
     // Espresso dependencies
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espresso_version"
@@ -89,7 +114,6 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-web:$espresso_version"
     androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:$espresso_version"
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:$espresso_version"
-
 }
 
 
