@@ -20,16 +20,16 @@ public interface BatchDao {
     @Query("SELECT * FROM batch")
     LiveData<List<Batch>> getAll();
 
-    @Query("SELECT * FROM batch WHERE id IN (:batchIds)")
-    List<Batch> loadAllByIds(int[] batchIds);
+    @Query("SELECT * FROM batch WHERE id = :batch_id LIMIT 1")
+    LiveData<Batch> get(Long batch_id);
 
     @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    public LiveData<List<Batch>> loadBatchesForUser(long user_id);
+    LiveData<List<Batch>> loadBatchesForUser(long user_id);
 
     @Query("SELECT * FROM log_entry "
             + "INNER JOIN batch on batch.id = log_entry.batch_id "
             + "WHERE batch.id = :batch_id")
-    public LiveData<List<LogEntry>> loadLogEntriesForBatch(long batch_id);
+    LiveData<List<LogEntry>> loadLogEntriesForBatch(long batch_id);
 
     @Insert
     Long insert(Batch batch);
@@ -45,5 +45,4 @@ public interface BatchDao {
 
     @Delete
     void delete(Batch batch);
-
 }

@@ -1,4 +1,4 @@
-package com.fullmeadalchemist.mustwatch.ui.batch;
+package com.fullmeadalchemist.mustwatch.ui.log;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,9 +20,9 @@ import javax.inject.Inject;
  * Created by Kyle on 7/23/2017.
  */
 
-public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecyclerViewAdapter.ViewHolder> {
+public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = BatchRecyclerViewAdapter.class.getSimpleName();
+    private static final String TAG = LogRecyclerViewAdapter.class.getSimpleName();
     private final BatchClickCallback batchClickCallback;
     List<Batch> dataSet;
     @Inject
@@ -33,7 +33,7 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public BatchRecyclerViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
+    public LogRecyclerViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
         if (dataSet == null)
             dataSet = new ArrayList<>();
         dataSet = dataSet;

@@ -16,18 +16,25 @@
 package com.fullmeadalchemist.mustwatch.ui.common;
 
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.MainActivity;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
 
 import javax.inject.Inject;
+
+import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 /**
  * A utility class that handles navigation in {@link MainActivity}.
  */
 public class NavigationController {
+    private static final String TAG = NavigationController.class.getSimpleName();
     private final int containerId;
     private final FragmentManager fragmentManager;
 
@@ -40,15 +47,20 @@ public class NavigationController {
     public void navigateToBatches() {
         String tag = "batch/list";
         BatchListFragment batchesFragment = new BatchListFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
 
-    public void navigateToEditBatch(int batchId) {
+    public void navigateToEditBatch(long batchId) {
         String tag = "batch/edit/" + batchId;
-        BatchListFragment batchesFragment = new BatchListFragment();
+        BatchFormFragment batchesFragment = new BatchFormFragment();
+        Bundle data = new Bundle();
+        data.putLong(BATCH_ID, batchId);
+        batchesFragment.setArguments(data);
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
                 .addToBackStack(null)
@@ -57,7 +69,21 @@ public class NavigationController {
 
     public void navigateToAddBatch() {
         String tag = "batch/add";
-        BatchListFragment batchesFragment = new BatchListFragment();
+        BatchFormFragment batchesFragment = new BatchFormFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, batchesFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToBatchDetail(Long batchId) {
+        String tag = "batch/view/" + batchId;
+        BatchDetailFragment batchesFragment = new BatchDetailFragment();
+        Bundle data = new Bundle();
+        data.putLong(BATCH_ID, batchId);
+        batchesFragment.setArguments(data);
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
                 .addToBackStack(null)

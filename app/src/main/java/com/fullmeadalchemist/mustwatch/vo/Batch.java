@@ -23,6 +23,9 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.dateToLocaleDateL
                 childColumns = "user_id"))
 public class Batch {
 
+    @Ignore
+    public static final String BATCH_ID = "BATCH_ID";
+
     @PrimaryKey(autoGenerate = true)
     public Long id;
 

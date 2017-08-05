@@ -18,6 +18,10 @@ package com.fullmeadalchemist.mustwatch.di;
 
 
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
+import com.fullmeadalchemist.mustwatch.ui.log.LogListFragment;
+import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import dagger.Module;
@@ -29,6 +33,17 @@ public abstract class FragmentBuildersModule {
     abstract BatchListFragment contributeBatchListFragment();
 
     @ContributesAndroidInjector
-    abstract UserProfileFragment contributeUserProfileFragment();
+    abstract BatchFormFragment contributeBatchFormFragment();
 
+    @ContributesAndroidInjector
+    abstract BatchDetailFragment contributeBatchDetailFragment();
+
+    @ContributesAndroidInjector
+    abstract LogListFragment contributeLogListFragment();
+
+    @ContributesAndroidInjector
+    abstract LogFormFragment contributeLogFormFragment();
+
+    @ContributesAndroidInjector
+    abstract UserProfileFragment contributeUserProfileFragment();
 }

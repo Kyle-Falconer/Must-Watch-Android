@@ -1,4 +1,4 @@
-package com.fullmeadalchemist.mustwatch.ui.batch;
+package com.fullmeadalchemist.mustwatch.ui.log;
 
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import javax.inject.Inject;
 
@@ -24,56 +23,38 @@ import javax.inject.Inject;
  * Created by Kyle on 7/22/2017.
  */
 
-public class BatchListFragment extends LifecycleFragment implements Injectable {
+public class LogListFragment extends LifecycleFragment implements Injectable {
 
-    private static final String TAG = BatchListFragment.class.getSimpleName();
+    private static final String TAG = LogListFragment.class.getSimpleName();
     protected RecyclerView mRecyclerView;
-    protected BatchRecyclerViewAdapter mAdapter;
+    protected LogRecyclerViewAdapter mAdapter;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     @Inject
     NavigationController navigationController;
 
-    private BatchViewModel viewModel;
+    private LogViewModel viewModel;
     private FloatingActionButton fab;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        loadDatabase();
-    }
-
-
-    private void loadDatabase() {
-        viewModel.getCurrentUser().observe(this, user -> {
-            viewModel.getBatches().observe(this, batches -> {
-                if (batches == null || batches.size() == 0) {
-                    Log.d(TAG, "Got user with no batches; generating batches...");
-                    // FIXME: get only batches for current user
-                    for (int i = 0; i < 20; i++) {
-                        Batch b = new Batch();
-                        b.userId = user.id;
-                        viewModel.addBatch(b);
-                    }
-                }
-            });
-        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.batch_list, container, false);
+        View rootView = inflater.inflate(R.layout.log_list, container, false);
         rootView.setTag(TAG);
 
-        mAdapter = new BatchRecyclerViewAdapter(null, batch -> {
-            navigationController.navigateToBatchDetail(batch.id);
+        mAdapter = new LogRecyclerViewAdapter(null, batch -> {
+            navigationController.navigateToEditBatch(batch.id);
         });
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchViewModel.class);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LogViewModel.class);
         viewModel.getBatches().observe(this, batches -> {
             // update UI
             mAdapter.dataSet = batches;
@@ -81,10 +62,10 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
         });
 
 
-        fab = rootView.findViewById(R.id.batches_fab);
+        fab = rootView.findViewById(R.id.logs_fab);
         mRecyclerView = rootView.findViewById(R.id.recyclerView);
 
-        FloatingActionButton fab = rootView.findViewById(R.id.batches_fab);
+        FloatingActionButton fab = rootView.findViewById(R.id.logs_fab);
 
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298
@@ -112,7 +93,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
                 navigationController.navigateToAddBatch();
             });
         } else {
-            Log.e(TAG, "FloatingActionButton at R.id.batches_fab is null!");
+            Log.e(TAG, "FloatingActionButton at R.id.logs_fab is null!");
         }
 
 

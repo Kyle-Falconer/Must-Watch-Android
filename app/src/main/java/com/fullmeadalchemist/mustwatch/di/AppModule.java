@@ -19,6 +19,7 @@ package com.fullmeadalchemist.mustwatch.di;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
+import com.fullmeadalchemist.mustwatch.MustWatchPreferences;
 import com.fullmeadalchemist.mustwatch.db.AppDatabase;
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
 import com.fullmeadalchemist.mustwatch.db.UserDao;
@@ -58,5 +59,11 @@ class AppModule {
     @Provides
     BatchDao provideBatchDao(AppDatabase db) {
         return db.batchDao();
+    }
+
+    @Singleton
+    @Provides
+    MustWatchPreferences provideMustWatchPreferences(Application app) {
+        return new MustWatchPreferences(app);
     }
 }

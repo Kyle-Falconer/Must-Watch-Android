@@ -17,13 +17,11 @@
 package com.fullmeadalchemist.mustwatch.repository;
 
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.fullmeadalchemist.mustwatch.MustWatchPreferences;
 import com.fullmeadalchemist.mustwatch.db.UserDao;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
@@ -34,24 +32,19 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.fullmeadalchemist.mustwatch.MustWatchApp.MUST_WATCH_SHARED_PREFS;
-
 /**
  * Repository that handles User objects.
  */
 @Singleton
 public class UserRepository {
     private static final String TAG = UserRepository.class.getSimpleName();
-    private static final String CURRENT_USER_ID = "CURRENT_USER_ID";
     private final UserDao userDao;
-    private final Application app;
+    MustWatchPreferences prefs;
     private User user;
 
-
     @Inject
-    public UserRepository(Application app, UserDao userDao) {
-        //this.webservice = webservice;
-        this.app = app;
+    public UserRepository(MustWatchPreferences prefs, UserDao userDao) {
+        this.prefs = prefs;
         this.userDao = userDao;
     }
 
@@ -69,17 +62,12 @@ public class UserRepository {
     }
 
     public LiveData<User> getCurrentUser() {
-        // FIXME: pull this from persistent storage.
-        SharedPreferences pSharedPref = app.getSharedPreferences(MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE);
-        if (pSharedPref != null) {
-            Long stored_id = pSharedPref.getLong(CURRENT_USER_ID, Long.MIN_VALUE);
-            if (stored_id != Long.MIN_VALUE) {
-                Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
-                return getUser(stored_id);
-            } else {
-                Log.d(TAG, "Found no User ID in shared preferences.");
-            }
+        Long stored_id = prefs.getCurrentUserID();
+        if (stored_id != Long.MIN_VALUE) {
+            Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
+            return getUser(stored_id);
         }
+
         if (this.user == null) {
             Log.i(TAG, "No User found locally. Preparing an Anonymous User.");
             User anon = new User(null, null);
@@ -102,13 +90,7 @@ public class UserRepository {
     private void setCurrentUser(User user) {
         Log.d(TAG, "Setting current User to: " + user.toString());
         if (user.id != null) {
-            SharedPreferences pSharedPref = app.getSharedPreferences(MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE);
-            if (pSharedPref != null) {
-                SharedPreferences.Editor editor = pSharedPref.edit();
-                //editor.remove(CURRENT_USER_ID).commit();
-                editor.putLong(CURRENT_USER_ID, user.id).apply();
-                Log.d(TAG, String.format("Stored User ID %d in shared preferences as the current User ID.", user.id));
-            }
+            prefs.setCurrentUserId(user.id);
         }
         this.user = user;
     }

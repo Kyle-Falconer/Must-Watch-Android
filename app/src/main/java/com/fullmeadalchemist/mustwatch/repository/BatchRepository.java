@@ -16,9 +16,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
 @Singleton
 public class BatchRepository {
     private static final String TAG = BatchRepository.class.getSimpleName();
@@ -51,5 +48,9 @@ public class BatchRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+    }
+
+    public LiveData<Batch> getBatch(Long id) {
+        return batchDao.get(id);
     }
 }
