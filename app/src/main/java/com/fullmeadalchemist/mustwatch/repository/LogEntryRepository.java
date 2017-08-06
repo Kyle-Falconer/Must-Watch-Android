@@ -14,35 +14,31 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.db;
+package com.fullmeadalchemist.mustwatch.repository;
+
 
 import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
 
+import com.fullmeadalchemist.mustwatch.db.LogEntryDao;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.List;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-@Dao
-public interface LogEntryDao {
-    @Query("SELECT * FROM log_entry")
-    List<LogEntry> getAll();
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    @Query("SELECT * FROM log_entry WHERE batch_id = :batch_id")
-    LiveData<List<LogEntry>> loadAllByBatchIds(Long batch_id);
+@Singleton
+public class LogEntryRepository {
+    private static final String TAG = LogEntryRepository.class.getSimpleName();
 
-    @Insert
-    void insert(LogEntry entry);
+    private final LogEntryDao logEntryDao;
 
-    @Insert
-    void insertAll(LogEntry... entries);
+    @Inject
+    public LogEntryRepository(LogEntryDao logEntryDao) {
+        this.logEntryDao = logEntryDao;
+    }
 
-    @Delete
-    void delete(LogEntry entry);
+    public LiveData<List<LogEntry>> getLogEntries(Long batchId){
+        return logEntryDao.loadAllByBatchIds(batchId);
+    }
 }

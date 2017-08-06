@@ -28,7 +28,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 public class LogFormViewModel extends ViewModel {
 
     private BatchRepository batchRepository;
@@ -42,10 +41,6 @@ public class LogFormViewModel extends ViewModel {
 
     public LiveData<Batch> getBatch(Long id) {
         return batchRepository.getBatch(id);
-    }
-
-    public LiveData<List<Batch>> getBatches() {
-        return batchRepository.getBatches();
     }
 
     public void addBatch(Batch batch) {

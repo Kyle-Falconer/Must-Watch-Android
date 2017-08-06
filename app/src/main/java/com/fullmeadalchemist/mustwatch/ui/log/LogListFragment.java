@@ -66,17 +66,20 @@ public class LogListFragment extends LifecycleFragment implements Injectable {
         View rootView = inflater.inflate(R.layout.log_list, container, false);
         rootView.setTag(TAG);
 
-        mAdapter = new LogRecyclerViewAdapter(null, batch -> {
-            navigationController.navigateToEditBatch(batch.id);
-        });
+//        mAdapter = new LogRecyclerViewAdapter(null, batch -> {
+//            navigationController.navigateToEditBatch(batch.id);
+//        });
 
+        Long batchId = null;
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LogViewModel.class);
-        viewModel.getBatches().observe(this, batches -> {
+        viewModel.getLogEntries(batchId).observe(this, logEntries -> {
             // update UI
-            mAdapter.dataSet = batches;
+            if (logEntries != null) {
+                Log.d(TAG, String.format("Got %d log entries for batch #%d", logEntries.size(), batchId));
+            }
+            mAdapter.dataSet = logEntries;
             mAdapter.notifyDataSetChanged();
         });
-
 
         fab = rootView.findViewById(R.id.logs_fab);
         mRecyclerView = rootView.findViewById(R.id.recyclerView);

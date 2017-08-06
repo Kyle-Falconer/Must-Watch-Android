@@ -29,7 +29,7 @@ import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 @Database(entities = {User.class, Batch.class, LogEntry.class, Group.class, GroupMembership.class}, version = 1)
-@TypeConverters({DateConverters.class, CalendarConverters.class})
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "mustwatch-db";

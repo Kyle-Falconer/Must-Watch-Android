@@ -25,19 +25,18 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import com.fullmeadalchemist.mustwatch.db.DateConverters;
+import com.fullmeadalchemist.mustwatch.db.Converters;
 
 import java.util.Calendar;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
-import static java.sql.Types.NUMERIC;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
         foreignKeys = @ForeignKey(entity = User.class,
                 parentColumns = "id",
                 childColumns = "user_id"))
-@TypeConverters({DateConverters.class})
+@TypeConverters({Converters.class})
 public class Batch {
 
     @Ignore
@@ -50,16 +49,16 @@ public class Batch {
     public Long userId;
 
     @ColumnInfo(name = "target_sg_starting")
-    public Double targetSgStarting;
+    public Float targetSgStarting;
 
     @ColumnInfo(name = "target_sg_final")
-    public Double targetSgFinal;
+    public Float targetSgFinal;
 
     @ColumnInfo(name = "target_abv")
-    public Double targetABV;
+    public Float targetABV;
 
     @ColumnInfo(name = "output_volume")
-    public Double outputVolume;
+    public Float outputVolume;
 
     @ColumnInfo(name = "status")
     public String status;

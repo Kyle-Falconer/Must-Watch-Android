@@ -24,7 +24,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +46,7 @@ import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
 public class BatchFormFragment extends LifecycleFragment implements Injectable,
-        TimePickerDialog.OnTimeSetListener ,  DatePickerDialog.OnDateSetListener {
+        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
     private static final String TAG = BatchListFragment.class.getSimpleName();
@@ -104,15 +103,13 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // Do something with the time chosen by the user
-        Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
         viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
         viewModel.batch.createDate.set(Calendar.MINUTE, minute);
+        Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        Log.d(TAG, String.format("onDateSet => year: %s, month: %s, dayOfMonth: %s", year, month, dayOfMonth));
         viewModel.batch.createDate.set(Calendar.YEAR, year);
         viewModel.batch.createDate.set(Calendar.MONTH, month);
         viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);

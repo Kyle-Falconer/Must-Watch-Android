@@ -32,10 +32,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-/**
- * Created by Kyle on 7/23/2017.
- */
-
 public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = BatchRecyclerViewAdapter.class.getSimpleName();

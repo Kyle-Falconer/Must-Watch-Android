@@ -19,26 +19,24 @@ package com.fullmeadalchemist.mustwatch.vo;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import com.fullmeadalchemist.mustwatch.db.DateConverters;
+import com.fullmeadalchemist.mustwatch.db.Converters;
 
 import java.util.Calendar;
 
-import static java.sql.Types.NUMERIC;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
 
 @Entity(tableName = "log_entry",
         indices = {@Index(value = "batch_id")},
         foreignKeys = @ForeignKey(entity = Batch.class,
                 parentColumns = "id",
                 childColumns = "batch_id"))
-@TypeConverters({DateConverters.class})
+@TypeConverters({Converters.class})
 public class LogEntry {
 
     @PrimaryKey(autoGenerate = true)
@@ -51,8 +49,17 @@ public class LogEntry {
     public Calendar entryDate;
 
     @ColumnInfo(name = "acidity")
-    public Double acidity;
+    public Float acidity;
 
     @ColumnInfo(name = "note")
     public String note;
+
+    @Ignore
+    @Override
+    public String toString(){
+        return String.format("Entry Date: %s\nAcidity: %spH\nNote: %s",
+                calendarToLocaleDateLong(entryDate),
+                acidity,
+                note);
+    }
 }

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,8 @@ import javax.inject.Inject;
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = LogRecyclerViewAdapter.class.getSimpleName();
-    private final BatchClickCallback batchClickCallback;
-    List<Batch> dataSet;
+    private final LogEntryClickCallback logEntryClickCallback;
+    List<LogEntry> dataSet;
     @Inject
     NavigationController navigationController;
 
@@ -49,11 +50,11 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public LogRecyclerViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
+    public LogRecyclerViewAdapter(List<LogEntry> dataSet, LogEntryClickCallback logEntryClickCallback) {
         if (dataSet == null)
             dataSet = new ArrayList<>();
-        dataSet = dataSet;
-        this.batchClickCallback = batchClickCallback;
+        this.dataSet = dataSet;
+        this.logEntryClickCallback = logEntryClickCallback;
     }
 
     // Create new views (invoked by the layout manager)
@@ -64,7 +65,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         //        .inflate(R.layout.batch_item_list, viewGroup, false);
 
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.batch_card_view, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.log_entry_card_view, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -73,11 +74,11 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        final Batch b = dataSet.get(position);
+        final LogEntry logEntry = dataSet.get(position);
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        viewHolder.getBatchNumberTextView().setText("Batch " + b.id);
+        viewHolder.getBatchNumberTextView().setText("LogEntry #" + logEntry.id+"\n"+logEntry.toString());
 //
 //        Calendar createDate = mDataSet.get(position).getCreateDate();
 //        String formattedCreateDate = calendarToLocaleDateLong(b.getCreateDate());
@@ -88,11 +89,11 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
 //        viewHolder.getBatchStatusTextView().setText(b.getStatusString());
 
         viewHolder.itemView.setOnClickListener(v -> {
-            if (b != null && batchClickCallback != null) {
-                Log.d(TAG, String.format("Element for batch #%s was clicked.", b.id));
-                batchClickCallback.onClick(b);
+            if (logEntryClickCallback != null) {
+                Log.d(TAG, String.format("Element for LogEntry #%s was clicked.", logEntry.id));
+                logEntryClickCallback.onClick(logEntry);
             } else {
-                Log.wtf(TAG, "No click listener set or Batch is null!?");
+                Log.wtf(TAG, "No click listener set!?");
             }
         });
 //
@@ -111,9 +112,10 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         return dataSet == null ? 0 : dataSet.size();
     }
 
-    public interface BatchClickCallback {
-        void onClick(Batch repo);
+    public interface LogEntryClickCallback {
+        void onClick(LogEntry entry);
     }
+
 
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)

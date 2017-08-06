@@ -21,8 +21,9 @@ import android.arch.persistence.room.TypeConverter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
-public class DateConverters {
+public class Converters {
 
     @TypeConverter
     public static Date fromTimestamp(Long value) {
@@ -34,4 +35,23 @@ public class DateConverters {
         return date == null ? null : date.getTime();
     }
 
+    @TypeConverter
+    public static Long calendarToTimestamp(Calendar calendar) {
+        if (calendar == null){
+            return null;
+        }
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return calendar.getTime().getTime();
+    }
+
+    @TypeConverter
+    public static Calendar timestampToCalendar(Long value) {
+        if (value == null){
+            return null;
+        }
+        Date d = new Date(value);
+        Calendar gregorianCalendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
+        gregorianCalendar.setTime(d);
+        return gregorianCalendar;
+    }
 }

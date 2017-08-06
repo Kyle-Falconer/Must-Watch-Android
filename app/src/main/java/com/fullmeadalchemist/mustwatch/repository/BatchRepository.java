@@ -22,6 +22,8 @@ import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
 
@@ -49,7 +51,6 @@ public class BatchRepository {
         return batchDao.getAll();
     }
 
-
     public void addBatch(Batch batch) {
         Log.d(TAG, "Adding batch to db: " + batch.toString());
         Observable.<Long>fromCallable(() -> batchDao.insert(batch))
@@ -69,4 +70,10 @@ public class BatchRepository {
     public LiveData<Batch> getBatch(Long id) {
         return batchDao.get(id);
     }
+
+    public LiveData<List<Batch>> getBatches(User user) {
+        return batchDao.getAll(user.id);
+    }
+
+
 }

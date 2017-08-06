@@ -34,11 +34,12 @@ import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import javax.inject.Inject;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
+import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.generateDummyBatchesWithData;
 
 public class BatchListFragment extends LifecycleFragment implements Injectable {
 
@@ -67,12 +68,10 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             viewModel.getBatches().observe(this, batches -> {
                 if (batches == null || batches.size() == 0) {
                     Log.d(TAG, "Got user with no batches; generating batches...");
-                    // FIXME: get only batches for current user
-                    for (int i = 0; i < 20; i++) {
-                        Batch b = new Batch();
-                        b.userId = user.id;
-                        viewModel.addBatch(b);
-                    }
+                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 20);
+                    viewModel.addBatches(dummyBatches);
+                } else {
+                    Log.d(TAG, String.format("Got user with %d batches.", batches.size()));
                 }
             });
         });
@@ -96,11 +95,8 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             mAdapter.notifyDataSetChanged();
         });
 
-
         fab = rootView.findViewById(R.id.batches_fab);
         mRecyclerView = rootView.findViewById(R.id.recyclerView);
-
-        FloatingActionButton fab = rootView.findViewById(R.id.batches_fab);
 
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298
@@ -130,7 +126,6 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
         } else {
             Log.e(TAG, "FloatingActionButton at R.id.batches_fab is null!");
         }
-
 
         mRecyclerView.setHasFixedSize(true);
 

@@ -45,10 +45,6 @@ public class BatchFormViewModel extends ViewModel {
         return batchRepository.getBatch(id);
     }
 
-    public LiveData<List<Batch>> getBatches() {
-        return batchRepository.getBatches();
-    }
-
     public void addBatch(Batch batch) {
         batchRepository.addBatch(batch);
     }

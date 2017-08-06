@@ -28,10 +28,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-
 public class BatchViewModel extends ViewModel {
     private LiveData<List<Batch>> batches;
     private BatchRepository batchRepository;
@@ -47,6 +43,10 @@ public class BatchViewModel extends ViewModel {
         return batchRepository.getBatches();
     }
 
+    public LiveData<List<Batch>> getBatches(User user) {
+        return batchRepository.getBatches(user);
+    }
+
     public void addBatch(Batch batch) {
         batchRepository.addBatch(batch);
     }
@@ -55,4 +55,7 @@ public class BatchViewModel extends ViewModel {
         return userRepository.getCurrentUser();
     }
 
+    public void addBatches(List<Batch> batches) {
+        batchRepository.addBatches(batches);
+    }
 }

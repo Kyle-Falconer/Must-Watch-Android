@@ -24,6 +24,7 @@ import android.arch.persistence.room.Query;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
 
@@ -36,8 +37,12 @@ public interface BatchDao {
     @Query("SELECT * FROM batch")
     LiveData<List<Batch>> getAll();
 
+    @Query("SELECT * FROM batch WHERE user_id = :user_id")
+    LiveData<List<Batch>> getAll(long user_id);
+
     @Query("SELECT * FROM batch WHERE id = :batch_id LIMIT 1")
     LiveData<Batch> get(Long batch_id);
+
 
     @Query("SELECT * FROM batch WHERE user_id = :user_id")
     LiveData<List<Batch>> loadBatchesForUser(long user_id);
@@ -61,4 +66,6 @@ public interface BatchDao {
 
     @Delete
     void delete(Batch batch);
+
+
 }
