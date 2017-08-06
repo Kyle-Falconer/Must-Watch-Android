@@ -12,10 +12,6 @@ import java.util.Date;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.dateToLocaleDateLong;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
         foreignKeys = @ForeignKey(entity = User.class,
@@ -65,6 +61,4 @@ public class Batch {
                 status,
                 outputVolume);
     }
-
-
 }
