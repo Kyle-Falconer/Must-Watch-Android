@@ -1,9 +1,7 @@
 package com.fullmeadalchemist.mustwatch;
 
-import android.app.FragmentManager;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.arch.lifecycle.LifecycleRegistryOwner;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -12,10 +10,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
 
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
@@ -23,6 +24,8 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
+
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 public class MainActivity extends AppCompatActivity implements LifecycleRegistryOwner,
         NavigationView.OnNavigationItemSelectedListener,
@@ -51,14 +54,15 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         toggle.syncState();
 
         if (savedInstanceState == null) {
             navigationController.navigateToBatches();
         }
-//        if (savedInstanceState == null) {
-//            navigationController.navigateToUserProfile();
-//        }
     }
 
     @Override
@@ -100,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
