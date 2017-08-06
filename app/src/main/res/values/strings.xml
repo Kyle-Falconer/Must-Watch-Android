@@ -4,4 +4,5 @@
     <string name="add_log_entry">Add Log Entry</string>
     <string name="edit_batch_title">Editing Batch #%d</string>
     <string name="create_batch_title">Create a new Batch</string>
+    <string name="user_profile_title">User Details</string>
 </resources>

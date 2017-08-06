@@ -25,6 +25,7 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
+import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import javax.inject.Inject;
 
@@ -90,28 +91,14 @@ public class NavigationController {
                 .commitAllowingStateLoss();
     }
 
-//    public void navigateToSearch() {
-//        SearchFragment searchFragment = new SearchFragment();
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, searchFragment)
-//                .commitAllowingStateLoss();
-//    }
-//
-//    public void navigateToRepo(String owner, String name) {
-//        RepoFragment fragment = RepoFragment.create(owner, name);
-//        String tag = "repo" + "/" + owner + "/" + name;
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, fragment, tag)
-//                .addToBackStack(null)
-//                .commitAllowingStateLoss();
-//    }
+    public void navigateToUserProfile() {
+        String tag = "user/view";
+        UserProfileFragment userProfileFragment = new UserProfileFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, userProfileFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
 
-//    public void navigateToUser(String login) {
-//        String tag = "user" + "/" + login;
-//        UserProfileFragment userFragment = UserProfileFragment.create(login);
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, userFragment, tag)
-//                .addToBackStack(null)
-//                .commitAllowingStateLoss();
-//    }
 }

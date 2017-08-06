@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         if (savedInstanceState == null) {
             navigationController.navigateToBatches();
         }
+//        if (savedInstanceState == null) {
+//            navigationController.navigateToUserProfile();
+//        }
     }
 
     @Override
