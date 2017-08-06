@@ -21,6 +21,13 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import com.fullmeadalchemist.mustwatch.db.DateConverters;
+
+import java.util.Calendar;
+
+import static java.sql.Types.NUMERIC;
 
 /**
  * Created by Kyle on 7/22/2017.
@@ -31,6 +38,7 @@ import android.arch.persistence.room.PrimaryKey;
         foreignKeys = @ForeignKey(entity = Batch.class,
                 parentColumns = "id",
                 childColumns = "batch_id"))
+@TypeConverters({DateConverters.class})
 public class LogEntry {
 
     @PrimaryKey(autoGenerate = true)
@@ -38,6 +46,9 @@ public class LogEntry {
 
     @ColumnInfo(name = "batch_id")
     public long batchId;
+
+    @ColumnInfo(name = "entry_date")
+    public Calendar entryDate;
 
     @ColumnInfo(name = "acidity")
     public Double acidity;

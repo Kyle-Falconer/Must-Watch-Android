@@ -23,16 +23,21 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 
-import java.util.Date;
+import com.fullmeadalchemist.mustwatch.db.DateConverters;
 
-import static com.fullmeadalchemist.mustwatch.util.FormatUtils.dateToLocaleDateLong;
+import java.util.Calendar;
+
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
+import static java.sql.Types.NUMERIC;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
         foreignKeys = @ForeignKey(entity = User.class,
                 parentColumns = "id",
                 childColumns = "user_id"))
+@TypeConverters({DateConverters.class})
 public class Batch {
 
     @Ignore
@@ -60,7 +65,7 @@ public class Batch {
     public String status;
 
     @ColumnInfo(name = "create_date")
-    public Date createDate;
+    public Calendar createDate;
 
 
     @SuppressLint("DefaultLocale")
@@ -73,7 +78,7 @@ public class Batch {
                         "Output volume: %s\n",
                 id,
                 userId,
-                dateToLocaleDateLong(createDate),
+                calendarToLocaleDateLong(createDate),
                 status,
                 outputVolume);
     }

@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.util;
+package com.fullmeadalchemist.mustwatch.db;
 
-import java.text.DateFormat;
+import android.arch.persistence.room.TypeConverter;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
-public class FormatUtils {
-
-    public static String calendarToLocaleDateLong(Calendar c) {
-        if (c == null) {
-            return "null";
-        }
-        Date d = c.getTime();
-        return dateToLocaleDateLong(d);
+public class CalendarConverters {
+    @TypeConverter
+    public static Long calendarToTimestamp(Calendar calendar) {
+        return calendar == null ? null : calendar.getTime().getTime();
     }
 
-    public static String dateToLocaleDateLong(Date d) {
-        if (d == null) {
-            return "null";
+    @TypeConverter
+    public static Calendar timestampToCalendar(Long value) {
+        if (value == null){
+            return null;
         }
-        DateFormat timeInstance = DateFormat.getDateInstance(DateFormat.LONG);
-        return timeInstance.format(d);
+        Date d = new Date(value);
+        Calendar gregorianCalendar = GregorianCalendar.getInstance();
+        gregorianCalendar.setTime(d);
+        return gregorianCalendar;
     }
-
 }

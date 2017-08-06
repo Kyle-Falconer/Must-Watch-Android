@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "00294df854b82d236e18e7bd8a0e73c5",
+    "identityHash": "6f4c61d8c1601d7a71f9b061520e0f2a",
     "entities": [
       {
         "tableName": "User",
@@ -130,7 +130,7 @@
       },
       {
         "tableName": "log_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `batch_id` INTEGER NOT NULL, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `batch_id` INTEGER NOT NULL, `entry_date` INTEGER, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -143,6 +143,12 @@
             "columnName": "batch_id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "entryDate",
+            "columnName": "entry_date",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "acidity",
@@ -296,7 +302,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"00294df854b82d236e18e7bd8a0e73c5\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6f4c61d8c1601d7a71f9b061520e0f2a\")"
     ]
   }
 }

@@ -63,7 +63,7 @@ public class UserRepository {
 
     public LiveData<User> getCurrentUser() {
         Long stored_id = prefs.getCurrentUserID();
-        if (stored_id != Long.MIN_VALUE) {
+        if (stored_id != null) {
             Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
             return getUser(stored_id);
         }

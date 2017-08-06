@@ -18,13 +18,11 @@ package com.fullmeadalchemist.mustwatch.db;
 
 import android.arch.persistence.room.TypeConverter;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
-/**
- * Created by Kyle on 4/8/2017.
- */
-
-public class Converters {
+public class DateConverters {
 
     @TypeConverter
     public static Date fromTimestamp(Long value) {

@@ -35,7 +35,7 @@ public class BatchDbTests extends DbTest {
         assertThat(loaded_user.name, is("foo"));
 
         final Batch batch = TestUtil.createBatch();
-        batch.createDate = new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
+        batch.createDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         batch.userId = loaded_user.id;
         db.batchDao().insert(batch);
 
@@ -53,7 +53,7 @@ public class BatchDbTests extends DbTest {
         assertThat(loaded_user.name, is("foo"));
 
         final Batch batch = TestUtil.createBatch();
-        batch.createDate = new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
+        batch.createDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         batch.userId = loaded_user.id;
         db.batchDao().insert(batch);
 
