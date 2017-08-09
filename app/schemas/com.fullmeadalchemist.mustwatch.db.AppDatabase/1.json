@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6f4c61d8c1601d7a71f9b061520e0f2a",
+    "identityHash": "94ca6a6433f00b06b4fa93b93997d113",
     "entities": [
       {
         "tableName": "User",
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "batch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `output_volume` REAL, `status` TEXT, `create_date` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` REAL, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -80,6 +80,18 @@
             "notNull": false
           },
           {
+            "fieldPath": "startingPh",
+            "columnName": "starting_ph",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startingTemp",
+            "columnName": "starting_temp_c",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
             "fieldPath": "outputVolume",
             "columnName": "output_volume",
             "affinity": "REAL",
@@ -95,6 +107,12 @@
             "fieldPath": "createDate",
             "columnName": "create_date",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -302,7 +320,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6f4c61d8c1601d7a71f9b061520e0f2a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"94ca6a6433f00b06b4fa93b93997d113\")"
     ]
   }
 }

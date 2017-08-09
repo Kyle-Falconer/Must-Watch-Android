@@ -24,8 +24,6 @@ import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 public class LogFormViewModel extends ViewModel {

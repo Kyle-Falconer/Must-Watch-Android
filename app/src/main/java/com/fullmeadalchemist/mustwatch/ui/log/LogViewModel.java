@@ -51,7 +51,7 @@ public class LogViewModel extends ViewModel {
         return userRepository.getCurrentUser();
     }
 
-    public LiveData<List<LogEntry>> getLogEntries(Long batchId){
+    public LiveData<List<LogEntry>> getLogEntries(Long batchId) {
         return logEntryRepository.getLogEntries(batchId);
     }
 }

@@ -38,7 +38,7 @@ public class LogEntryRepository {
         this.logEntryDao = logEntryDao;
     }
 
-    public LiveData<List<LogEntry>> getLogEntries(Long batchId){
+    public LiveData<List<LogEntry>> getLogEntries(Long batchId) {
         return logEntryDao.loadAllByBatchIds(batchId);
     }
 }

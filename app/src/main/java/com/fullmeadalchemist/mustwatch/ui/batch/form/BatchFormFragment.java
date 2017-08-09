@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -37,6 +38,7 @@ import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
+import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import java.util.Calendar;
 
@@ -52,9 +54,12 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
     private static final String TAG = BatchListFragment.class.getSimpleName();
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    ;
     @Inject
     NavigationController navigationController;
     BatchFormFragmentBinding dataBinding;
+    private MODES FORM_MODE;
     private BatchFormViewModel viewModel;
 
     @Nullable
@@ -80,7 +85,18 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
             }
         } else {
             Log.i(TAG, "No Batch ID was received. Acting as a Batch Creation form.");
+            viewModel.batch = new Batch();
+            viewModel.getCurrentUser().observe(this, user -> {
+                if (user == null) {
+                    Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
+                    return;
+                }
+                Log.d(TAG, String.format("Setting batch user ID to %s", user.id));
+                viewModel.batch.userId = user.id;
+            });
+            dataBinding.setBatch(viewModel.batch);
         }
+
 
         return dataBinding.getRoot();
     }
@@ -91,15 +107,46 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
 
         if (viewModel.batch != null) {
             // We're in "edit" mode, so set the title accordingly
+            FORM_MODE = MODES.EDIT;
             TextView formTitle = getActivity().findViewById(R.id.batchFormTitleTV);
             if (formTitle != null) {
                 String title = getResources().getString(R.string.edit_batch_title);
                 title = String.format(title, viewModel.batch.id);
                 formTitle.setText(title);
             }
+        } else {
+            FORM_MODE = MODES.CREATE;
+        }
+
+        Button submitButton = getActivity().findViewById(R.id.button_submit);
+        if (submitButton != null) {
+            submitButton.setOnClickListener(v -> {
+                Log.w(TAG, "Submit button clicked!");
+                FORM_MODE = (viewModel.batch.id == null) ? MODES.CREATE : MODES.EDIT;
+                viewModel.batch.targetSgStarting = dataBinding.getBatch().targetSgStarting;
+                viewModel.batch.targetSgFinal = dataBinding.getBatch().targetSgFinal;
+                viewModel.batch.targetABV = dataBinding.getBatch().targetABV;
+                viewModel.batch.startingPh = dataBinding.getBatch().startingPh;
+                viewModel.batch.startingTemp = dataBinding.getBatch().startingTemp;
+                viewModel.batch.outputVolume = dataBinding.getBatch().outputVolume;
+                viewModel.batch.status = dataBinding.getBatch().status;
+                viewModel.batch.createDate = dataBinding.getBatch().createDate;
+                viewModel.batch.notes = dataBinding.getBatch().notes;
+                if (FORM_MODE == MODES.CREATE) {
+                    Log.d(TAG, "We are in CREATE mode.");
+                    Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
+                    viewModel.saveNewBatch();
+                } else {
+                    Log.d(TAG, String.format("We are in EDIT mode for batch #%s", viewModel.batch.id));
+                    Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
+                    viewModel.updateBatch();
+                }
+                navigationController.navigateToBatches();
+            });
+        } else {
+            Log.e(TAG, "Cannot find submit button in view");
         }
     }
-
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -115,4 +162,6 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
         viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
     }
+
+    private enum MODES {CREATE, EDIT}
 }

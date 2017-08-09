@@ -56,7 +56,7 @@ public class LogEntry {
 
     @Ignore
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("Entry Date: %s\nAcidity: %spH\nNote: %s",
                 calendarToLocaleDateLong(entryDate),
                 acidity,

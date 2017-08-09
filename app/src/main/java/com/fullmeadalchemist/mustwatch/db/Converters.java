@@ -37,7 +37,7 @@ public class Converters {
 
     @TypeConverter
     public static Long calendarToTimestamp(Calendar calendar) {
-        if (calendar == null){
+        if (calendar == null) {
             return null;
         }
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -46,7 +46,7 @@ public class Converters {
 
     @TypeConverter
     public static Calendar timestampToCalendar(Long value) {
-        if (value == null){
+        if (value == null) {
             return null;
         }
         Date d = new Date(value);

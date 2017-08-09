@@ -29,6 +29,7 @@ import java.util.Random;
 
 public class DemoGenerators {
 
+    @SuppressLint("DefaultLocale")
     public static List<Batch> generateDummyBatchesWithData(Long userId, int numBatches) {
         List<Batch> batches = new ArrayList<>();
         for (int i = 0; i < numBatches; i++) {
@@ -39,6 +40,7 @@ public class DemoGenerators {
             b.outputVolume = randFloat(1f, 12f);
             b.targetABV = randFloat(8f, 17f);
             b.userId = userId;
+            b.notes = String.format("Dummy Batch entry #%d", i);
             batches.add(b);
         }
         return batches;

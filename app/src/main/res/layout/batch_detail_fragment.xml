@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="batch"
+            type="com.fullmeadalchemist.mustwatch.vo.Batch" />
+    </data>
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="16dp">
@@ -176,47 +181,51 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/editText_sg"
+            <TextView
+                android:id="@+id/editText_targetABV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Specific Gravity (example: 1.110)"
-                android:inputType="numberDecimal"
+                android:hint="Target ABV%"
+                android:text="@{batch.targetABV}"
                 android:maxLines="1" />
 
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/editText_targetSgStarting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Target starting Specific Gravity (example: 1.115)"
+                android:text="@{batch.targetSgStarting}"
+                android:maxLines="1" />
 
-            <android.support.design.widget.TextInputEditText
+            <TextView
+                android:id="@+id/editText_targetSgFinal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Target final Specific Gravity (example: 1.05)"
+                android:text="@{batch.targetSgFinal}"
+                android:maxLines="1" />
+
+
+
+            <TextView
                 android:id="@+id/editText_ph_level"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="pH level (example: 3.7)"
-                android:inputType="numberDecimal"
+                android:hint="Starting pH level (example: 3.7)"
+                android:text="@{batch.startingPh}"
                 android:maxLines="1" />
 
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
+            <TextView
                 android:id="@+id/editText_temperature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="temperature"
+                android:hint="starting temperature"
+                android:text="@{batch.startingTemp}"
                 android:inputType="numberDecimal"
                 android:maxLines="1" />
-
-        </android.support.design.widget.TextInputLayout>
 
 
 
@@ -244,12 +253,12 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Notes"
-                app:layout_constraintLeft_toLeftOf="@+id/textView_notes_contents"
-                app:layout_constraintRight_toRightOf="@+id/textView_notes_contents"
+                app:layout_constraintLeft_toLeftOf="@+id/notes"
+                app:layout_constraintRight_toRightOf="@+id/notes"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Notes" />
 
-            <TextView android:id="@+id/textView_notes_contents"
+            <TextView android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -262,9 +271,23 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
+                android:text="@{batch.notes}"
                 tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
 
         </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/button_edit_batch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/edit_batch" />
+
 
         <Button
             android:id="@+id/button_add_log_entry"
@@ -278,5 +301,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/add_log_entry" />
 
+
     </LinearLayout>
 </ScrollView>
+</layout>

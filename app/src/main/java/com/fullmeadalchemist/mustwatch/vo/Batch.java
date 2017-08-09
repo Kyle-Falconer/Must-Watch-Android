@@ -57,6 +57,12 @@ public class Batch {
     @ColumnInfo(name = "target_abv")
     public Float targetABV;
 
+    @ColumnInfo(name = "starting_ph")
+    public Float startingPh;
+
+    @ColumnInfo(name = "starting_temp_c")
+    public Float startingTemp;
+
     @ColumnInfo(name = "output_volume")
     public Float outputVolume;
 
@@ -66,9 +72,10 @@ public class Batch {
     @ColumnInfo(name = "create_date")
     public Calendar createDate;
 
+    @ColumnInfo(name = "notes")
+    public String notes;
 
     @SuppressLint("DefaultLocale")
-    @Ignore
     public String toString() {
         return String.format("Batch #%s\n" +
                         "User id: %d\n" +

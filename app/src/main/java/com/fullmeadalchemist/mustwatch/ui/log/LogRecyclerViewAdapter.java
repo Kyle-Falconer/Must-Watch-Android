@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        viewHolder.getBatchNumberTextView().setText("LogEntry #" + logEntry.id+"\n"+logEntry.toString());
+        viewHolder.getBatchNumberTextView().setText("LogEntry #" + logEntry.id + "\n" + logEntry.toString());
 //
 //        Calendar createDate = mDataSet.get(position).getCreateDate();
 //        String formattedCreateDate = calendarToLocaleDateLong(b.getCreateDate());

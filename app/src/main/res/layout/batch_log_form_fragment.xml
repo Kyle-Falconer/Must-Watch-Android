@@ -244,12 +244,12 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Notes"
-                app:layout_constraintLeft_toLeftOf="@+id/textView_notes_contents"
-                app:layout_constraintRight_toRightOf="@+id/textView_notes_contents"
+                app:layout_constraintLeft_toLeftOf="@+id/notes"
+                app:layout_constraintRight_toRightOf="@+id/notes"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Notes" />
 
-            <TextView android:id="@+id/textView_notes_contents"
+            <TextView android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"

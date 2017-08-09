@@ -34,7 +34,6 @@ import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,7 +67,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             viewModel.getBatches().observe(this, batches -> {
                 if (batches == null || batches.size() == 0) {
                     Log.d(TAG, "Got user with no batches; generating batches...");
-                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 20);
+                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 2);
                     viewModel.addBatches(dummyBatches);
                 } else {
                     Log.d(TAG, String.format("Got user with %d batches.", batches.size()));

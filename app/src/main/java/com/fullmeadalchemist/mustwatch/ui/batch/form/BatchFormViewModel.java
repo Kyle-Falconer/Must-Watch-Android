@@ -24,8 +24,6 @@ import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 
@@ -53,4 +51,11 @@ public class BatchFormViewModel extends ViewModel {
         return userRepository.getCurrentUser();
     }
 
+    public void updateBatch() {
+        batchRepository.updateBatch(batch);
+    }
+
+    public void saveNewBatch() {
+        batchRepository.addBatch(batch);
+    }
 }

@@ -22,7 +22,6 @@ import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
-import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class BatchRepository {
     }
 
     public void addBatches(List<Batch> batches) {
-        Log.d(TAG, String.format("Adding %d batch to db: ", batches.size(), TextUtils.join("\n", batches)));
+        Log.d(TAG, String.format("Adding %d batch to db: %s", batches.size(), TextUtils.join("\n", batches)));
         Observable.fromCallable(() -> batchDao.insertAll(batches.toArray(new Batch[batches.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,5 +74,10 @@ public class BatchRepository {
         return batchDao.getAll(user.id);
     }
 
-
+    public void updateBatch(Batch batch) {
+        Observable.fromCallable(() -> batchDao.updateBatch(batch))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
 }
