@@ -29,13 +29,17 @@ import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecyclerViewAdapter.ViewHolder> {
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 
-    private static final String TAG = BatchRecyclerViewAdapter.class.getSimpleName();
+public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdapter.ViewHolder> {
+
+    private static final String TAG = BatchListViewAdapter.class.getSimpleName();
     private final BatchClickCallback batchClickCallback;
+    private Locale defaultLocale = Locale.getDefault();
     List<Batch> dataSet;
     @Inject
     NavigationController navigationController;
@@ -45,7 +49,7 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public BatchRecyclerViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
+    public BatchListViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
         if (dataSet == null)
             dataSet = new ArrayList<>();
         dataSet = dataSet;
@@ -73,15 +77,27 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        viewHolder.getBatchNumberTextView().setText("Batch " + b.id);
-//
-//        Calendar createDate = mDataSet.get(position).getCreateDate();
-//        String formattedCreateDate = calendarToLocaleDateTimeLong(b.getCreateDate());
-//        if (createDate != null) {
-//            viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
-//        }
-//
-//        viewHolder.getBatchStatusTextView().setText(b.getStatusString());
+
+        viewHolder.getBatchLabelTextView().setText(String.format(defaultLocale, "%s", b.name));
+        viewHolder.getBatchNumberTextView().setText(String.format(defaultLocale, "Batch %d", b.id));
+
+        if (b.outputVolume == null || b.outputVolume < 0.01) {
+            viewHolder.getOutputVolumeTextView().setText("-");
+        } else {
+            viewHolder.getOutputVolumeTextView().setText(String.format(defaultLocale, "%.1f Gallons", b.outputVolume));
+        }
+        if (b.targetABV == null || b.targetABV < 0.01) {
+            viewHolder.getBatchTargetAbvTextView().setText("-");
+        } else {
+            viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%.1f", b.targetABV));
+        }
+
+
+
+        viewHolder.getBatchStatusTextView().setText(b.status);
+        String formattedCreateDate = calendarToLocaleDate(b.createDate);
+        viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
+
 
         viewHolder.itemView.setOnClickListener(v -> {
             if (b != null && batchClickCallback != null) {
@@ -91,14 +107,8 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
                 Log.wtf(TAG, "No click listener set or Batch is null!?");
             }
         });
-//
-//
-//        viewHolder.getBatchTargetAbvTextView().setText(String.format("%s%%", b.getTargetABV()));
-//
-//        String outVol = b.getFormattedOutputVolume();
-//        if (outVol != null) {
-//            viewHolder.getOutputVolumeTextView().setText(outVol);
-//        }
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -115,6 +125,7 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView batchLabelTextView;
         private final TextView batchNumberTextView;
         private final TextView batchCreateDateTextView;
         private final TextView batchStatusTextView;
@@ -123,11 +134,16 @@ public class BatchRecyclerViewAdapter extends RecyclerView.Adapter<BatchRecycler
 
         public ViewHolder(View v) {
             super(v);
-            batchNumberTextView = (TextView) v.findViewById(R.id.name);
-            batchStatusTextView = (TextView) v.findViewById(R.id.batchCardStatusTextView);
-            batchTargetAbvTextView = (TextView) v.findViewById(R.id.batchCardTargetAbvTextView);
-            outputVolumeTextView = (TextView) v.findViewById(R.id.batchCardOutputVolTextView);
-            batchCreateDateTextView = (TextView) v.findViewById(R.id.batchCardCreateDateTextView);
+            batchLabelTextView = v.findViewById(R.id.name);
+            batchNumberTextView = v.findViewById(R.id.batch_id);
+            batchStatusTextView = v.findViewById(R.id.batchCardStatusTextView);
+            batchTargetAbvTextView = v.findViewById(R.id.batchCardTargetAbvTextView);
+            outputVolumeTextView = v.findViewById(R.id.batchCardOutputVolTextView);
+            batchCreateDateTextView = v.findViewById(R.id.batchCardCreateDateTextView);
+        }
+
+        public TextView getBatchLabelTextView() {
+            return batchLabelTextView;
         }
 
         public TextView getBatchNumberTextView() {

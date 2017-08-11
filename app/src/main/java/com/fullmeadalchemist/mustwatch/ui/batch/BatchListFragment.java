@@ -44,7 +44,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
 
     private static final String TAG = BatchListFragment.class.getSimpleName();
     protected RecyclerView mRecyclerView;
-    protected BatchRecyclerViewAdapter mAdapter;
+    protected BatchListViewAdapter mAdapter;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -67,7 +67,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             viewModel.getBatches().observe(this, batches -> {
                 if (batches == null || batches.size() == 0) {
                     Log.d(TAG, "Got user with no batches; generating batches...");
-                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 2);
+                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 7);
                     viewModel.addBatches(dummyBatches);
                 } else {
                     Log.d(TAG, String.format("Got user with %d batches.", batches.size()));
@@ -83,7 +83,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
         View rootView = inflater.inflate(R.layout.batch_list, container, false);
         rootView.setTag(TAG);
 
-        mAdapter = new BatchRecyclerViewAdapter(null, batch -> {
+        mAdapter = new BatchListViewAdapter(null, batch -> {
             navigationController.navigateToBatchDetail(batch.id);
         });
 

@@ -24,10 +24,42 @@ import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class DemoGenerators {
+
+    private static final String[] RECIPE_LABELS = {
+            "null",
+            "Beginner Traditional",
+            "Beginner Metheglin",
+            "Beginner Cyser",
+            "Capsicumel",
+            "Sparkling Hydromel",
+            "Beginner Melomel",
+            "Rhodomel",
+            "Chai",
+            "Bochet",
+            "Braggot",
+            "Smoked Oaked Capsicumel",
+            "Berry Supreme Melomel",
+            "Cinnamon Metheglin",
+            "Heartbound Hibiscus",
+            "Pomegranate Melomel",
+            "Persimmon Melomel",
+            "Sweet Habanero Capsicumel",
+            "Smoked Capsicumel Mk. II",
+            "Heartbound Hibiscus: pH Control and Cold Variation",
+            "Stupid Quick Session Mead",
+            "Modified JAOM",
+            "Juniper Berry Metheglin",
+            "Peach Cinnamon Melomel",
+            "Green Tea Lemon Metheglomel"
+    };
+
+    private static Set<Integer> usedRecipes = new HashSet<>();
 
     @SuppressLint("DefaultLocale")
     public static List<Batch> generateDummyBatchesWithData(Long userId, int numBatches) {
@@ -35,7 +67,9 @@ public class DemoGenerators {
         for (int i = 0; i < numBatches; i++) {
             Batch b = new Batch();
 
+            b.name = getRecipe();
             // FIXME: change to random, date in the past
+
             b.createDate = GregorianCalendar.getInstance();
             b.outputVolume = randFloat(1f, 12f);
             b.targetABV = randFloat(8f, 17f);
@@ -46,6 +80,17 @@ public class DemoGenerators {
         return batches;
     }
 
+    private static String getRecipe(){
+        Integer rNo = 0;
+        if (usedRecipes.size() == 0){
+            usedRecipes.add(0);
+        }
+        while (usedRecipes.contains(rNo)){
+            rNo = randInt(0, RECIPE_LABELS.length - 1);
+        }
+        usedRecipes.add(rNo);
+        return RECIPE_LABELS[rNo];
+    }
 
 //    private static BatchItem.BatchStatusEnum getRandomBatchStatus() {
 //        int randPlan = randInt(0, 4);
