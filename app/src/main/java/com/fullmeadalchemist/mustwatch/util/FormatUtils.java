@@ -23,15 +23,39 @@ import java.util.Date;
 
 public class FormatUtils {
 
-    public static String calendarToLocaleDateLong(Calendar c) {
+    public static String calendarToLocaleDateTimeLong(Calendar c) {
         if (c == null) {
             return "null";
         }
         Date d = c.getTime();
-        return dateToLocaleDateLong(d);
+        return dateToLocaleDateTimeLong(d);
     }
 
-    public static String dateToLocaleDateLong(Date d) {
+    public static String dateToLocaleDateTimeLong(Date d) {
+        if (d == null) {
+            return "null";
+        }
+        DateFormat timeInstance = DateFormat.getDateTimeInstance();
+        return timeInstance.format(d);
+    }
+//
+//    public static String calendarToLocaleDateTimeLong(Calendar c) {
+//        if (c == null) {
+//            return "null";
+//        }
+//        Date d = c.getTime();
+//        return dateToLocaleDateTimeLong(d);
+//    }
+
+    public static String calendarToLocaleDate(Calendar c) {
+        if (c == null) {
+            return "null";
+        }
+        Date d = c.getTime();
+        return dateToLocaleDate(d);
+    }
+
+    public static String dateToLocaleDate(Date d) {
         if (d == null) {
             return "null";
         }
@@ -39,4 +63,19 @@ public class FormatUtils {
         return timeInstance.format(d);
     }
 
+    public static String calendarToLocaleTime(Calendar c) {
+        if (c == null) {
+            return "null";
+        }
+        Date d = c.getTime();
+        return dateToLocaleTime(d);
+    }
+
+    public static String dateToLocaleTime(Date d) {
+        if (d == null) {
+            return "null";
+        }
+        DateFormat timeInstance = DateFormat.getTimeInstance(DateFormat.SHORT);
+        return timeInstance.format(d);
+    }
 }

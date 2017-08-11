@@ -80,7 +80,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         viewHolder.getBatchNumberTextView().setText("LogEntry #" + logEntry.id + "\n" + logEntry.toString());
 //
 //        Calendar createDate = mDataSet.get(position).getCreateDate();
-//        String formattedCreateDate = calendarToLocaleDateLong(b.getCreateDate());
+//        String formattedCreateDate = calendarToLocaleDateTimeLong(b.getCreateDate());
 //        if (createDate != null) {
 //            viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
 //        }
@@ -128,7 +128,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
 
         public ViewHolder(View v) {
             super(v);
-            batchNumberTextView = (TextView) v.findViewById(R.id.batchCardNumTextView);
+            batchNumberTextView = (TextView) v.findViewById(R.id.name);
             batchStatusTextView = (TextView) v.findViewById(R.id.batchCardStatusTextView);
             batchTargetAbvTextView = (TextView) v.findViewById(R.id.batchCardTargetAbvTextView);
             outputVolumeTextView = (TextView) v.findViewById(R.id.batchCardOutputVolTextView);

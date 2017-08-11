@@ -95,7 +95,7 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
         });
 
         fab = rootView.findViewById(R.id.batches_fab);
-        mRecyclerView = rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = rootView.findViewById(R.id.batch_list);
 
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298

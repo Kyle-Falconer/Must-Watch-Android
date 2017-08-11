@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "94ca6a6433f00b06b4fa93b93997d113",
+    "identityHash": "6c85106d44a2e09fcdcbf717879159eb",
     "entities": [
       {
         "tableName": "User",
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "batch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` REAL, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `name` TEXT, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` REAL, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -59,6 +59,12 @@
             "fieldPath": "userId",
             "columnName": "user_id",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -320,7 +326,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"94ca6a6433f00b06b4fa93b93997d113\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6c85106d44a2e09fcdcbf717879159eb\")"
     ]
   }
 }

@@ -29,7 +29,7 @@ import com.fullmeadalchemist.mustwatch.db.Converters;
 
 import java.util.Calendar;
 
-import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
@@ -47,6 +47,9 @@ public class Batch {
 
     @ColumnInfo(name = "user_id")
     public Long userId;
+
+    @ColumnInfo(name = "name")
+    public String name;
 
     @ColumnInfo(name = "target_sg_starting")
     public Float targetSgStarting;
@@ -79,12 +82,14 @@ public class Batch {
     public String toString() {
         return String.format("Batch #%s\n" +
                         "User id: %d\n" +
+                        "Name: %s\n" +
                         "Create date: %s\n" +
                         "Status: %s\n" +
                         "Output volume: %s\n",
                 id,
                 userId,
-                calendarToLocaleDateLong(createDate),
+                name,
+                calendarToLocaleDateTimeLong(createDate),
                 status,
                 outputVolume);
     }

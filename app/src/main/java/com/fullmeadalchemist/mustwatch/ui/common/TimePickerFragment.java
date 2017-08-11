@@ -18,28 +18,45 @@ package com.fullmeadalchemist.mustwatch.ui.common;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.format.DateFormat;
+import android.util.Log;
+import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 
-public class TimePickerFragment extends DialogFragment {
+public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
+    private static final String TAG = DatePickerFragment.class.getSimpleName();
+    public static final String TIME_SET_EVENT = "TIME_SET_EVENT";
+    public static final String HOUR = "HOUR";
+    public static final String MINUTE = "MINUTE";
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
-
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        android.text.format.DateFormat dateFormat = new android.text.format.DateFormat();
-        boolean is24HourFormat = dateFormat.is24HourFormat(getActivity());
+        boolean is24HourFormat = DateFormat.is24HourFormat(getActivity());
+        return new TimePickerDialog(getActivity(), this, hour, minute, is24HourFormat);
+    }
 
-        // Activity needs to implement this interface
-        TimePickerDialog.OnTimeSetListener listener = (TimePickerDialog.OnTimeSetListener) getActivity();
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Log.d(TAG, String.format("Broadcasting TIME_SET_EVENT with time: %s:%s", hourOfDay, minute));
 
-        return new TimePickerDialog(getActivity(), listener, hour, minute, is24HourFormat);
+        Intent intent = new Intent(TIME_SET_EVENT);
+        intent.putExtra(HOUR, hourOfDay);
+        intent.putExtra(MINUTE, minute);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
     }
 }

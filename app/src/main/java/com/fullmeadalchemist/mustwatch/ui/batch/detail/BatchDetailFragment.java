@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
@@ -35,6 +36,8 @@ import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
 
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
@@ -73,10 +76,22 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                 viewModel.getBatch(batchId).observe(this, batch -> {
                     Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
                     dataBinding.setBatch(batch);
+                    viewModel.batch = batch;
+                    dataBinding.createDateDate.setText(calendarToLocaleDate(batch.createDate));
+                    dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
                 });
             }
         } else {
-            Log.i(TAG, "No Batch ID was received. Acting as a Batch Creation form.");
+            Log.i(TAG, "No Batch ID was received. Redirecting to the Batch Creation form.");
+        }
+
+        Button submitButton = getActivity().findViewById(R.id.button_edit_batch);
+        if (submitButton != null) {
+            submitButton.setOnClickListener(v -> {
+
+                navigationController.navigateToEditBatch(viewModel.batch.id);
+
+            });
         }
     }
 }

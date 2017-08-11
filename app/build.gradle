@@ -42,7 +42,7 @@ android {
     productFlavors {
         dev {
             dimension "default"
-            resConfigs "en", "xhdpi"
+            //resConfigs "en", "xhdpi"
         }
         prod {
             dimension "default"

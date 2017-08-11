@@ -18,26 +18,48 @@ package com.fullmeadalchemist.mustwatch.ui.common;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.DatePicker;
 
 import java.util.Calendar;
 
+public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
-public class DatePickerFragment extends DialogFragment {
+    private static final String TAG = DatePickerFragment.class.getSimpleName();
+    public static final String DATE_SET_EVENT = "DATE_SET_EVENT";
+    public static final String YEAR = "YEAR";
+    public static final String MONTH = "MONTH";
+    public static final String DAY_OF_MONTH = "DAY_OF_MONTH";
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
-        final Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        // Activity needs to implement this interface
-        DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getActivity();
-
         // Create a new instance of TimePickerDialog and return it
-        return new DatePickerDialog(getActivity(), listener, year, month, day);
+        return new DatePickerDialog(getActivity(), this, year, month, day);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Log.d(TAG, String.format("Date was set by user with DatePickerFragment to mm/dd/yyyy : %s/%s/%s", month, dayOfMonth, year));
+
+        Intent intent = new Intent(DATE_SET_EVENT);
+        intent.putExtra(YEAR, year);
+        intent.putExtra(MONTH, month);
+        intent.putExtra(DAY_OF_MONTH, dayOfMonth);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
     }
 }

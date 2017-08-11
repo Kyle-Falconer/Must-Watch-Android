@@ -14,10 +14,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="batch" type="com.fullmeadalchemist.mustwatch.vo.Batch"/>
+    </data>
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -42,22 +45,24 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/batchCardNumTextView"
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_toRightOf="@+id/batch_photo"
                     android:layout_weight="1"
+                    android:text="@{batch.name}"
                     android:textSize="24sp"
                     tools:text="Batch 9" />
 
                 <TextView
-                    android:id="@+id/batchCardCreateDateTextView"
+                    android:id="@+id/createDate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="top|end"
                     android:textAlignment="viewEnd"
+                    android:text="@{batch.createDate}"
                     tools:text="March 25, 2017" />
 
             </LinearLayout>
@@ -82,12 +87,13 @@
                         android:text="Status" />
 
                     <TextView
-                        android:id="@+id/batchCardStatusTextView"
+                        android:id="@+id/status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="top|end"
+                        android:layout_weight="1"
                         android:textAlignment="viewEnd"
+                        android:text="@{batch.status}"
                         tools:text="Fermenting" />
                 </LinearLayout>
 
@@ -105,12 +111,13 @@
                         android:text="Target ABV" />
 
                     <TextView
-                        android:id="@+id/batchCardTargetAbvTextView"
+                        android:id="@+id/targetABV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="top|end"
+                        android:layout_weight="1"
                         android:textAlignment="viewEnd"
+                        android:text="@{batch.targetABV}"
                         tools:text="12%" />
                 </LinearLayout>
 
@@ -128,14 +135,15 @@
                         android:text="Target Volume" />
 
                     <TextView
-                        android:id="@+id/batchCardOutputVolTextView"
+                        android:id="@+id/outputVolume"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/batchCardNumTextView"
+                        android:layout_below="@+id/name"
+                        android:layout_gravity="top|end"
                         android:layout_toRightOf="@+id/batch_photo"
                         android:layout_weight="1"
-                        android:layout_gravity="top|end"
                         android:textAlignment="textEnd"
+                        android:text="@{batch.outputVolume}"
                         tools:text="5 Gallons" />
                 </LinearLayout>
 
@@ -145,3 +153,4 @@
 
     </android.support.v7.widget.CardView>
 </LinearLayout>
+</layout>

@@ -28,7 +28,7 @@ import com.fullmeadalchemist.mustwatch.db.Converters;
 
 import java.util.Calendar;
 
-import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
 
 
 @Entity(tableName = "log_entry",
@@ -58,7 +58,7 @@ public class LogEntry {
     @Override
     public String toString() {
         return String.format("Entry Date: %s\nAcidity: %spH\nNote: %s",
-                calendarToLocaleDateLong(entryDate),
+                calendarToLocaleDateTimeLong(entryDate),
                 acidity,
                 note);
     }

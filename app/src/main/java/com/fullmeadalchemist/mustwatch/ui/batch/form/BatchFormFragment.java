@@ -21,9 +21,15 @@ import android.app.TimePickerDialog;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,25 +43,36 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
+import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
+import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import java.util.Calendar;
 
 import javax.inject.Inject;
 
+import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
+import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
+import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
+import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.YEAR;
+import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.HOUR;
+import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUTE;
+import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
+import static com.fullmeadalchemist.mustwatch.util.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
-public class BatchFormFragment extends LifecycleFragment implements Injectable,
-        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
-
+public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
     private static final String TAG = BatchListFragment.class.getSimpleName();
+    private static final int DATE_REQUEST_CODE = 1;
+    private static final int TIME_REQUEST_CODE = 2;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    ;
     @Inject
     NavigationController navigationController;
     BatchFormFragmentBinding dataBinding;
@@ -81,11 +98,13 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
                     Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
                     viewModel.batch = batch;
                     dataBinding.setBatch(batch);
+                    updateUiDateTime();
                 });
             }
         } else {
             Log.i(TAG, "No Batch ID was received. Acting as a Batch Creation form.");
             viewModel.batch = new Batch();
+            viewModel.batch.createDate = Calendar.getInstance();
             viewModel.getCurrentUser().observe(this, user -> {
                 if (user == null) {
                     Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
@@ -96,8 +115,6 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
             });
             dataBinding.setBatch(viewModel.batch);
         }
-
-
         return dataBinding.getRoot();
     }
 
@@ -105,7 +122,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (viewModel.batch != null) {
+        if (viewModel.batch != null && viewModel.batch.id != null) {
             // We're in "edit" mode, so set the title accordingly
             FORM_MODE = MODES.EDIT;
             TextView formTitle = getActivity().findViewById(R.id.batchFormTitleTV);
@@ -117,21 +134,57 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
         } else {
             FORM_MODE = MODES.CREATE;
         }
+        updateUiDateTime();
+
+        TextView dateField = getActivity().findViewById(R.id.createDateDate);
+        if (dateField != null) {
+            dateField.setOnClickListener(v -> {
+                Log.i(TAG, "Date was clicked!");
+                DialogFragment newFragment = new DatePickerFragment();
+                Bundle args = new Bundle();
+                args.putInt(YEAR, viewModel.batch.createDate.get(Calendar.YEAR));
+                args.putInt(MONTH, viewModel.batch.createDate.get(Calendar.MONTH));
+                args.putInt(DAY_OF_MONTH, viewModel.batch.createDate.get(Calendar.DAY_OF_MONTH));
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, DATE_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+            });
+        }
+
+        TextView timeField = getActivity().findViewById(R.id.createDateTime);
+        if (timeField != null) {
+            timeField.setOnClickListener(v -> {
+                Log.i(TAG, "Time was clicked!");
+                DialogFragment newFragment = new TimePickerFragment();
+                Bundle args = new Bundle();
+                args.putInt(HOUR, viewModel.batch.createDate.get(Calendar.HOUR));
+                args.putInt(MINUTE, viewModel.batch.createDate.get(Calendar.MINUTE));
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, TIME_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+            });
+        }
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(datePickerMessageReceiver,
+                new IntentFilter(DATE_SET_EVENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(timePickerMessageReceiver,
+                new IntentFilter(TIME_SET_EVENT));
+
 
         Button submitButton = getActivity().findViewById(R.id.button_submit);
         if (submitButton != null) {
             submitButton.setOnClickListener(v -> {
-                Log.w(TAG, "Submit button clicked!");
+                Log.i(TAG, "Submit button clicked!");
                 FORM_MODE = (viewModel.batch.id == null) ? MODES.CREATE : MODES.EDIT;
-                viewModel.batch.targetSgStarting = dataBinding.getBatch().targetSgStarting;
-                viewModel.batch.targetSgFinal = dataBinding.getBatch().targetSgFinal;
-                viewModel.batch.targetABV = dataBinding.getBatch().targetABV;
-                viewModel.batch.startingPh = dataBinding.getBatch().startingPh;
-                viewModel.batch.startingTemp = dataBinding.getBatch().startingTemp;
-                viewModel.batch.outputVolume = dataBinding.getBatch().outputVolume;
-                viewModel.batch.status = dataBinding.getBatch().status;
-                viewModel.batch.createDate = dataBinding.getBatch().createDate;
-                viewModel.batch.notes = dataBinding.getBatch().notes;
+                viewModel.batch.name = dataBinding.name.getText().toString().trim();
+                viewModel.batch.targetSgStarting = toFloat(dataBinding.targetSgStarting.getText().toString().trim());
+                viewModel.batch.targetSgFinal = toFloat(dataBinding.targetSgFinal.getText().toString().trim());
+                viewModel.batch.targetABV = toFloat(dataBinding.targetABV.getText().toString().trim());
+                viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
+                viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());
+                viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
+                viewModel.batch.status = dataBinding.status.getText().toString().trim();
+                viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
                 if (FORM_MODE == MODES.CREATE) {
                     Log.d(TAG, "We are in CREATE mode.");
                     Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
@@ -141,6 +194,8 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
                     Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
                     viewModel.updateBatch();
                 }
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
                 navigationController.navigateToBatches();
             });
         } else {
@@ -148,20 +203,52 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable,
         }
     }
 
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
-        viewModel.batch.createDate.set(Calendar.MINUTE, minute);
-        Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
+    private void updateUiDateTime(){
+        if (viewModel.batch == null){
+            return;
+        }
+        TextView timeField = getActivity().findViewById(R.id.createDateTime);
+        if (timeField != null) {
+            timeField.setText(calendarToLocaleTime(viewModel.batch.createDate));
+        } else {
+            Log.e(TAG, "Could not find createDateTime in View");
+        }
+
+        TextView dateField = getActivity().findViewById(R.id.createDateDate);
+        if (dateField != null) {
+            dateField.setText(calendarToLocaleDate(viewModel.batch.createDate));
+        } else {
+            Log.e(TAG, "Could not find createDateDate in View");
+        }
     }
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        viewModel.batch.createDate.set(Calendar.YEAR, year);
-        viewModel.batch.createDate.set(Calendar.MONTH, month);
-        viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
-    }
+    private BroadcastReceiver timePickerMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received TIME_SET_EVENT");
+            Integer hourOfDay = intent.getIntExtra(HOUR, 0);
+            Integer minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0);
+            viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
+            viewModel.batch.createDate.set(Calendar.MINUTE, minute);
+            Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
+            updateUiDateTime();
+        }
+    };
+
+    private BroadcastReceiver datePickerMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received DATE_SET_EVENT");
+            Integer year = intent.getIntExtra(DatePickerFragment.YEAR, 0);
+            Integer month = intent.getIntExtra(DatePickerFragment.MONTH, 0);
+            Integer dayOfMonth = intent.getIntExtra(DatePickerFragment.DAY_OF_MONTH, 0);
+            viewModel.batch.createDate.set(Calendar.YEAR, year);
+            viewModel.batch.createDate.set(Calendar.MONTH, month);
+            viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
+            updateUiDateTime();
+        }
+    };
 
     private enum MODES {CREATE, EDIT}
 }

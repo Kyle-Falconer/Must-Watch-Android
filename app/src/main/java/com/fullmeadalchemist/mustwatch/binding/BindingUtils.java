@@ -25,7 +25,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateLong;
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
 
 
 public class BindingUtils {
@@ -51,7 +51,7 @@ public class BindingUtils {
     @BindingAdapter("android:text")
     public static void setCalendar(TextView view, Calendar value) {
         if (value == null) view.setText("");
-        else view.setText(calendarToLocaleDateLong(value));
+        else view.setText(calendarToLocaleDateTimeLong(value));
     }
 
     @Nullable

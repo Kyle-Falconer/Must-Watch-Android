@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 public class BatchDetailViewModel extends ViewModel {
 
+    public Batch batch;
     private BatchRepository batchRepository;
     private UserRepository userRepository;
 

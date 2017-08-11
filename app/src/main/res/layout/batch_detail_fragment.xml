@@ -28,6 +28,13 @@
             android:text="Batch Detail View"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{batch.name}"
+            tools:text="Joe's Quick Grape Mead #2" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +52,7 @@
                 app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
             <TextView
-                android:id="@+id/textView_time"
+                android:id="@+id/createDate_date"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginLeft="24dp"
@@ -58,7 +65,7 @@
                 tools:text="Mar 31, 2017" />
 
             <TextView
-                android:id="@+id/textView_date"
+                android:id="@+id/createDate_time"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:ems="10"
@@ -182,50 +189,49 @@
         </android.support.constraint.ConstraintLayout>
 
 
-            <TextView
-                android:id="@+id/editText_targetABV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Target ABV%"
-                android:text="@{batch.targetABV}"
-                android:maxLines="1" />
+        <TextView
+            android:id="@+id/targetABV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Target ABV%"
+            android:maxLines="1"
+            android:text="@{batch.targetABV}" />
 
 
-            <TextView
-                android:id="@+id/editText_targetSgStarting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Target starting Specific Gravity (example: 1.115)"
-                android:text="@{batch.targetSgStarting}"
-                android:maxLines="1" />
+        <TextView
+            android:id="@+id/targetSgStarting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Target starting Specific Gravity (example: 1.115)"
+            android:maxLines="1"
+            android:text="@{batch.targetSgStarting}" />
 
-            <TextView
-                android:id="@+id/editText_targetSgFinal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Target final Specific Gravity (example: 1.05)"
-                android:text="@{batch.targetSgFinal}"
-                android:maxLines="1" />
-
-
-
-            <TextView
-                android:id="@+id/editText_ph_level"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Starting pH level (example: 3.7)"
-                android:text="@{batch.startingPh}"
-                android:maxLines="1" />
+        <TextView
+            android:id="@+id/targetSgFinal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Target final Specific Gravity (example: 1.05)"
+            android:maxLines="1"
+            android:text="@{batch.targetSgFinal}" />
 
 
-            <TextView
-                android:id="@+id/editText_temperature"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="starting temperature"
-                android:text="@{batch.startingTemp}"
-                android:inputType="numberDecimal"
-                android:maxLines="1" />
+        <TextView
+            android:id="@+id/startingPh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Starting pH level (example: 3.7)"
+            android:maxLines="1"
+            android:text="@{batch.startingPh}" />
+
+
+        <TextView
+            android:id="@+id/startingTemp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="starting temperature"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:text="@{batch.startingTemp}" />
 
 
 
