@@ -59,6 +59,8 @@ public class DemoGenerators {
             "Green Tea Lemon Metheglomel"
     };
 
+    private static final String[] STATUS_TYPES = {"brewing","fermenting", "aging", "bottled"};
+
     private static Set<Integer> usedRecipes = new HashSet<>();
 
     @SuppressLint("DefaultLocale")
@@ -71,13 +73,22 @@ public class DemoGenerators {
             // FIXME: change to random, date in the past
 
             b.createDate = GregorianCalendar.getInstance();
-            b.outputVolume = randFloat(1f, 12f);
+            b.status = getStatus();
+            b.targetSgStarting = randFloat(1.10f, 1.30f);
+            b.targetSgFinal = randFloat(0.95f, 1.05f);
+            b.startingPh = randFloat(3.0f, 5.5f);
+            b.startingTemp = randFloat(65f, 75f);
+            b.outputVolume = (float) randInt(1, 15);
             b.targetABV = randFloat(8f, 17f);
             b.userId = userId;
             b.notes = String.format("Dummy Batch entry #%d", i);
             batches.add(b);
         }
         return batches;
+    }
+
+    private static String getStatus(){
+        return STATUS_TYPES[randInt(0, STATUS_TYPES.length - 1)];
     }
 
     private static String getRecipe(){

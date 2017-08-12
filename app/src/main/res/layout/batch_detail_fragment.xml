@@ -1,313 +1,360 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="batch"
             type="com.fullmeadalchemist.mustwatch.vo.Batch" />
     </data>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="16dp">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Batch Detail View"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{batch.name}"
-            tools:text="Joe's Quick Grape Mead #2" />
+        android:layout_marginBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="24dp"
-                android:layout_height="48dp"
-                android:adjustViewBounds="true"
-                android:gravity="center"
-                android:tint="@color/colorFieldIcon"
-                app:srcCompat="@drawable/ic_access_time_black_24dp" />
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:padding="4dp">
 
             <TextView
-                android:id="@+id/createDate_date"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:ems="10"
-                android:gravity="start|center"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textAlignment="textStart"
-                tools:text="Mar 31, 2017" />
-
-            <TextView
-                android:id="@+id/createDate_time"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:ems="10"
-                android:gravity="end|center"
-                android:maxLines="1"
-                android:textAlignment="textEnd"
-                tools:text="7:44 AM" />
-        </LinearLayout>
-
-        <!--<ExpandableListView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:entries="@array/mass_units_list"-->
-        <!--android:scrollbars="vertical" />-->
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraintLayout_sugars"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:id="@+id/name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Sugars"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Sugars" />
+                android:layout_marginBottom="16dp"
+                android:text="@{batch.name}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Joe's Quick Grape Mead #2" />
 
-            <TextView
-                android:id="@+id/textView_sugars_added"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_margin="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="add sugar"
-                android:text="add sugar"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_sugars_added"
-                tools:text="add sugar" />
+                <TextView
+                    android:id="@+id/createDateLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Date Created"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
+                <TextView
+                    android:id="@+id/createDate_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="Mar 31, 2017" />
 
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/createDate_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="7:44 AM" />
+            </LinearLayout>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraintLayout_nutrients"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout_sugars">
+            <!--<ExpandableListView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:entries="@array/mass_units_list"-->
+            <!--android:scrollbars="vertical" />-->
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Nutrients"
-                app:layout_constraintHorizontal_bias="0.466"
-                app:layout_constraintLeft_toLeftOf="@+id/button_add_nutrient"
-                app:layout_constraintRight_toRightOf="@+id/button_add_nutrient"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Nutrients" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
 
-            <TextView
-                android:id="@+id/textView_nutrients_added"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="9dp"
-                android:visibility="gone"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                <TextView
+                    android:id="@+id/statusLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Status"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-            <Button
-                android:id="@+id/button_add_nutrient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="Add Nutrient"
-                android:text="Add Nutrient"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_nutrients_added"
-                tools:text="Add Nutrient" />
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.status}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="fermenting" />
+            </LinearLayout>
 
-        </android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/outputVolumeLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Output Volume"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
-        <TextView
-            android:id="@+id/targetABV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Target ABV%"
-            android:maxLines="1"
-            android:text="@{batch.targetABV}" />
+                <TextView
+                    android:id="@+id/outputVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.outputVolume}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="6" />
+
+                <TextView
+                    android:id="@+id/outputVolumeUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    android:maxLines="1"
+                    android:text="Gallons"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/targetABVLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Target ABV"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/targetABV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.targetABV}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="15.4%" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/targetSgStartingLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Target starting Specific Gravity"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/targetSgStarting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.targetSgStarting}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="1.115" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/targetSgFinalLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Target final Specific Gravity"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/targetSgFinal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.targetSgFinal}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="1.05" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/startingPhLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Starting pH level"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/startingPh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.startingPh}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="4.2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                tools:divider="@android:drawable/bottom_bar">
+
+                <TextView
+                    android:id="@+id/startingTempLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Starting Temperature"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
-        <TextView
-            android:id="@+id/targetSgStarting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Target starting Specific Gravity (example: 1.115)"
-            android:maxLines="1"
-            android:text="@{batch.targetSgStarting}" />
+                <TextView
+                    android:id="@+id/startingTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:text="@{batch.startingTemp}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="68" />
 
-        <TextView
-            android:id="@+id/targetSgFinal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Target final Specific Gravity (example: 1.05)"
-            android:maxLines="1"
-            android:text="@{batch.targetSgFinal}" />
+                <TextView
+                    android:id="@+id/startingTempUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    android:maxLines="1"
+                    android:text="\u00B0F"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-
-        <TextView
-            android:id="@+id/startingPh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Starting pH level (example: 3.7)"
-            android:maxLines="1"
-            android:text="@{batch.startingPh}" />
+            </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/startingTemp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="starting temperature"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:text="@{batch.startingTemp}" />
-
-
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraintLayout_notes_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout_temp_group">
-
-            <TextView
-                android:id="@+id/textView_notes_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Notes"
-                app:layout_constraintLeft_toLeftOf="@+id/notes"
-                app:layout_constraintRight_toRightOf="@+id/notes"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Notes" />
-
-            <TextView android:id="@+id/notes"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout_notes_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:lines="4"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
-                android:text="@{batch.notes}"
-                tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_temp_group">
 
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textView_notes_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Notes"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    app:layout_constraintLeft_toLeftOf="@+id/notes"
+                    app:layout_constraintRight_toRightOf="@+id/notes"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Notes" />
 
-        <Button
-            android:id="@+id/button_edit_batch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/edit_batch" />
+                <TextView
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:lines="4"
+                    android:text="@{batch.notes}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
+                    tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <Button
+                android:id="@+id/button_edit_batch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/edit_batch" />
 
 
-        <Button
-            android:id="@+id/button_add_log_entry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/add_log_entry" />
+            <Button
+                android:id="@+id/button_add_log_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/add_log_entry" />
 
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 </layout>
