@@ -25,6 +25,7 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
+import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import javax.inject.Inject;
@@ -90,6 +91,21 @@ public class NavigationController {
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
+
+
+    public void navigateToAddLog(Long batchId) {
+        String tag = "batch/" + batchId+"/log/add";
+        LogFormFragment logFormFragment = new LogFormFragment();
+        Bundle data = new Bundle();
+        data.putLong(BATCH_ID, batchId);
+        logFormFragment.setArguments(data);
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, logFormFragment, tag)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
 
     public void navigateToUserProfile() {
         String tag = "user/view";

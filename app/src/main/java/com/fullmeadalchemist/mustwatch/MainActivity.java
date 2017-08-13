@@ -81,13 +81,24 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         return dispatchingAndroidInjector;
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        }
+        else {
+            int fragments = getSupportFragmentManager().getBackStackEntryCount();
+            if (fragments == 1) {
+                finish();
+            } else {
+                if (getFragmentManager().getBackStackEntryCount() > 1) {
+                    getFragmentManager().popBackStack();
+                } else {
+                    super.onBackPressed();
+                }
+            }
         }
     }
 
@@ -122,26 +133,26 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_batches:
-                Log.d(TAG, "nav_batches selected from Drawer");
+                Log.i(TAG, "nav_batches selected from Drawer");
                 navigationController.navigateToBatches();
                 break;
             case R.id.nav_groups:
-                Log.d(TAG, "nav_groups selected from Drawer");
-                Log.e(TAG, "Groups view not yet implemented");
+                Log.i(TAG, "nav_groups selected from Drawer");
+                Log.w(TAG, "Groups view not yet implemented");
                 navigationController.navigateToBatches();
                 break;
             case R.id.nav_recipes:
-                Log.d(TAG, "nav_recipes selected from Drawer");
-                Log.e(TAG, "Recipes view not yet implemented");
+                Log.i(TAG, "nav_recipes selected from Drawer");
+                Log.w(TAG, "Recipes view not yet implemented");
                 navigationController.navigateToBatches();
                 break;
             case R.id.nav_settings:
-                Log.d(TAG, "nav_settings selected from Drawer");
-                Log.e(TAG, "Settings view not yet implemented");
+                Log.i(TAG, "nav_settings selected from Drawer");
+                Log.w(TAG, "Settings view not yet implemented");
                 navigationController.navigateToBatches();
                 break;
             default:
-                Log.w(TAG, "unknown selected from Drawer");
+                Log.w(TAG, String.format("unknown selected from Drawer: %s", item.getTitle()));
                 break;
         }
 

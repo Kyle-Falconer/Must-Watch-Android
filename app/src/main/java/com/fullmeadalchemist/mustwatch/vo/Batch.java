@@ -85,12 +85,14 @@ public class Batch {
                         "Name: %s\n" +
                         "Create date: %s\n" +
                         "Status: %s\n" +
-                        "Output volume: %s\n",
+                        "Output volume: %f\n"+
+                        "ABV: %f\n",
                 id,
                 userId,
                 name,
                 calendarToLocaleDateTimeLong(createDate),
                 status,
-                outputVolume);
+                outputVolume,
+                targetABV);
     }
 }

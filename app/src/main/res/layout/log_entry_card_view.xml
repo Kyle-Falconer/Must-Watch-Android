@@ -14,13 +14,10 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <variable name="batch" type="com.fullmeadalchemist.mustwatch.vo.Batch"/>
-    </data>
-<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -44,25 +41,14 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/batch_photo"
-                    android:layout_weight="1"
-                    android:text="@{batch.name}"
-                    android:textSize="24sp"
-                    tools:text="Batch 9" />
 
                 <TextView
-                    android:id="@+id/createDate"
+                    android:id="@+id/entryDate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="top|end"
-                    android:textAlignment="viewEnd"
-                    android:text="@{batch.createDate}"
+                    android:gravity="top|start"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="March 25, 2017" />
 
             </LinearLayout>
@@ -76,76 +62,56 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/batchCardStatusTextViewLabel"
+                        android:id="@+id/sgLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Status" />
+                        android:text="Specific Gravity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
                     <TextView
-                        android:id="@+id/status"
+                        android:id="@+id/sg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top|end"
-                        android:layout_weight="1"
-                        android:textAlignment="viewEnd"
-                        android:text="@{batch.status}"
-                        tools:text="Fermenting" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        tools:text="1.115" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/batchCardTargetAbvTextViewLabel"
+                        android:id="@+id/acidityLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Target ABV" />
+                        android:text="Acidity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
                     <TextView
-                        android:id="@+id/targetABV"
+                        android:id="@+id/acidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top|end"
-                        android:layout_weight="1"
-                        android:textAlignment="viewEnd"
                         android:text="@{batch.targetABV}"
-                        tools:text="12%" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        tools:text="4.3" />
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/note"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/batchCardOutputVolTextViewLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Target Volume" />
-
-                    <TextView
-                        android:id="@+id/outputVolume"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/name"
-                        android:layout_gravity="top|end"
-                        android:layout_toRightOf="@+id/batch_photo"
-                        android:layout_weight="1"
-                        android:textAlignment="textEnd"
-                        android:text="@{batch.outputVolume}"
-                        tools:text="5 Gallons" />
-                </LinearLayout>
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="Some note about this log entry. Some note about this log entry. Some note about this log entry. Some note about this log entry." />
 
             </LinearLayout>
 
@@ -153,4 +119,3 @@
 
     </android.support.v7.widget.CardView>
 </LinearLayout>
-</layout>

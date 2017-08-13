@@ -16,37 +16,28 @@
 
 package com.fullmeadalchemist.mustwatch.ui.log.form;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
-import com.fullmeadalchemist.mustwatch.repository.UserRepository;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
-import com.fullmeadalchemist.mustwatch.vo.User;
+import com.fullmeadalchemist.mustwatch.repository.LogEntryRepository;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
 public class LogFormViewModel extends ViewModel {
 
-    private BatchRepository batchRepository;
-    private UserRepository userRepository;
+    protected LogEntry logEntry;
+    private LogEntryRepository logEntryRepository;
 
     @Inject
-    public LogFormViewModel(BatchRepository batchRepository, UserRepository userRepository) {
-        this.batchRepository = batchRepository;
-        this.userRepository = userRepository;
+    public LogFormViewModel(LogEntryRepository logEntryRepository) {
+        this.logEntryRepository = logEntryRepository;
+        this.logEntry = new LogEntry();
+        this.logEntry.entryDate = Calendar.getInstance();
     }
 
-    public LiveData<Batch> getBatch(Long id) {
-        return batchRepository.getBatch(id);
+    public void saveNewLogEntry() {
+        logEntryRepository.addLogEntry(logEntry);
     }
-
-    public void addBatch(Batch batch) {
-        batchRepository.addBatch(batch);
-    }
-
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
-    }
-
 }

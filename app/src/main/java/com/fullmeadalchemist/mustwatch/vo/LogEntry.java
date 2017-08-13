@@ -16,6 +16,7 @@
 
 package com.fullmeadalchemist.mustwatch.vo;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
@@ -48,18 +49,28 @@ public class LogEntry {
     @ColumnInfo(name = "entry_date")
     public Calendar entryDate;
 
+    @ColumnInfo(name = "sg")
+    public Float sg;
+
     @ColumnInfo(name = "acidity")
     public Float acidity;
 
     @ColumnInfo(name = "note")
     public String note;
 
+    @SuppressLint("DefaultLocale")
     @Ignore
     @Override
     public String toString() {
-        return String.format("Entry Date: %s\nAcidity: %spH\nNote: %s",
+        return String.format("Batch ID %s\n" +
+                        "Entry Date: %s\n" +
+                        "Acidity: %f\n" +
+                        "SG: %f\n" +
+                        "Note: %s",
+                batchId,
                 calendarToLocaleDateTimeLong(entryDate),
                 acidity,
+                sg,
                 note);
     }
 }

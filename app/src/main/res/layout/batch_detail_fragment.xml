@@ -31,6 +31,19 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Joe's Quick Grape Mead #2" />
 
+            <TextView
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:lines="4"
+                android:text="@{batch.notes}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
+                tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
@@ -279,56 +292,6 @@
             </LinearLayout>
 
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout_notes_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_temp_group">
-
-                <TextView
-                    android:id="@+id/textView_notes_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Notes"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    app:layout_constraintLeft_toLeftOf="@+id/notes"
-                    app:layout_constraintRight_toRightOf="@+id/notes"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Notes" />
-
-                <TextView
-                    android:id="@+id/notes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:lines="4"
-                    android:text="@{batch.notes}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
-                    tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
-
-            </android.support.constraint.ConstraintLayout>
-
             <Button
                 android:id="@+id/button_edit_batch"
                 android:layout_width="wrap_content"
@@ -353,6 +316,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/add_log_entry" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/logs_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>

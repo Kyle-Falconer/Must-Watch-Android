@@ -38,7 +38,7 @@ public interface LogEntryDao {
     LiveData<List<LogEntry>> loadAllByBatchIds(Long batch_id);
 
     @Insert
-    void insert(LogEntry entry);
+    Long insert(LogEntry entry);
 
     @Insert
     void insertAll(LogEntry... entries);

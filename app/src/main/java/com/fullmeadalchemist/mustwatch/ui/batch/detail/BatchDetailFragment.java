@@ -22,6 +22,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,10 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.BatchListViewAdapter;
+import com.fullmeadalchemist.mustwatch.ui.batch.BatchViewModel;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
+import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
 
 import javax.inject.Inject;
 
@@ -51,6 +56,8 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
     BatchDetailFragmentBinding dataBinding;
     private BatchDetailViewModel viewModel;
 
+    protected RecyclerView logsRecyclerView;
+    protected LogRecyclerViewAdapter logsAdapter;
 
     @Nullable
     @Override
@@ -58,6 +65,14 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                              @Nullable Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.batch_detail_fragment,
                 container, false);
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchDetailViewModel.class);
+
+        logsAdapter = new LogRecyclerViewAdapter(null, logEntry -> {
+            Log.i(TAG, String.format("Log entry clicked:\n%s", logEntry.toString()));
+        });
+
+
         return dataBinding.getRoot();
     }
 
@@ -65,7 +80,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchDetailViewModel.class);
+        initClickListeners();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -74,23 +89,51 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
             if (batchId != Long.MIN_VALUE) {
                 viewModel.getBatch(batchId).observe(this, batch -> {
-                    Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
-                    dataBinding.setBatch(batch);
-                    viewModel.batch = batch;
-                    dataBinding.createDateDate.setText(calendarToLocaleDate(batch.createDate));
-                    dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
+                    if (batch != null) {
+                        Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
+                        dataBinding.setBatch(batch);
+                        viewModel.batch = batch;
+                        dataBinding.createDateDate.setText(calendarToLocaleDate(batch.createDate));
+                        dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
+                    } else {
+                        Log.w(TAG, "Received a null Batch from the BatchDetailViewModel.");
+                    }
                 });
+                viewModel.getLogsForBatch(batchId).observe(this, batches -> {
+                    // update UI
+                    logsAdapter.dataSet = batches;
+                    logsAdapter.notifyDataSetChanged();
+                });
+
             }
         } else {
             Log.i(TAG, "No Batch ID was received. Redirecting to the Batch Creation form.");
+            navigationController.navigateToAddBatch();
         }
 
+        logsRecyclerView = getActivity().findViewById(R.id.logs_list);
+        logsRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+
+        logsRecyclerView.setLayoutManager(llm);
+        logsRecyclerView.setAdapter(logsAdapter);
+    }
+
+    private void initClickListeners() {
         Button submitButton = getActivity().findViewById(R.id.button_edit_batch);
         if (submitButton != null) {
             submitButton.setOnClickListener(v -> {
-
+                Log.i(TAG, "Edit Batch button clicked");
                 navigationController.navigateToEditBatch(viewModel.batch.id);
-
+            });
+        }
+        Button addLogButton = getActivity().findViewById(R.id.button_add_log_entry);
+        if (addLogButton != null) {
+            addLogButton.setOnClickListener(v -> {
+                Log.i(TAG, "Add Log Entry button clicked");
+                navigationController.navigateToAddLog(viewModel.batch.id);
             });
         }
     }

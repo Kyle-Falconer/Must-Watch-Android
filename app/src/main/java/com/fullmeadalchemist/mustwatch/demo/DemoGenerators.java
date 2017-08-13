@@ -59,7 +59,7 @@ public class DemoGenerators {
             "Green Tea Lemon Metheglomel"
     };
 
-    private static final String[] STATUS_TYPES = {"brewing","fermenting", "aging", "bottled"};
+    private static final String[] STATUS_TYPES = {"brewing", "fermenting", "aging", "bottled"};
 
     private static Set<Integer> usedRecipes = new HashSet<>();
 
@@ -74,12 +74,12 @@ public class DemoGenerators {
 
             b.createDate = GregorianCalendar.getInstance();
             b.status = getStatus();
-            b.targetSgStarting = randFloat(1.10f, 1.30f);
-            b.targetSgFinal = randFloat(0.95f, 1.05f);
-            b.startingPh = randFloat(3.0f, 5.5f);
-            b.startingTemp = randFloat(65f, 75f);
-            b.outputVolume = (float) randInt(1, 15);
-            b.targetABV = randFloat(8f, 17f);
+            b.targetSgStarting = roundThreeDecimalPlaces(randFloat(1.10f, 1.30f));
+            b.targetSgFinal = roundThreeDecimalPlaces(randFloat(0.95f, 1.05f));
+            b.startingPh = roundTwoDecimalPlaces(randFloat(3.0f, 5.5f));
+            b.startingTemp = roundOneDecimalPlace(randFloat(65f, 75f));
+            b.outputVolume = round(randFloat(1f, 15f));
+            b.targetABV = roundTwoDecimalPlaces(randFloat(0.08f, 0.17f));
             b.userId = userId;
             b.notes = String.format("Dummy Batch entry #%d", i);
             batches.add(b);
@@ -87,20 +87,36 @@ public class DemoGenerators {
         return batches;
     }
 
-    private static String getStatus(){
+    private static String getStatus() {
         return STATUS_TYPES[randInt(0, STATUS_TYPES.length - 1)];
     }
 
-    private static String getRecipe(){
+    private static String getRecipe() {
         Integer rNo = 0;
-        if (usedRecipes.size() == 0){
+        if (usedRecipes.size() == 0) {
             usedRecipes.add(0);
         }
-        while (usedRecipes.contains(rNo)){
+        while (usedRecipes.contains(rNo)) {
             rNo = randInt(0, RECIPE_LABELS.length - 1);
         }
         usedRecipes.add(rNo);
         return RECIPE_LABELS[rNo];
+    }
+
+    private static float round(float n){
+        return (float) Math.floor(n);
+    }
+
+    private static float roundOneDecimalPlace(float n) {
+        return (float) (Math.round(n * 10.0) / 10.0);
+    }
+
+    private static float roundTwoDecimalPlaces(float n) {
+        return (float) (Math.round(n * 100.0) / 100.0);
+    }
+
+    private static float roundThreeDecimalPlaces(float n) {
+        return (float) (Math.round(n * 1000.0) / 1000.0);
     }
 
 //    private static BatchItem.BatchStatusEnum getRandomBatchStatus() {

@@ -20,9 +20,13 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
+import com.fullmeadalchemist.mustwatch.repository.LogEntryRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import com.fullmeadalchemist.mustwatch.vo.User;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,11 +36,13 @@ public class BatchDetailViewModel extends ViewModel {
     public Batch batch;
     private BatchRepository batchRepository;
     private UserRepository userRepository;
+    private LogEntryRepository logEntryRepository;
 
     @Inject
-    public BatchDetailViewModel(BatchRepository batchRepository, UserRepository userRepository) {
+    public BatchDetailViewModel(BatchRepository batchRepository, UserRepository userRepository, LogEntryRepository logEntryRepository) {
         this.batchRepository = batchRepository;
         this.userRepository = userRepository;
+        this.logEntryRepository = logEntryRepository;
     }
 
     public LiveData<Batch> getBatch(Long id) {
@@ -47,4 +53,7 @@ public class BatchDetailViewModel extends ViewModel {
         return userRepository.getCurrentUser();
     }
 
+    public LiveData<List<LogEntry>> getLogsForBatch(long batchId) {
+        return logEntryRepository.getLogEntries(batchId);
+    }
 }

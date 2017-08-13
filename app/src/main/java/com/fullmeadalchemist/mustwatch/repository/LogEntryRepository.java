@@ -18,8 +18,10 @@ package com.fullmeadalchemist.mustwatch.repository;
 
 
 import android.arch.lifecycle.LiveData;
+import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.LogEntryDao;
+import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.List;
@@ -27,16 +29,31 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 @Singleton
 public class LogEntryRepository {
     private static final String TAG = LogEntryRepository.class.getSimpleName();
 
     private final LogEntryDao logEntryDao;
+    protected LogEntry logEntry;
 
     @Inject
     public LogEntryRepository(LogEntryDao logEntryDao) {
         this.logEntryDao = logEntryDao;
+        this.logEntry = new LogEntry();
     }
+
+    public void addLogEntry(LogEntry logEntry) {
+        Log.d(TAG, "Adding LogEntry to db: " + logEntry.toString());
+        Observable.fromCallable(() -> logEntryDao.insert(logEntry))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
 
     public LiveData<List<LogEntry>> getLogEntries(Long batchId) {
         return logEntryDao.loadAllByBatchIds(batchId);

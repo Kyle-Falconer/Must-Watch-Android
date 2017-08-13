@@ -29,18 +29,18 @@ import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
-/**
- * Created by Kyle on 7/23/2017.
- */
+import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = LogRecyclerViewAdapter.class.getSimpleName();
     private final LogEntryClickCallback logEntryClickCallback;
-    List<LogEntry> dataSet;
+    public List<LogEntry> dataSet;
+    private Locale defaultLocale = Locale.getDefault();
     @Inject
     NavigationController navigationController;
 
@@ -75,17 +75,23 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
 
         final LogEntry logEntry = dataSet.get(position);
 
-        // Get element from your dataset at this position and replace the contents of the view
-        // with that element
-        viewHolder.getBatchNumberTextView().setText("LogEntry #" + logEntry.id + "\n" + logEntry.toString());
-//
-//        Calendar createDate = mDataSet.get(position).getCreateDate();
-//        String formattedCreateDate = calendarToLocaleDateTimeLong(b.getCreateDate());
-//        if (createDate != null) {
-//            viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
-//        }
-//
-//        viewHolder.getBatchStatusTextView().setText(b.getStatusString());
+
+        viewHolder.getEntryDateTextView().setText(calendarToLocaleDate(logEntry.entryDate));
+        viewHolder.getNoteTextView().setText(logEntry.note);
+
+        if (logEntry.sg == null ||logEntry.sg < 0.01) {
+            viewHolder.getSgTextView().setText("-");
+        } else {
+            viewHolder.getSgTextView().setText(String.format(defaultLocale, "%.3f", logEntry.sg));
+        }
+
+
+        if (logEntry.acidity == null ||logEntry.acidity < 0.01) {
+            viewHolder.getAcidityTextView().setText("-");
+        } else {
+            viewHolder.getAcidityTextView().setText(String.format(defaultLocale, "%.2f", logEntry.acidity));
+        }
+
 
         viewHolder.itemView.setOnClickListener(v -> {
             if (logEntryClickCallback != null) {
@@ -95,14 +101,9 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
                 Log.wtf(TAG, "No click listener set!?");
             }
         });
-//
-//
-//        viewHolder.getBatchTargetAbvTextView().setText(String.format("%s%%", b.getTargetABV()));
-//
-//        String outVol = b.getFormattedOutputVolume();
-//        if (outVol != null) {
-//            viewHolder.getOutputVolumeTextView().setText(outVol);
-//        }
+
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -120,39 +121,34 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView batchNumberTextView;
-        private final TextView batchCreateDateTextView;
-        private final TextView batchStatusTextView;
-        private final TextView batchTargetAbvTextView;
-        private final TextView outputVolumeTextView;
+        private final TextView entryDateTextView;
+        private final TextView noteTextView;
+        private final TextView sgTextView;
+        private final TextView acidityTextView;
 
         public ViewHolder(View v) {
             super(v);
-            batchNumberTextView = (TextView) v.findViewById(R.id.name);
-            batchStatusTextView = (TextView) v.findViewById(R.id.batchCardStatusTextView);
-            batchTargetAbvTextView = (TextView) v.findViewById(R.id.batchCardTargetAbvTextView);
-            outputVolumeTextView = (TextView) v.findViewById(R.id.batchCardOutputVolTextView);
-            batchCreateDateTextView = (TextView) v.findViewById(R.id.batchCardCreateDateTextView);
+            entryDateTextView = v.findViewById(R.id.entryDate);
+            sgTextView = v.findViewById(R.id.sg);
+            acidityTextView = v.findViewById(R.id.acidity);
+            noteTextView = v.findViewById(R.id.note);
         }
 
-        public TextView getBatchNumberTextView() {
-            return batchNumberTextView;
+        public TextView getEntryDateTextView() {
+            return entryDateTextView;
         }
 
-        public TextView getBatchStatusTextView() {
-            return batchStatusTextView;
+        public TextView getSgTextView() {
+            return sgTextView;
         }
 
-        public TextView getBatchTargetAbvTextView() {
-            return batchTargetAbvTextView;
+        public TextView getAcidityTextView() {
+            return acidityTextView;
         }
 
-        public TextView getBatchCreateDateTextView() {
-            return batchCreateDateTextView;
+        public TextView getNoteTextView() {
+            return noteTextView;
         }
 
-        public TextView getOutputVolumeTextView() {
-            return outputVolumeTextView;
-        }
     }
 }
