@@ -94,7 +94,7 @@ public class NavigationController {
 
 
     public void navigateToAddLog(Long batchId) {
-        String tag = "batch/" + batchId+"/log/add";
+        String tag = "batch/" + batchId + "/log/add";
         LogFormFragment logFormFragment = new LogFormFragment();
         Bundle data = new Bundle();
         data.putLong(BATCH_ID, batchId);

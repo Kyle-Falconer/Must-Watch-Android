@@ -40,9 +40,9 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     private static final String TAG = LogRecyclerViewAdapter.class.getSimpleName();
     private final LogEntryClickCallback logEntryClickCallback;
     public List<LogEntry> dataSet;
-    private Locale defaultLocale = Locale.getDefault();
     @Inject
     NavigationController navigationController;
+    private Locale defaultLocale = Locale.getDefault();
 
     /**
      * Initialize the dataset of the Adapter.
@@ -79,14 +79,14 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         viewHolder.getEntryDateTextView().setText(calendarToLocaleDate(logEntry.entryDate));
         viewHolder.getNoteTextView().setText(logEntry.note);
 
-        if (logEntry.sg == null ||logEntry.sg < 0.01) {
+        if (logEntry.sg == null || logEntry.sg < 0.01) {
             viewHolder.getSgTextView().setText("-");
         } else {
             viewHolder.getSgTextView().setText(String.format(defaultLocale, "%.3f", logEntry.sg));
         }
 
 
-        if (logEntry.acidity == null ||logEntry.acidity < 0.01) {
+        if (logEntry.acidity == null || logEntry.acidity < 0.01) {
             viewHolder.getAcidityTextView().setText("-");
         } else {
             viewHolder.getAcidityTextView().setText(String.format(defaultLocale, "%.2f", logEntry.acidity));
@@ -101,7 +101,6 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
                 Log.wtf(TAG, "No click listener set!?");
             }
         });
-
 
 
     }

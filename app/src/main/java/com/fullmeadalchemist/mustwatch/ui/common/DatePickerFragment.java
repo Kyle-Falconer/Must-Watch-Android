@@ -18,26 +18,23 @@ package com.fullmeadalchemist.mustwatch.ui.common;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-    private static final String TAG = DatePickerFragment.class.getSimpleName();
     public static final String DATE_SET_EVENT = "DATE_SET_EVENT";
     public static final String YEAR = "YEAR";
     public static final String MONTH = "MONTH";
     public static final String DAY_OF_MONTH = "DAY_OF_MONTH";
+    private static final String TAG = DatePickerFragment.class.getSimpleName();
 
     @NonNull
     @Override

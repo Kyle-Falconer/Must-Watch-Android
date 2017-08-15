@@ -34,8 +34,6 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
-import com.fullmeadalchemist.mustwatch.ui.batch.BatchListViewAdapter;
-import com.fullmeadalchemist.mustwatch.ui.batch.BatchViewModel;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
 
@@ -49,15 +47,14 @@ import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 public class BatchDetailFragment extends LifecycleFragment implements Injectable {
 
     private static final String TAG = BatchListFragment.class.getSimpleName();
+    protected RecyclerView logsRecyclerView;
+    protected LogRecyclerViewAdapter logsAdapter;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     @Inject
     NavigationController navigationController;
     BatchDetailFragmentBinding dataBinding;
     private BatchDetailViewModel viewModel;
-
-    protected RecyclerView logsRecyclerView;
-    protected LogRecyclerViewAdapter logsAdapter;
 
     @Nullable
     @Override

@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -43,11 +42,9 @@
                 android:id="@+id/textView_time"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_marginLeft="24dp"
                 android:layout_marginStart="24dp"
                 android:ems="10"
                 android:gravity="start|center"
-                android:inputType="text"
                 android:maxLines="1"
                 android:textAlignment="textStart"
                 tools:text="Mar 31, 2017" />

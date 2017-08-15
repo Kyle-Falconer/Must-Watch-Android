@@ -51,8 +51,8 @@ public class BatchViewModel extends ViewModel {
         batchRepository.addBatch(batch);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
+    public LiveData<Long> getCurrentUserId() {
+        return userRepository.getCurrentUserId();
     }
 
     public void addBatches(List<Batch> batches) {

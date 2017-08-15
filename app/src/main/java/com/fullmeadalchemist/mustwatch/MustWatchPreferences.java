@@ -25,10 +25,6 @@ import javax.inject.Inject;
 
 import static com.fullmeadalchemist.mustwatch.MustWatchApp.MUST_WATCH_SHARED_PREFS;
 
-/**
- * Created by Kyle on 8/5/2017.
- */
-
 public class MustWatchPreferences {
 
     private static final String TAG = MustWatchPreferences.class.getSimpleName();

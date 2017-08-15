@@ -19,6 +19,7 @@ package com.fullmeadalchemist.mustwatch;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -87,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             int fragments = getSupportFragmentManager().getBackStackEntryCount();
             if (fragments == 1) {
                 finish();
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_batches:

@@ -22,7 +22,6 @@ import android.arch.lifecycle.ViewModel;
 import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
-import com.fullmeadalchemist.mustwatch.vo.User;
 
 import javax.inject.Inject;
 
@@ -47,8 +46,8 @@ public class BatchFormViewModel extends ViewModel {
         batchRepository.addBatch(batch);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
+    public LiveData<Long> getCurrentUserId() {
+        return userRepository.getCurrentUserId();
     }
 
     public void updateBatch() {

@@ -28,9 +28,7 @@ import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
+
 @Dao
 public interface GroupDao {
     @Query("SELECT * FROM groups")

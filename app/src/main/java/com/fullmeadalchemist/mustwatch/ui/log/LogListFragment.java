@@ -35,10 +35,6 @@ import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-
 public class LogListFragment extends LifecycleFragment implements Injectable {
 
     private static final String TAG = LogListFragment.class.getSimpleName();

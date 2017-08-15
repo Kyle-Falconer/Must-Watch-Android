@@ -17,6 +17,7 @@
 package com.fullmeadalchemist.mustwatch.repository;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -50,20 +51,24 @@ public class BatchRepository {
         return batchDao.getAll();
     }
 
-    public void addBatch(Batch batch) {
+    public LiveData<Long> addBatch(Batch batch) {
+        MutableLiveData<Long> batchIdLiveData = new MutableLiveData<>();
         Log.d(TAG, "Adding batch to db: " + batch.toString());
-        Observable.<Long>fromCallable(() -> batchDao.insert(batch))
+        Observable.fromCallable(() -> batchDao.insert(batch))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(batchIdLiveData::setValue);
+        return batchIdLiveData;
     }
 
-    public void addBatches(List<Batch> batches) {
+    public LiveData<List<Long>> addBatches(List<Batch> batches) {
+        MutableLiveData<List<Long>> batchIdsLiveData = new MutableLiveData<>();
         Log.d(TAG, String.format("Adding %d batch to db: %s", batches.size(), TextUtils.join("\n", batches)));
         Observable.fromCallable(() -> batchDao.insertAll(batches.toArray(new Batch[batches.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(batchIdsLiveData::setValue);
+        return batchIdsLiveData;
     }
 
     public LiveData<Batch> getBatch(Long id) {
@@ -74,10 +79,18 @@ public class BatchRepository {
         return batchDao.getAll(user.id);
     }
 
-    public void updateBatch(Batch batch) {
+    /**
+     * @param batch the Batch object to be updated
+     * @return Observable number of rows updated
+     */
+    public LiveData<Integer> updateBatch(Batch batch) {
+        MutableLiveData<Integer> updatedLiveData = new MutableLiveData<>();
         Observable.fromCallable(() -> batchDao.updateBatch(batch))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(updatedLiveData::setValue, e -> {
+                    Log.e(TAG, String.format("Failed to update batch:\n%s", e.toString()));
+                });
+        return updatedLiveData;
     }
 }

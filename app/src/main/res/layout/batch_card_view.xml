@@ -124,9 +124,7 @@
                             android:id="@+id/batchCardOutputVolTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/name"
                             android:layout_gravity="top|end"
-                            android:layout_toRightOf="@+id/batch_photo"
                             android:layout_weight="1"
                             android:textAlignment="textEnd"
                             tools:text="5 Gallons" />

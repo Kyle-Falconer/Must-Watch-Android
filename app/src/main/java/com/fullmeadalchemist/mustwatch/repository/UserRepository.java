@@ -48,12 +48,23 @@ public class UserRepository {
         this.userDao = userDao;
     }
 
-    public Observable<Long> addUser(User user) {
-        Log.d(TAG, "Adding user to db: " + user.toString());
-        return Observable.fromCallable(() -> userDao.insert(user))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+//    public Observable<Long> addUser2(User user) {
+//        Log.d(TAG, "Adding user to db: " + user.toString());
+//        MutableLiveData<Long> userLiveData = new MutableLiveData<>();
+//        return Observable.fromCallable(() -> userDao.insert(user))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//    }
 
+
+    public LiveData<Long> addUser(User user) {
+        Log.d(TAG, "Adding user to db: " + user.toString());
+        MutableLiveData<Long> userLiveData = new MutableLiveData<>();
+        Observable.fromCallable(() -> userDao.insert(user))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userLiveData::setValue);
+        return userLiveData;
     }
 
     public LiveData<User> getUser(long userId) {
@@ -61,31 +72,49 @@ public class UserRepository {
         return userDao.load(userId);
     }
 
-    public LiveData<User> getCurrentUser() {
+    public LiveData<Long> getCurrentUserId() {
+        MutableLiveData<Long> userIdLiveData = new MutableLiveData<>();
         Long stored_id = prefs.getCurrentUserID();
         if (stored_id != null) {
             Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
-            return getUser(stored_id);
+            userIdLiveData.setValue(stored_id);
+            return userIdLiveData;
         }
 
         if (this.user == null) {
             Log.i(TAG, "No User found locally. Preparing an Anonymous User.");
             User anon = new User(null, null);
-            MutableLiveData<User> userLiveData = new MutableLiveData<>();
-            addUser(anon).subscribe(id -> {
-                Log.i(TAG, String.format("Got ID %d for Anonymous user.", id));
-                anon.id = id;
-                userLiveData.setValue(anon);
-                setCurrentUser(userLiveData.getValue());
-            }, e -> {
-                Log.e(TAG, "failed to add Anonymous User to the  database");
-            });
-            return userLiveData;
+            return addUser(anon);
         }
-        MutableLiveData<User> userLiveData = new MutableLiveData<>();
-        userLiveData.setValue(this.user);
-        return userLiveData;
+        userIdLiveData.setValue(this.user.id);
+        return userIdLiveData;
     }
+
+//    public LiveData<User> getCurrentUserId2() {
+//        Long stored_id = prefs.getCurrentUserID();
+//        if (stored_id != null) {
+//            Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
+//            return getUser(stored_id);
+//        }
+//
+//        if (this.user == null) {
+//            Log.i(TAG, "No User found locally. Preparing an Anonymous User.");
+//            User anon = new User(null, null);
+//            MutableLiveData<User> userLiveData = new MutableLiveData<>();
+//            addUser2(anon).subscribe(id -> {
+//                Log.i(TAG, String.format("Got ID %d for Anonymous user.", id));
+//                anon.id = id;
+//                userLiveData.setValue(anon);
+//                setCurrentUser(userLiveData.getValue());
+//            }, e -> {
+//                Log.e(TAG, "failed to add Anonymous User to the  database");
+//            });
+//            return userLiveData;
+//        }
+//        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+//        userLiveData.setValue(this.user);
+//        return userLiveData;
+//    }
 
     private void setCurrentUser(User user) {
         Log.d(TAG, "Setting current User to: " + user.toString());

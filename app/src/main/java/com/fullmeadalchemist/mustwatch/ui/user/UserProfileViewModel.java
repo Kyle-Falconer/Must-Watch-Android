@@ -25,17 +25,21 @@ import com.fullmeadalchemist.mustwatch.vo.User;
 import javax.inject.Inject;
 
 public class UserProfileViewModel extends ViewModel {
-    private final LiveData<User> user;
+    private final LiveData<Long> userId;
     private UserRepository userRepo;
 
 
     @Inject
     public UserProfileViewModel(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.user = userRepo.getCurrentUser();
+        this.userId = userRepo.getCurrentUserId();
     }
 
-    public LiveData<User> getUser() {
-        return this.user;
+    public LiveData<Long> getCurrentUserId() {
+        return this.userId;
+    }
+
+    public LiveData<User> getUser(Long id) {
+        return userRepo.getUser(id);
     }
 }

@@ -6,10 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Before;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-
 abstract public class DbTest {
     protected AppDatabase db;
 

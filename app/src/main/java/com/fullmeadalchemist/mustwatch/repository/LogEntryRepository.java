@@ -21,7 +21,6 @@ import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.LogEntryDao;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.List;

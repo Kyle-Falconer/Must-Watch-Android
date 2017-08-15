@@ -7,9 +7,6 @@ import android.support.annotation.Nullable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
 
 public class LiveDataTestUtil {
     public static <T> T getValue(final LiveData<T> liveData) throws InterruptedException {

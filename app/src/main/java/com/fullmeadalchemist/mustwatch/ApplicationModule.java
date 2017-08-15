@@ -22,9 +22,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * This is a Dagger module. We use this to pass in the Context dependency to the
- * {@link
- * com.example.android.architecture.blueprints.todoapp.data.source.TasksRepositoryComponent}.
+ * This is a Dagger module. We use this to pass in the Context dependency.
  */
 @Module
 public final class ApplicationModule {

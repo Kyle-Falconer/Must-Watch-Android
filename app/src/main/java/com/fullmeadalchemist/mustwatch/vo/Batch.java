@@ -85,7 +85,7 @@ public class Batch {
                         "Name: %s\n" +
                         "Create date: %s\n" +
                         "Status: %s\n" +
-                        "Output volume: %f\n"+
+                        "Output volume: %f\n" +
                         "ABV: %f\n",
                 id,
                 userId,

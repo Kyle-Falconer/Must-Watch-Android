@@ -103,7 +103,7 @@ public class DemoGenerators {
         return RECIPE_LABELS[rNo];
     }
 
-    private static float round(float n){
+    private static float round(float n) {
         return (float) Math.floor(n);
     }
 

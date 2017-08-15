@@ -19,10 +19,6 @@ import static com.fullmeadalchemist.mustwatch.util.LiveDataTestUtil.getValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
-
 @RunWith(AndroidJUnit4.class)
 public class BatchDbTests extends DbTest {
 

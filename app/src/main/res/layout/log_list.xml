@@ -27,8 +27,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_alignParentLeft="false" />
+        android:layout_alignWithParentIfMissing="false"/>
 
 </android.support.design.widget.CoordinatorLayout>

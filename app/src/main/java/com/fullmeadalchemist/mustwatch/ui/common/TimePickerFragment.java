@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -33,10 +32,10 @@ import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
-    private static final String TAG = DatePickerFragment.class.getSimpleName();
     public static final String TIME_SET_EVENT = "TIME_SET_EVENT";
     public static final String HOUR = "HOUR";
     public static final String MINUTE = "MINUTE";
+    private static final String TAG = DatePickerFragment.class.getSimpleName();
 
     @NonNull
     @Override

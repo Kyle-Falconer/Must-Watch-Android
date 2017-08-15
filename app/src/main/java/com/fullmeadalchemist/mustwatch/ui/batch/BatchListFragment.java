@@ -63,11 +63,11 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
 
 
     private void loadDatabase() {
-        viewModel.getCurrentUser().observe(this, user -> {
+        viewModel.getCurrentUserId().observe(this, userId -> {
             viewModel.getBatches().observe(this, batches -> {
                 if (batches == null || batches.size() == 0) {
                     Log.d(TAG, "Got user with no batches; generating batches...");
-                    List<Batch> dummyBatches = generateDummyBatchesWithData(user.id, 7);
+                    List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 7);
                     viewModel.addBatches(dummyBatches);
                 } else {
                     Log.d(TAG, String.format("Got user with %d batches.", batches.size()));

@@ -39,10 +39,10 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
 
     private static final String TAG = BatchListViewAdapter.class.getSimpleName();
     private final BatchClickCallback batchClickCallback;
-    private Locale defaultLocale = Locale.getDefault();
     List<Batch> dataSet;
     @Inject
     NavigationController navigationController;
+    private Locale defaultLocale = Locale.getDefault();
 
     /**
      * Initialize the dataset of the Adapter.
@@ -52,7 +52,7 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
     public BatchListViewAdapter(List<Batch> dataSet, BatchClickCallback batchClickCallback) {
         if (dataSet == null)
             dataSet = new ArrayList<>();
-        dataSet = dataSet;
+        this.dataSet = dataSet;
         this.batchClickCallback = batchClickCallback;
     }
 
@@ -93,14 +93,13 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         }
 
 
-
         viewHolder.getBatchStatusTextView().setText(b.status);
         String formattedCreateDate = calendarToLocaleDate(b.createDate);
         viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
 
 
         viewHolder.itemView.setOnClickListener(v -> {
-            if (b != null && batchClickCallback != null) {
+            if (batchClickCallback != null) {
                 Log.d(TAG, String.format("Element for batch #%s was clicked.", b.id));
                 batchClickCallback.onClick(b);
             } else {

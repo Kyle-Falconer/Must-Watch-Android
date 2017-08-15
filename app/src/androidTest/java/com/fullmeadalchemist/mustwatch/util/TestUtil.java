@@ -4,9 +4,6 @@ import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.Group;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
 
 public class TestUtil {
 

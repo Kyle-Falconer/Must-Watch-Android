@@ -24,7 +24,6 @@ import com.fullmeadalchemist.mustwatch.repository.LogEntryRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
-import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
 
@@ -49,8 +48,8 @@ public class BatchDetailViewModel extends ViewModel {
         return batchRepository.getBatch(id);
     }
 
-    public LiveData<User> getCurrentUser() {
-        return userRepository.getCurrentUser();
+    public LiveData<Long> getCurrentUserId() {
+        return userRepository.getCurrentUserId();
     }
 
     public LiveData<List<LogEntry>> getLogsForBatch(long batchId) {

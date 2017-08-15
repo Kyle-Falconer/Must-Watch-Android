@@ -21,9 +21,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
+
 @Entity(tableName = "group_membership",
         primaryKeys = {"group_id", "user_id"},
         indices = {@Index(value = "user_id")},

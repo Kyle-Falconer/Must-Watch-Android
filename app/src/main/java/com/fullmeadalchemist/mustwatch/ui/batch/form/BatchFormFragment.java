@@ -16,8 +16,6 @@
 
 package com.fullmeadalchemist.mustwatch.ui.batch.form;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -35,9 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
@@ -78,6 +74,32 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
     BatchFormFragmentBinding dataBinding;
     private MODES FORM_MODE;
     private BatchFormViewModel viewModel;
+    private BroadcastReceiver timePickerMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received TIME_SET_EVENT");
+            Integer hourOfDay = intent.getIntExtra(HOUR, 0);
+            Integer minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0);
+            viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
+            viewModel.batch.createDate.set(Calendar.MINUTE, minute);
+            Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
+            updateUiDateTime();
+        }
+    };
+    private BroadcastReceiver datePickerMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received DATE_SET_EVENT");
+            Integer year = intent.getIntExtra(DatePickerFragment.YEAR, 0);
+            Integer month = intent.getIntExtra(DatePickerFragment.MONTH, 0);
+            Integer dayOfMonth = intent.getIntExtra(DatePickerFragment.DAY_OF_MONTH, 0);
+            viewModel.batch.createDate.set(Calendar.YEAR, year);
+            viewModel.batch.createDate.set(Calendar.MONTH, month);
+            viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
+            updateUiDateTime();
+        }
+    };
 
     @Nullable
     @Override
@@ -95,23 +117,27 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
             if (batchId != Long.MIN_VALUE) {
                 viewModel.getBatch(batchId).observe(this, batch -> {
-                    Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
-                    viewModel.batch = batch;
-                    dataBinding.setBatch(batch);
-                    updateUiDateTime();
+                    if (batch != null) {
+                        Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
+                        viewModel.batch = batch;
+                        dataBinding.setBatch(batch);
+                        updateUiDateTime();
+                    } else {
+                        Log.e(TAG, "Got a null Batch!");
+                    }
                 });
             }
         } else {
             Log.i(TAG, "No Batch ID was received. Acting as a Batch Creation form.");
             viewModel.batch = new Batch();
             viewModel.batch.createDate = Calendar.getInstance();
-            viewModel.getCurrentUser().observe(this, user -> {
-                if (user == null) {
+            viewModel.getCurrentUserId().observe(this, userId -> {
+                if (userId == null) {
                     Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
                     return;
                 }
-                Log.d(TAG, String.format("Setting batch user ID to %s", user.id));
-                viewModel.batch.userId = user.id;
+                Log.d(TAG, String.format("Setting batch user ID to %s", userId));
+                viewModel.batch.userId = userId;
             });
             dataBinding.setBatch(viewModel.batch);
         }
@@ -203,8 +229,8 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         }
     }
 
-    private void updateUiDateTime(){
-        if (viewModel.batch == null){
+    private void updateUiDateTime() {
+        if (viewModel.batch == null) {
             return;
         }
         TextView timeField = getActivity().findViewById(R.id.createDateTime);
@@ -221,34 +247,6 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             Log.e(TAG, "Could not find createDateDate in View");
         }
     }
-
-    private BroadcastReceiver timePickerMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received TIME_SET_EVENT");
-            Integer hourOfDay = intent.getIntExtra(HOUR, 0);
-            Integer minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0);
-            viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
-            viewModel.batch.createDate.set(Calendar.MINUTE, minute);
-            Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
-            updateUiDateTime();
-        }
-    };
-
-    private BroadcastReceiver datePickerMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received DATE_SET_EVENT");
-            Integer year = intent.getIntExtra(DatePickerFragment.YEAR, 0);
-            Integer month = intent.getIntExtra(DatePickerFragment.MONTH, 0);
-            Integer dayOfMonth = intent.getIntExtra(DatePickerFragment.DAY_OF_MONTH, 0);
-            viewModel.batch.createDate.set(Calendar.YEAR, year);
-            viewModel.batch.createDate.set(Calendar.MONTH, month);
-            viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
-            updateUiDateTime();
-        }
-    };
 
     private enum MODES {CREATE, EDIT}
 }

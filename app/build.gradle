@@ -64,7 +64,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$support_version"
-    compile 'org.jscience:jscience:4.3.1'
+    //compile 'org.jscience:jscience:4.3.1'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile "com.android.support:design:$support_version"
     compile "com.android.support:appcompat-v7:$support_version"
     compile "com.android.support:recyclerview-v7:$support_version"
@@ -85,7 +86,6 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
 
     // Dagger
-
     // https://google.github.io/dagger/
     compile "com.google.dagger:dagger:$dagger_version"
     compile "com.google.dagger:dagger-android:$dagger_version"
@@ -94,13 +94,12 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
+
     testCompile "android.arch.persistence.room:testing:$arch_version"
     testCompile "junit:junit:$junit_version"
 
     //    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-
     //        exclude group: 'com.android.support', module: 'support-annotations'
-
     //    })
 
     // AndroidJUnitRunner and JUnit Rules

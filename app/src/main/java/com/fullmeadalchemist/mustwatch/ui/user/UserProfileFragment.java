@@ -57,14 +57,21 @@ public class UserProfileFragment extends LifecycleFragment implements Injectable
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserProfileViewModel.class);
-        viewModel.getUser().observe(this, user -> {
-            Log.d(TAG, String.format("Got user from db: %s", user));
-            if (user != null) {
-                if (user.isAnon()) {
-                    user.name = "Anonymous";
-                }
-                dataBinding.setUser(user);
+        viewModel.getCurrentUserId().observe(this, userId -> {
+            if (userId != null) {
+                viewModel.getUser(userId).observe(this, user -> {
+                    Log.d(TAG, String.format("Got user from db: %s", user));
+                    if (user != null) {
+                        if (user.isAnon()) {
+                            user.name = "Anonymous";
+                        }
+                        dataBinding.setUser(user);
+                    }
+                });
+            } else {
+                Log.e(TAG, "Got a null user ID from the database.");
             }
         });
+
     }
 }

@@ -26,9 +26,6 @@ import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.List;
 
-/**
- * Created by Kyle on 7/22/2017.
- */
 @Dao
 public interface LogEntryDao {
     @Query("SELECT * FROM log_entry")
