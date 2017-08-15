@@ -34,5 +34,6 @@ public class JSONResources {
         Resources res = InstrumentationRegistry.getTargetContext().getResources();
         JSONResourceReader reader = new JSONResourceReader(res, R.raw.sugars);
         Sugar[] jsonObj = reader.constructUsingGson(Sugar[].class);
+        // This should work without crashing.
     }
 }
