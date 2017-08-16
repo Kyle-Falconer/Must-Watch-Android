@@ -110,6 +110,10 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                             DecimalFormat f = new DecimalFormat("0.##");
                             dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
                         }
+
+                        if (viewModel.batch.status != null){
+                            dataBinding.status.setText(viewModel.batch.status.toString());
+                        }
                     } else {
                         Log.w(TAG, "Received a null Batch from the BatchDetailViewModel.");
                     }

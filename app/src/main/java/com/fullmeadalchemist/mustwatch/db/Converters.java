@@ -20,6 +20,8 @@ import android.arch.persistence.room.TypeConverter;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.fullmeadalchemist.mustwatch.vo.Batch;
+
 import org.jscience.physics.amount.Amount;
 
 import java.util.Calendar;
@@ -114,6 +116,22 @@ public class Converters {
                 SEPARATOR,
                 volume.getUnit().toString());
     }
+
+
+    @TypeConverter
+    public static Batch.BatchStatusEnum fromBatchStatusString(String status) {
+        if (status == null){
+            return null;
+        }
+        return Batch.BatchStatusEnum.fromString(status);
+    }
+
+    @TypeConverter
+    public static String toBatchStatusString(Batch.BatchStatusEnum statusEnum) {
+        return statusEnum.toString();
+    }
+
+
 
 
 }

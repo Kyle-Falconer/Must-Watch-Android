@@ -97,8 +97,12 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
             viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
         }
 
+        if (b.status != null) {
+            viewHolder.getBatchStatusTextView().setText(b.status.toString());
+        } else {
+            viewHolder.getBatchStatusTextView().setText(Batch.BatchStatusEnum.PLANNING.toString());
+        }
 
-        viewHolder.getBatchStatusTextView().setText(b.status);
         String formattedCreateDate = calendarToLocaleDate(b.createDate);
         viewHolder.getBatchCreateDateTextView().setText(formattedCreateDate);
 

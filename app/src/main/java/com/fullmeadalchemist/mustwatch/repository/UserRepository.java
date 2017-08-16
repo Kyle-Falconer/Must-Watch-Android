@@ -58,7 +58,7 @@ public class UserRepository {
 
 
     public LiveData<Long> addUser(User user) {
-        Log.d(TAG, "Adding user to db: " + user.toString());
+        Log.d(TAG, String.format("Adding user to db:\n%s", user.toString()));
         MutableLiveData<Long> userLiveData = new MutableLiveData<>();
         Observable.fromCallable(() -> userDao.insert(user))
                 .subscribeOn(Schedulers.io())

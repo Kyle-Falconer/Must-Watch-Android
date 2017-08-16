@@ -29,6 +29,7 @@ import com.fullmeadalchemist.mustwatch.db.Converters;
 
 import org.jscience.physics.amount.Amount;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import javax.measure.converter.UnitConverter;
@@ -78,7 +79,7 @@ public class Batch {
     public Amount<Volume> outputVolume;
 
     @ColumnInfo(name = "status")
-    public String status;
+    public BatchStatusEnum status;
 
     @ColumnInfo(name = "create_date")
     public Calendar createDate;
@@ -88,20 +89,48 @@ public class Batch {
 
     @SuppressLint("DefaultLocale")
     public String toString() {
+        DecimalFormat f = new DecimalFormat("0.##");
         return String.format("Batch #%s\n" +
                         "User id: %d\n" +
                         "Name: %s\n" +
                         "Create date: %s\n" +
                         "Status: %s\n" +
-                        "Output volume: %f %s\n" +
-                        "ABV: %f\n",
+                        "Output volume: %s %s\n" +
+                        "ABV: %s\n",
                 id,
                 userId,
                 name,
                 calendarToLocaleDateTimeLong(createDate),
-                status,
-                outputVolume.getEstimatedValue(),
+                status.toString(),
+                f.format(outputVolume.getEstimatedValue()),
                 outputVolume.getUnit().toString(),
-                targetABV);
+                f.format(targetABV));
+    }
+
+    public enum BatchStatusEnum {
+
+        PLANNING("planning"),
+        FERMENTING("fermenting"),
+        AGING("aging"),
+        BOTTLED("bottled");
+
+        private String name;
+
+        BatchStatusEnum(String stringVal) {
+            name = stringVal;
+        }
+
+        public String toString() {
+            return name;
+        }
+
+        public static BatchStatusEnum fromString(String text) {
+            for (BatchStatusEnum b : BatchStatusEnum.values()) {
+                if (b.name.equalsIgnoreCase(text)) {
+                    return b;
+                }
+            }
+            return null;
+        }
     }
 }

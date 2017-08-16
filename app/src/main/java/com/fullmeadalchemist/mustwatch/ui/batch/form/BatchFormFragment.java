@@ -121,6 +121,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                         Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
                         viewModel.batch = batch;
                         dataBinding.setBatch(batch);
+                        dataBinding.status.setText(batch.status.toString());
                         updateUiDateTime();
                     } else {
                         Log.e(TAG, "Got a null Batch!");
@@ -209,7 +210,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
                 viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());
                 //viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
-                viewModel.batch.status = dataBinding.status.getText().toString().trim();
+                viewModel.batch.status = Batch.BatchStatusEnum.fromString(dataBinding.status.getText().toString().trim());
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
                 if (FORM_MODE == MODES.CREATE) {
                     Log.d(TAG, "We are in CREATE mode.");

@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.demo;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
@@ -66,9 +65,6 @@ public class DemoGenerators {
             "Green Tea Lemon Metheglomel"
     };
 
-    private static final String[] STATUS_TYPES = {"planning", "brewing", "fermenting", "aging", "bottled"};
-
-
     @SuppressLint("DefaultLocale")
     public static List<Batch> generateDummyBatchesWithData(Long userId, int numBatches) {
         List<Batch> batches = new ArrayList<>();
@@ -93,8 +89,27 @@ public class DemoGenerators {
         return batches;
     }
 
-    private static String getStatus() {
-        return STATUS_TYPES[randInt(0, STATUS_TYPES.length - 1)];
+    private static Batch.BatchStatusEnum getStatus() {
+        int n = randInt(1, 4);
+        Batch.BatchStatusEnum statusEnum;
+        switch (n) {
+            case 1:
+                statusEnum = Batch.BatchStatusEnum.PLANNING;
+                break;
+            case 2:
+                statusEnum = Batch.BatchStatusEnum.FERMENTING;
+                break;
+            case 3:
+                statusEnum = Batch.BatchStatusEnum.AGING;
+                break;
+            case 4:
+                statusEnum = Batch.BatchStatusEnum.BOTTLED;
+                break;
+            default:
+                statusEnum = null;
+                break;
+        }
+        return statusEnum;
     }
 
     private static String getRecipe() {
@@ -105,7 +120,6 @@ public class DemoGenerators {
 
     private static Amount<Volume> getRandVolume() {
         int n = randInt(1, 3);
-        Log.v(TAG, String.format("Got n=%d", n));
         Amount<Volume> vol;
         switch (n) {
             case 1:

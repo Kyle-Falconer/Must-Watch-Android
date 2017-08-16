@@ -206,8 +206,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Status"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:text="@{batch.status}" />
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
