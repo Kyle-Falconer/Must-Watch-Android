@@ -17,13 +17,28 @@
 package com.fullmeadalchemist.mustwatch.db;
 
 import android.arch.persistence.room.TypeConverter;
+import android.text.TextUtils;
+import android.util.Log;
+
+import org.jscience.physics.amount.Amount;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.measure.quantity.Volume;
+import javax.measure.unit.Unit;
+
+import static javax.measure.unit.NonSI.GALLON_LIQUID_US;
+import static javax.measure.unit.NonSI.LITER;
+import static javax.measure.unit.NonSI.OUNCE_LIQUID_US;
+
+
 public class Converters {
+
+    private static final String TAG = Converters.class.getSimpleName();
+    private static final String SEPARATOR = " ";
 
     @TypeConverter
     public static Date fromTimestamp(Long value) {
@@ -54,4 +69,51 @@ public class Converters {
         gregorianCalendar.setTime(d);
         return gregorianCalendar;
     }
+
+
+    @TypeConverter
+    public static Amount<Volume> fromVolumeText(String volText) {
+        if (TextUtils.isEmpty(volText)) {
+            return null;
+        }
+
+        String[] valueTexts = TextUtils.split(volText.trim(), SEPARATOR);
+        if (valueTexts.length != 2) {
+            Log.e(TAG, String.format("Could not parse Amount<Volume> from \"%s\"", volText));
+            return null;
+        }
+
+        Log.v(TAG, String.format("Parsing Amount<Volume> from string %s", volText));
+        Double value = Double.parseDouble(valueTexts[0]);
+        String unitText = valueTexts[1];
+        Unit<Volume> unit;
+        switch (unitText) {
+            case "L":
+                unit = LITER;
+                break;
+            case "gal":
+                unit = GALLON_LIQUID_US;
+                break;
+            case "oz":
+                unit = OUNCE_LIQUID_US;
+                break;
+            default:
+                unit = LITER;
+                break;
+        }
+        return Amount.valueOf(value, unit);
+    }
+
+    @TypeConverter
+    public static String toVolumeText(Amount<Volume> volume) {
+        if (volume == null) {
+            return null;
+        }
+        return String.format("%s%s%s",
+                volume.getEstimatedValue(),
+                SEPARATOR,
+                volume.getUnit().toString());
+    }
+
+
 }

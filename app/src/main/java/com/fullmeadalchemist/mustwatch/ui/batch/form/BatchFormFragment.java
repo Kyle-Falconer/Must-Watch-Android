@@ -208,7 +208,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 viewModel.batch.targetABV = toFloat(dataBinding.targetABV.getText().toString().trim());
                 viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
                 viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());
-                viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
+                //viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
                 viewModel.batch.status = dataBinding.status.getText().toString().trim();
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
                 if (FORM_MODE == MODES.CREATE) {

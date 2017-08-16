@@ -27,9 +27,17 @@ import android.arch.persistence.room.TypeConverters;
 
 import com.fullmeadalchemist.mustwatch.db.Converters;
 
+import org.jscience.physics.amount.Amount;
+
 import java.util.Calendar;
 
+import javax.measure.converter.UnitConverter;
+import javax.measure.quantity.Quantity;
+import javax.measure.quantity.Volume;
+import javax.measure.unit.Unit;
+
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
+import static javax.measure.unit.NonSI.LITER;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
@@ -67,7 +75,7 @@ public class Batch {
     public Float startingTemp;
 
     @ColumnInfo(name = "output_volume")
-    public Float outputVolume;
+    public Amount<Volume> outputVolume;
 
     @ColumnInfo(name = "status")
     public String status;
@@ -85,14 +93,15 @@ public class Batch {
                         "Name: %s\n" +
                         "Create date: %s\n" +
                         "Status: %s\n" +
-                        "Output volume: %f\n" +
+                        "Output volume: %f %s\n" +
                         "ABV: %f\n",
                 id,
                 userId,
                 name,
                 calendarToLocaleDateTimeLong(createDate),
                 status,
-                outputVolume,
+                outputVolume.getEstimatedValue(),
+                outputVolume.getUnit().toString(),
                 targetABV);
     }
 }

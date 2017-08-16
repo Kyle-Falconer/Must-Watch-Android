@@ -37,6 +37,9 @@ import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
@@ -55,6 +58,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
     NavigationController navigationController;
     BatchDetailFragmentBinding dataBinding;
     private BatchDetailViewModel viewModel;
+    private Locale defaultLocale = Locale.getDefault();
 
     @Nullable
     @Override
@@ -81,9 +85,10 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Log.i(TAG, "Got Batch ID %d from the NavigationController. Acting as a Batch Editor.");
 
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
+            Log.i(TAG, String.format("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId));
+
             if (batchId != Long.MIN_VALUE) {
                 viewModel.getBatch(batchId).observe(this, batch -> {
                     if (batch != null) {
@@ -92,6 +97,19 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                         viewModel.batch = batch;
                         dataBinding.createDateDate.setText(calendarToLocaleDate(batch.createDate));
                         dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
+
+                        if (viewModel.batch.outputVolume != null) {
+                            double volumeAmount = viewModel.batch.outputVolume.getEstimatedValue();
+                            DecimalFormat f = new DecimalFormat("#.##");
+                            dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
+                            dataBinding.outputVolumeAmountUnit.setText(viewModel.batch.outputVolume.getUnit().toString());
+                        }
+
+                        if (viewModel.batch.targetABV != null){
+                            float abv_pct = viewModel.batch.targetABV*100;
+                            DecimalFormat f = new DecimalFormat("0.##");
+                            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
+                        }
                     } else {
                         Log.w(TAG, "Received a null Batch from the BatchDetailViewModel.");
                     }

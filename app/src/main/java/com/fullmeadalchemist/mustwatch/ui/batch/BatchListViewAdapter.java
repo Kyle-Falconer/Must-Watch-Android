@@ -27,6 +27,7 @@ import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -81,15 +82,19 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         viewHolder.getBatchLabelTextView().setText(String.format(defaultLocale, "%s", b.name));
         viewHolder.getBatchNumberTextView().setText(String.format(defaultLocale, "Batch %d", b.id));
 
-        if (b.outputVolume == null || b.outputVolume < 0.01) {
+        if (b.outputVolume == null || b.outputVolume.getEstimatedValue() < 0.01) {
             viewHolder.getOutputVolumeTextView().setText("-");
         } else {
-            viewHolder.getOutputVolumeTextView().setText(String.format(defaultLocale, "%.1f Gallons", b.outputVolume));
+            double volumeAmount = b.outputVolume.getEstimatedValue();
+            DecimalFormat f = new DecimalFormat("#.##");
+            viewHolder.getOutputVolumeTextView().setText(String.format(defaultLocale, "%s %s", f.format(volumeAmount), b.outputVolume.getUnit().toString()));
         }
         if (b.targetABV == null || b.targetABV < 0.01) {
             viewHolder.getBatchTargetAbvTextView().setText("-");
         } else {
-            viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%.1f", b.targetABV));
+            float abv_pct = b.targetABV*100;
+            DecimalFormat f = new DecimalFormat("#.##");
+            viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
         }
 
 

@@ -128,18 +128,17 @@
 
 
                 <TextView
-                    android:id="@+id/outputVolume"
+                    android:id="@+id/outputVolumeAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.outputVolume}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="6" />
 
                 <TextView
-                    android:id="@+id/outputVolumeUnit"
+                    android:id="@+id/outputVolumeAmountUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="1dp"
@@ -170,7 +169,6 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.targetABV}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="15.4%" />
             </LinearLayout>
