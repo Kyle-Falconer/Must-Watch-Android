@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fullmeadalchemist.mustwatch.core.HeadlessLoadingFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     @Inject
     NavigationController navigationController;
+
+    HeadlessLoadingFragment headlessLoadingFragment;
+    String HEADLESS_FRAGMENT_TAG = "HEADLESS_LOADING_FRAGMENT";
 
     @Override
     public LifecycleRegistry getLifecycle() {
@@ -71,6 +75,17 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         navigationView.setNavigationItemSelectedListener(this);
 
         toggle.syncState();
+
+
+        headlessLoadingFragment = (HeadlessLoadingFragment) getSupportFragmentManager().findFragmentByTag(HEADLESS_FRAGMENT_TAG);
+        if (headlessLoadingFragment == null) {
+            headlessLoadingFragment = new HeadlessLoadingFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(headlessLoadingFragment, TAG)
+                    .commit();
+        }
+
 
         if (savedInstanceState == null) {
             navigationController.navigateToBatches();
@@ -160,5 +175,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 }

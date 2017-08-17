@@ -120,7 +120,7 @@ public class Converters {
 
     @TypeConverter
     public static Batch.BatchStatusEnum fromBatchStatusString(String status) {
-        if (status == null){
+        if (status == null) {
             return null;
         }
         return Batch.BatchStatusEnum.fromString(status);
@@ -130,8 +130,6 @@ public class Converters {
     public static String toBatchStatusString(Batch.BatchStatusEnum statusEnum) {
         return statusEnum.toString();
     }
-
-
 
 
 }

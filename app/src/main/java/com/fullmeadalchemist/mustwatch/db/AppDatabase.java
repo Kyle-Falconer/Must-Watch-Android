@@ -26,9 +26,18 @@ import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.Group;
 import com.fullmeadalchemist.mustwatch.vo.GroupMembership;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+import com.fullmeadalchemist.mustwatch.vo.Sugar;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
-@Database(entities = {User.class, Batch.class, LogEntry.class, Group.class, GroupMembership.class}, version = 1)
+@Database(version = 1,
+        entities = {
+                User.class,
+                Batch.class,
+                LogEntry.class,
+                Group.class,
+                GroupMembership.class,
+                Sugar.class
+        })
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -60,4 +69,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract LogEntryDao logEntryDao();
 
     public abstract GroupDao groupDao();
+
+    public abstract SugarDao sugarDao();
 }

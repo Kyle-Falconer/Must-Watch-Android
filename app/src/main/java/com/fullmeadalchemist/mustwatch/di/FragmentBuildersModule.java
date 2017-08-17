@@ -17,6 +17,7 @@
 package com.fullmeadalchemist.mustwatch.di;
 
 
+import com.fullmeadalchemist.mustwatch.core.HeadlessLoadingFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
@@ -46,4 +47,8 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract UserProfileFragment contributeUserProfileFragment();
+
+    @ContributesAndroidInjector
+    abstract HeadlessLoadingFragment contributeHeadlessLoadingFragment();
+
 }

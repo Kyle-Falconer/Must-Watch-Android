@@ -32,13 +32,9 @@ import org.jscience.physics.amount.Amount;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
-import javax.measure.converter.UnitConverter;
-import javax.measure.quantity.Quantity;
 import javax.measure.quantity.Volume;
-import javax.measure.unit.Unit;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
-import static javax.measure.unit.NonSI.LITER;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
@@ -120,10 +116,6 @@ public class Batch {
             name = stringVal;
         }
 
-        public String toString() {
-            return name;
-        }
-
         public static BatchStatusEnum fromString(String text) {
             for (BatchStatusEnum b : BatchStatusEnum.values()) {
                 if (b.name.equalsIgnoreCase(text)) {
@@ -131,6 +123,10 @@ public class Batch {
                 }
             }
             return null;
+        }
+
+        public String toString() {
+            return name;
         }
     }
 }

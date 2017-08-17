@@ -36,7 +36,6 @@ import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
-import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment;
@@ -60,7 +59,7 @@ import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 public class LogFormFragment extends LifecycleFragment implements Injectable {
 
-    private static final String TAG = BatchListFragment.class.getSimpleName();
+    private static final String TAG = LogFormFragment.class.getSimpleName();
     private static final int DATE_REQUEST_CODE = 1;
     private static final int TIME_REQUEST_CODE = 2;
     @Inject

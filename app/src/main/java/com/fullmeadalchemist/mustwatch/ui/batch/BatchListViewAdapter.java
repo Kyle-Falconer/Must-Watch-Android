@@ -92,9 +92,9 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         if (b.targetABV == null || b.targetABV < 0.01) {
             viewHolder.getBatchTargetAbvTextView().setText("-");
         } else {
-            float abv_pct = b.targetABV*100;
+            float abv_pct = b.targetABV * 100;
             DecimalFormat f = new DecimalFormat("#.##");
-            viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
+            viewHolder.getBatchTargetAbvTextView().setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
         }
 
         if (b.status != null) {

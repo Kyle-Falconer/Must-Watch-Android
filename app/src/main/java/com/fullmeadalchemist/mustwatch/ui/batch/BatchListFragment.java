@@ -32,13 +32,8 @@ import android.view.ViewGroup;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
-
-import java.util.List;
 
 import javax.inject.Inject;
-
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.generateDummyBatchesWithData;
 
 public class BatchListFragment extends LifecycleFragment implements Injectable {
 
@@ -57,24 +52,8 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        loadDatabase();
     }
 
-
-    private void loadDatabase() {
-        viewModel.getCurrentUserId().observe(this, userId -> {
-            viewModel.getBatches().observe(this, batches -> {
-                if (batches == null || batches.size() == 0) {
-                    Log.d(TAG, "Got user with no batches; generating batches...");
-                    List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 7);
-                    viewModel.addBatches(dummyBatches);
-                } else {
-                    Log.d(TAG, String.format("Got user with %d batches.", batches.size()));
-                }
-            });
-        });
-    }
 
     @Nullable
     @Override

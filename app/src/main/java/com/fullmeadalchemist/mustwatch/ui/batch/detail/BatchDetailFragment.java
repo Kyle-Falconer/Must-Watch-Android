@@ -33,7 +33,6 @@ import android.widget.Button;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
-import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
 
@@ -49,7 +48,7 @@ import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 public class BatchDetailFragment extends LifecycleFragment implements Injectable {
 
-    private static final String TAG = BatchListFragment.class.getSimpleName();
+    private static final String TAG = BatchDetailFragment.class.getSimpleName();
     protected RecyclerView logsRecyclerView;
     protected LogRecyclerViewAdapter logsAdapter;
     @Inject
@@ -72,7 +71,6 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         logsAdapter = new LogRecyclerViewAdapter(null, logEntry -> {
             Log.i(TAG, String.format("Log entry clicked:\n%s", logEntry.toString()));
         });
-
 
         return dataBinding.getRoot();
     }
@@ -105,13 +103,13 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                             dataBinding.outputVolumeAmountUnit.setText(viewModel.batch.outputVolume.getUnit().toString());
                         }
 
-                        if (viewModel.batch.targetABV != null){
-                            float abv_pct = viewModel.batch.targetABV*100;
+                        if (viewModel.batch.targetABV != null) {
+                            float abv_pct = viewModel.batch.targetABV * 100;
                             DecimalFormat f = new DecimalFormat("0.##");
-                            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%",  f.format(abv_pct)));
+                            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
                         }
 
-                        if (viewModel.batch.status != null){
+                        if (viewModel.batch.status != null) {
                             dataBinding.status.setText(viewModel.batch.status.toString());
                         }
                     } else {

@@ -23,6 +23,7 @@ import com.fullmeadalchemist.mustwatch.MustWatchPreferences;
 import com.fullmeadalchemist.mustwatch.db.AppDatabase;
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
 import com.fullmeadalchemist.mustwatch.db.LogEntryDao;
+import com.fullmeadalchemist.mustwatch.db.SugarDao;
 import com.fullmeadalchemist.mustwatch.db.UserDao;
 
 import javax.inject.Singleton;
@@ -34,15 +35,6 @@ import static com.fullmeadalchemist.mustwatch.db.AppDatabase.DATABASE_NAME;
 
 @Module(includes = ViewModelModule.class)
 class AppModule {
-//    @Singleton @Provides
-//    GithubService provideGithubService() {
-//        return new Retrofit.Builder()
-//                .baseUrl("https://api.github.com/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
-//                .build()
-//                .create(GithubService.class);
-//    }
 
     @Singleton
     @Provides
@@ -66,6 +58,12 @@ class AppModule {
     @Provides
     LogEntryDao provideLogEntryDao(AppDatabase db) {
         return db.logEntryDao();
+    }
+
+    @Singleton
+    @Provides
+    SugarDao provideSugarDao(AppDatabase db) {
+        return db.sugarDao();
     }
 
     @Singleton

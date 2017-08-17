@@ -38,7 +38,6 @@ public class DemoGenerators {
     private static final String TAG = DemoGenerators.class.getSimpleName();
 
     private static final String[] RECIPE_LABELS = {
-            "null",
             "Beginner Traditional",
             "Beginner Metheglin",
             "Beginner Cyser",
