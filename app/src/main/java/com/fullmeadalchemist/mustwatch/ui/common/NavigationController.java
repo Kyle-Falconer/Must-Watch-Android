@@ -52,7 +52,7 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 
@@ -65,7 +65,7 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 
@@ -75,7 +75,7 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 
@@ -88,7 +88,7 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, batchesFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 
@@ -102,8 +102,20 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, logFormFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
+    }
+
+    public void navigateFromAddBatch(Long batchId) {
+        Log.i(TAG, "Popping backstack");
+        fragmentManager.popBackStack();
+        navigateToBatchDetail(batchId);
+    }
+
+    public void navigateFromEditBatch(Long batchId) {
+        String tag = "batch/view/" + batchId;
+        Log.i(TAG, String.format("Popping backstack to: %s", tag));
+        fragmentManager.popBackStack(tag, 0);
     }
 
 
@@ -113,7 +125,7 @@ public class NavigationController {
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
                 .replace(containerId, userProfileFragment, tag)
-                .addToBackStack(null)
+                .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 

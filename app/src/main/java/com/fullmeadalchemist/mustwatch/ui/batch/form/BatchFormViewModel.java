@@ -54,7 +54,7 @@ public class BatchFormViewModel extends ViewModel {
         batchRepository.updateBatch(batch);
     }
 
-    public void saveNewBatch() {
-        batchRepository.addBatch(batch);
+    public LiveData<Long> saveNewBatch() {
+        return batchRepository.addBatch(batch);
     }
 }

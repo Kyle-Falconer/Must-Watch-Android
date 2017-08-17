@@ -97,10 +97,10 @@ public class Batch {
                 userId,
                 name,
                 calendarToLocaleDateTimeLong(createDate),
-                status.toString(),
-                f.format(outputVolume.getEstimatedValue()),
-                outputVolume.getUnit().toString(),
-                f.format(targetABV));
+                (status == null) ? "null" : status.toString(),
+                (outputVolume == null) ? "null" : f.format(outputVolume.getEstimatedValue()),
+                (outputVolume == null) ? "null" : outputVolume.getUnit().toString(),
+                (targetABV == null) ? "null" : f.format(targetABV));
     }
 
     public enum BatchStatusEnum {

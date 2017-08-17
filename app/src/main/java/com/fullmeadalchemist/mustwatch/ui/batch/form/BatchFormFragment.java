@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -212,18 +213,34 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 //viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
                 viewModel.batch.status = Batch.BatchStatusEnum.fromString(dataBinding.status.getText().toString().trim());
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
+
                 if (FORM_MODE == MODES.CREATE) {
                     Log.d(TAG, "We are in CREATE mode.");
                     Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
-                    viewModel.saveNewBatch();
+                    viewModel.saveNewBatch().observe(this, savedBatchId -> {
+                        if (savedBatchId != null) {
+                            Log.i(TAG, String.format("Successfully saved Batch, which now has ID=%s", savedBatchId));
+                            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
+                            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
+                            Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            navigationController.navigateFromAddBatch(savedBatchId);
+                        } else {
+                            Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Failed to save batch!", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+                    });
                 } else {
                     Log.d(TAG, String.format("We are in EDIT mode for batch #%s", viewModel.batch.id));
                     Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
                     viewModel.updateBatch();
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
+                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    navigationController.navigateFromEditBatch(viewModel.batch.id);
                 }
-                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
-                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
-                navigationController.navigateToBatches();
+
             });
         } else {
             Log.e(TAG, "Cannot find submit button in view");

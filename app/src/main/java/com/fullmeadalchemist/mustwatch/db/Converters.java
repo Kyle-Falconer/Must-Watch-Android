@@ -128,7 +128,7 @@ public class Converters {
 
     @TypeConverter
     public static String toBatchStatusString(Batch.BatchStatusEnum statusEnum) {
-        return statusEnum.toString();
+        return (statusEnum == null) ? null : statusEnum.toString();
     }
 
 
