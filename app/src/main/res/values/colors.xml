@@ -10,4 +10,9 @@
     <color name="colorSecondaryLight">#9b4dcb</color>
     <color name="colorSecondaryText">#ffffff</color>
     <color name="colorFieldIcon">#616161</color>
+
+
+    <color name="fma_orange">#bf8400</color>
+    <color name="fma_yellow">#ffb000</color>
+    <color name="fma_brown">#402c00</color>
 </resources>
