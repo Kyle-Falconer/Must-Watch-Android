@@ -211,19 +211,33 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="48dp"
+                android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/outputVolumeAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Output Volume"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"/>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/outputVolumeAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Output Volume"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Spinner
+                    android:id="@+id/output_volume_units"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:entries="@array/volume_units_list" />
+
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

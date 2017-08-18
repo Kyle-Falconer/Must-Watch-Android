@@ -10,4 +10,112 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="edit_batch">Edit Batch</string>
     <string name="save_entry">Save Log Entry</string>
+
+
+    <!-- ================================================================
+                            UNITS
+    ================================================================= -->
+    <string name="BLANK_DEFAULT_UNIT">unit</string>
+    <string name="Liter">Liter</string>
+    <string name="Gallon_US">Gallon (U.S.)</string>
+    <string name="Pint_US">Pint (U.S.)</string>
+    <string name="Cup_US">Cup (U.S.)</string>
+    <string name="Fl_Ounce_US">Fluid Ounce (U.S.)</string>
+
+    <string name="Kilogram">Kilogram</string>
+    <string name="Gram">Gram</string>
+    <string name="Pound">Pound</string>
+    <string name="Dry_Ounce_US">Ounce (dry)</string>
+
+
+    <!-- ================================================================
+                                SUGARS
+    ================================================================= -->
+    <string name="HONEY">honey</string>
+    <string name="SUCROSE">sugar</string>
+    <string name="ACEROLA">acerola</string>
+    <string name="APPLES">apples</string>
+    <string name="APRICOTS">apricots</string>
+    <string name="APRICOTS_DRIED">apricots, dried</string>
+    <string name="BANANAS">bananas</string>
+    <string name="BLACKBERRY">blackberry</string>
+    <string name="BLUEBERRY">blueberry</string>
+    <string name="BOYSENBERRY">boysenberry</string>
+    <string name="CANTALOUPE">cantaloupe</string>
+    <string name="CARAMBOLA">carambola</string>
+    <string name="CARROTS">carrots</string>
+    <string name="CASABA_MELON">casaba melon</string>
+    <string name="CASHEWS">cashews</string>
+    <string name="CELERY">celery</string>
+    <string name="CHERRY_DARK_SWEET">cherry, dark sweet</string>
+    <string name="CHERRY_MONTMORENCY">cherry, montmorency</string>
+    <string name="CRABAPPLES">crabapples</string>
+    <string name="CRANBERRY">cranberry</string>
+    <string name="CURRANT_BLACK">currant, black</string>
+    <string name="CURRANT_RED">currant, red</string>
+    <string name="DATES">dates</string>
+    <string name="DATES_DRIED">dates dried</string>
+    <string name="DEWBERRY">dewberry</string>
+    <string name="ELDERBERRY">elderberry</string>
+    <string name="FIGS">figs</string>
+    <string name="FIGS_DRIED">figs, dried</string>
+    <string name="GOOSEBERRY">gooseberry</string>
+    <string name="GRAPE_CONCORD">grape, concord</string>
+    <string name="GRAPES">grapes</string>
+    <string name="GRAPEFRUIT">grapefruit</string>
+    <string name="GUANABANA">guanabana</string>
+    <string name="GUAVAS">guavas</string>
+    <string name="HONEYDEW_MELON">honeydew melon</string>
+    <string name="JACKFRUIT">jackfruit</string>
+    <string name="KIWIS">kiwis</string>
+    <string name="LEMON_JUICE">lemon juice</string>
+    <string name="LIME_JUICE">lime juice</string>
+    <string name="LITCHI">litchi</string>
+    <string name="LOGANBERRY">loganberry</string>
+    <string name="MANGOS">mangos</string>
+    <string name="MAPLE_SYRUP">maple syrup</string>
+    <string name="MAPLE_SAP">maple sap</string>
+    <string name="MULBERRY">mulberry</string>
+    <string name="NECTARINES">nectarines</string>
+    <string name="ORANGE_JUICE">orange juice</string>
+    <string name="PAPAYA">papaya</string>
+    <string name="PASSIONFRUIT">passionfruit</string>
+    <string name="PEACHES">peaches</string>
+    <string name="PEARS">pears</string>
+    <string name="PERSIMMON">persimmon</string>
+    <string name="PINEAPPLES">pineapples</string>
+    <string name="PLUMS">plums</string>
+    <string name="POMEGRANATES">pomegranates</string>
+    <string name="PRICKLY_PEAR">prickly pear</string>
+    <string name="PRUNES_DRIED">prunes, dried</string>
+    <string name="QUINCES">quinces</string>
+    <string name="RAISINS_DRIED">raisins, dried</string>
+    <string name="RASPBERRY_BLACK">raspberry, black</string>
+    <string name="RASPBERRY_RED">raspberry, red</string>
+    <string name="RHUBARB">rhubarb</string>
+    <string name="STRAWBERRY">strawberry</string>
+    <string name="SULTANAS">sultanas</string>
+    <string name="TANGERINES">tangerines</string>
+    <string name="TANGELO">tangelo</string>
+    <string name="TOMATOES">tomatoes</string>
+    <string name="WATERMELONS">watermelons</string>
+    <string name="YOUNGBERRY">youngberry</string>
+
+
+    <!-- ================================================================
+                                YEASTS
+    ================================================================= -->
+    <string name="Lalvin_EC_1118">Lalvin EC-1118</string>
+    <string name="Lalvin_D_47">Lalvin D-47</string>
+    <string name="Lalvin_K1_V1116">Lalvin K1-V1116</string>
+    <string name="Lalvin_71B_1122">Lalvin 71B-1122</string>
+
+
+    <!-- ================================================================
+                                NUTRIENTS
+    ================================================================= -->
+    <string name="Diammonium_Phosphate">Diammonium Phosphate (DAP)</string>
+    <string name="Fermaid_O">Fermaid O</string>
+    <string name="Fermaid_K">Fermaid K</string>
+    <string name="GoFerm">GoFerm</string>
 </resources>
