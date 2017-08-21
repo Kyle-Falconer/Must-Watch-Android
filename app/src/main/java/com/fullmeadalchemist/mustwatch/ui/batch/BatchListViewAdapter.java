@@ -82,10 +82,10 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         viewHolder.getBatchLabelTextView().setText(String.format(defaultLocale, "%s", b.name));
         viewHolder.getBatchNumberTextView().setText(String.format(defaultLocale, "Batch %d", b.id));
 
-        if (b.outputVolume == null || b.outputVolume.getEstimatedValue() < 0.01) {
+        if (b.outputVolume == null || (double)b.outputVolume.getValue() < 0.01) {
             viewHolder.getOutputVolumeTextView().setText("-");
         } else {
-            double volumeAmount = b.outputVolume.getEstimatedValue();
+            double volumeAmount = (double)b.outputVolume.getValue();
             DecimalFormat f = new DecimalFormat("#.##");
             viewHolder.getOutputVolumeTextView().setText(String.format(defaultLocale, "%s %s", f.format(volumeAmount), b.outputVolume.getUnit().toString()));
         }

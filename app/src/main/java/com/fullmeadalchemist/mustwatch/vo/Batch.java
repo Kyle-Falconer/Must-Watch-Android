@@ -27,11 +27,10 @@ import android.arch.persistence.room.TypeConverters;
 
 import com.fullmeadalchemist.mustwatch.db.Converters;
 
-import org.jscience.physics.amount.Amount;
-
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
+import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
@@ -72,7 +71,7 @@ public class Batch {
     public Float startingTemp;
 
     @ColumnInfo(name = "output_volume")
-    public Amount<Volume> outputVolume;
+    public Quantity<Volume> outputVolume;
 
     @ColumnInfo(name = "status")
     public BatchStatusEnum status;
@@ -98,8 +97,8 @@ public class Batch {
                 name,
                 calendarToLocaleDateTimeLong(createDate),
                 (status == null) ? "null" : status.toString(),
-                (outputVolume == null) ? "null" : f.format(outputVolume.getEstimatedValue()),
-                (outputVolume == null) ? "null" : outputVolume.getUnit().toString(),
+                (outputVolume == null) ? "null" : f.format(outputVolume.getValue()),
+                (outputVolume == null) ? "null" : outputVolume.getUnit().getName(),
                 (targetABV == null) ? "null" : f.format(targetABV));
     }
 

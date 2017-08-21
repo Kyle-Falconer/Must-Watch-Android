@@ -33,7 +33,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
@@ -44,11 +46,14 @@ import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import javax.inject.Inject;
 
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
@@ -58,7 +63,7 @@ import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUT
 import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
-import static com.fullmeadalchemist.mustwatch.util.ValueParsers.toFloat;
+import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
@@ -122,8 +127,13 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                         Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
                         viewModel.batch = batch;
                         dataBinding.setBatch(batch);
-                        dataBinding.status.setText(batch.status.toString());
+                        if (batch.status != null) {
+                            dataBinding.status.setText(batch.status.toString());
+                        } else {
+                            dataBinding.status.setText(BatchStatusEnum.PLANNING.toString());
+                        }
                         updateUiDateTime();
+                        updateSpinners(viewModel.batch);
                     } else {
                         Log.e(TAG, "Got a null Batch!");
                     }
@@ -198,7 +208,6 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(timePickerMessageReceiver,
                 new IntentFilter(TIME_SET_EVENT));
 
-
         Button submitButton = getActivity().findViewById(R.id.button_submit);
         if (submitButton != null) {
             submitButton.setOnClickListener(v -> {
@@ -210,8 +219,14 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 viewModel.batch.targetABV = toFloat(dataBinding.targetABV.getText().toString().trim());
                 viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
                 viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());
-                //viewModel.batch.outputVolume = toFloat(dataBinding.outputVolume.getText().toString().trim());
-                viewModel.batch.status = Batch.BatchStatusEnum.fromString(dataBinding.status.getText().toString().trim());
+
+
+                viewModel.batch.outputVolume = toVolume(
+                        dataBinding.outputVolumeAmount.getText().toString(),
+                        dataBinding.outputVolumeAmountUnit.getSelectedItem().toString());
+
+
+                viewModel.batch.status = BatchStatusEnum.fromString(dataBinding.status.getText().toString().trim());
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
 
                 if (FORM_MODE == MODES.CREATE) {
@@ -244,6 +259,42 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             });
         } else {
             Log.e(TAG, "Cannot find submit button in view");
+        }
+    }
+
+    private int getIndex(Spinner spinner, String myString) {
+        int index = 0;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    private void updateSpinners(Batch batch) {
+        if (batch == null) {
+            Log.e(TAG, "Could not update spinners because batch is null");
+            return;
+        }
+        if (batch.outputVolume != null) {
+            double volumeAmount = (double) batch.outputVolume.getValue();
+            DecimalFormat f = new DecimalFormat("#.##");
+            dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
+            Spinner volSpin = dataBinding.outputVolumeAmountUnit;
+            volSpin.setSelection(getIndex(volSpin, batch.outputVolume.getUnit().toString()));
+
+            volSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                    Log.v(TAG, String.format("Volume spinner item selected: pos=%s, id=%s, string=%s", pos, id, volSpin.getItemAtPosition(pos).toString()));
+
+                    Object item = parent.getItemAtPosition(pos);
+                }
+
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
         }
     }
 

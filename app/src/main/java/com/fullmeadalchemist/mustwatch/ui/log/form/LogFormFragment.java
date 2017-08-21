@@ -53,7 +53,7 @@ import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUT
 import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
-import static com.fullmeadalchemist.mustwatch.util.ValueParsers.toFloat;
+import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 

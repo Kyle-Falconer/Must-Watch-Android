@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.util;
+package com.fullmeadalchemist.mustwatch.core;
 
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class ValueParsers {
     private static final String TAG = ValueParsers.class.getSimpleName();
 
+    @Nullable
     public static Float toFloat(String value) {
+        if (value == null) {
+            return null;
+        }
         try {
             return Float.parseFloat(value);
         } catch (NullPointerException | NumberFormatException e) {
@@ -30,4 +35,5 @@ public class ValueParsers {
             return null;
         }
     }
+
 }

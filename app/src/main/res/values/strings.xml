@@ -15,17 +15,16 @@
     <!-- ================================================================
                             UNITS
     ================================================================= -->
-    <string name="BLANK_DEFAULT_UNIT">unit</string>
-    <string name="Liter">Liter</string>
-    <string name="Gallon_US">Gallon (U.S.)</string>
-    <string name="Pint_US">Pint (U.S.)</string>
-    <string name="Cup_US">Cup (U.S.)</string>
-    <string name="Fl_Ounce_US">Fluid Ounce (U.S.)</string>
+    <string name="LITER">L</string>
+    <string name="OUNCE_LIQUID_US">fl oz (US)</string>
+    <string name="GALLON_LIQUID_US">gal (US)</string>
+    <string name="OUNCE_LIQUID_UK">fl oz (UK)</string>
+    <string name="GALLON_LIQUID_UK">gal (UK)</string>
 
-    <string name="Kilogram">Kilogram</string>
-    <string name="Gram">Gram</string>
-    <string name="Pound">Pound</string>
-    <string name="Dry_Ounce_US">Ounce (dry)</string>
+    <string name="KILOGRAM">kg</string>
+    <string name="GRAM">g</string>
+    <string name="POUND">lb</string>
+    <string name="OUNCE">oz</string>
 
 
     <!-- ================================================================

@@ -9,7 +9,7 @@ android {
 
         // FIXME: Change to 14 before building for release!
         // minSdkVersion 14
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 26
 
         versionCode 1
@@ -77,9 +77,25 @@ dependencies {
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile "com.github.bumptech.glide:glide:$glide_version"
     compile 'com.google.code.gson:gson:2.8.1'
-    compile ('org.jscience:jscience:4.3.1') {
-        exclude group: 'org.javolution', module: 'javolution'
-    }
+//    compile ('org.jscience:jscience:4.3.1') {
+//        exclude group: 'org.javolution', module: 'javolution'
+//    }
+
+    //
+    // UNITS OF MEASUREMENT
+    // JSR 363
+    //
+    // https://github.com/unitsofmeasurement/unit-api
+    compile 'javax.measure:unit-api:1.0'
+    //
+    // Units of Measurement Implementation for Java SE 8 and above
+    // provides some duplicate functionality of the reference implementation
+    //https://github.com/unitsofmeasurement/uom-se
+    //compile 'tec.uom:uom-se:1.0.8'
+    //
+    // https://github.com/unitsofmeasurement/uom-systems/tree/master/common
+    // https://bintray.com/unitsofmeasurement/maven/systems.uom%3Asystems-common/0.7.1
+    compile 'systems.uom:systems-common:0.7.1'
 
     // RxAndroid
     // https://github.com/ReactiveX/RxAndroid

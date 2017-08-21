@@ -97,7 +97,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                         dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
 
                         if (viewModel.batch.outputVolume != null) {
-                            double volumeAmount = viewModel.batch.outputVolume.getEstimatedValue();
+                            double volumeAmount = (double) viewModel.batch.outputVolume.getValue();
                             DecimalFormat f = new DecimalFormat("#.##");
                             dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
                             dataBinding.outputVolumeAmountUnit.setText(viewModel.batch.outputVolume.getUnit().toString());

@@ -21,8 +21,6 @@ import android.annotation.SuppressLint;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
-import org.jscience.physics.amount.Amount;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -30,8 +28,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
-import javax.measure.unit.NonSI;
+
+import tec.units.ri.quantity.Quantities;
+
+import static systems.uom.common.USCustomary.FLUID_OUNCE;
+import static systems.uom.common.USCustomary.GALLON_LIQUID;
+import static systems.uom.common.USCustomary.LITER;
 
 public class DemoGenerators {
 
@@ -117,18 +121,18 @@ public class DemoGenerators {
         return String.format("%s #%s", RECIPE_LABELS[recipe_index], rNo);
     }
 
-    private static Amount<Volume> getRandVolume() {
+    private static Quantity<Volume> getRandVolume() {
         int n = randInt(1, 3);
-        Amount<Volume> vol;
+        Quantity<Volume> vol;
         switch (n) {
             case 1:
-                vol = Amount.valueOf(randInt(32, 128), NonSI.OUNCE_LIQUID_US);
+                vol = Quantities.getQuantity(randInt(32, 128), FLUID_OUNCE);
                 break;
             case 2:
-                vol = Amount.valueOf(randInt(3, 25), NonSI.LITER);
+                vol = Quantities.getQuantity(randInt(3, 25), LITER);
                 break;
             default:
-                vol = Amount.valueOf(randInt(1, 15), NonSI.GALLON_LIQUID_US);
+                vol = Quantities.getQuantity(randInt(1, 15), GALLON_LIQUID);
                 break;
         }
         return vol;

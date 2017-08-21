@@ -22,20 +22,19 @@ import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
-import org.jscience.physics.amount.Amount;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.measure.Quantity;
+import javax.measure.Unit;
 import javax.measure.quantity.Volume;
-import javax.measure.unit.Unit;
 
-import static javax.measure.unit.NonSI.GALLON_LIQUID_US;
-import static javax.measure.unit.NonSI.LITER;
-import static javax.measure.unit.NonSI.OUNCE_LIQUID_US;
+import tec.units.ri.quantity.Quantities;
 
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.qtyToTextAbbr;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToUnit;
 
 public class Converters {
 
@@ -74,7 +73,7 @@ public class Converters {
 
 
     @TypeConverter
-    public static Amount<Volume> fromVolumeText(String volText) {
+    public static Quantity<Volume> fromVolumeText(String volText) {
         if (TextUtils.isEmpty(volText)) {
             return null;
         }
@@ -88,33 +87,26 @@ public class Converters {
         Log.v(TAG, String.format("Parsing Amount<Volume> from string %s", volText));
         Double value = Double.parseDouble(valueTexts[0]);
         String unitText = valueTexts[1];
+
         Unit<Volume> unit;
-        switch (unitText) {
-            case "L":
-                unit = LITER;
-                break;
-            case "gal":
-                unit = GALLON_LIQUID_US;
-                break;
-            case "oz":
-                unit = OUNCE_LIQUID_US;
-                break;
-            default:
-                unit = LITER;
-                break;
+        try {
+            unit = (Unit<Volume>) textAbbrToUnit(unitText);
+        } catch (ClassCastException e) {
+            Log.e(TAG, String.format("Failed to cast unit text %s to Unit<Volume>", unitText));
+            return null;
         }
-        return Amount.valueOf(value, unit);
+        return Quantities.getQuantity(value, unit);
     }
 
     @TypeConverter
-    public static String toVolumeText(Amount<Volume> volume) {
+    public static String toVolumeText(Quantity<Volume> volume) {
         if (volume == null) {
             return null;
         }
         return String.format("%s%s%s",
-                volume.getEstimatedValue(),
+                volume.getValue(),
                 SEPARATOR,
-                volume.getUnit().toString());
+                qtyToTextAbbr(volume));
     }
 
 

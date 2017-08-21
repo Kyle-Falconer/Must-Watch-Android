@@ -18,11 +18,13 @@ package com.fullmeadalchemist.mustwatch.core;
 
 import android.util.Log;
 
-import org.jscience.physics.amount.Amount;
-
 import javax.measure.quantity.Volume;
 
-import static javax.measure.unit.NonSI.LITER;
+
+import tec.units.ri.AbstractQuantity;
+
+import static systems.uom.common.USCustomary.LITER;
+
 
 public class BrewFormulae {
 
@@ -45,8 +47,8 @@ public class BrewFormulae {
      * @param outputVolume the output volume of the batch.
      * @return calculated specific gravity based on provided sugars and output volume.
      */
-    public static double sugarConcToSG(double totalSugars, Amount<Volume> outputVolume) {
-        double sugars_in_grams_per_L = totalSugars / outputVolume.to(LITER).getEstimatedValue();
+    public static double sugarConcToSG(double totalSugars, AbstractQuantity<Volume> outputVolume) {
+        double sugars_in_grams_per_L = totalSugars / outputVolume.doubleValue(LITER);
         double sg_guess = 0.992;    // lowest point
 
         double loopLimit = 100000;
@@ -64,7 +66,7 @@ public class BrewFormulae {
         return 0d;
     }
 
-    public static double getFinalABV_pct(Double targetStartingSG, Double targetFinalSG, Double totalSugars, Amount<Volume> outputVolume) {
+    public static double getFinalABV_pct(Double targetStartingSG, Double targetFinalSG, Double totalSugars, AbstractQuantity<Volume> outputVolume) {
         // http://www.boulder.nist.gov/div838/publications.html
         // https://www.brewersfriend.com/2011/06/16/alcohol-by-volume-calculator-updated/
         /*
