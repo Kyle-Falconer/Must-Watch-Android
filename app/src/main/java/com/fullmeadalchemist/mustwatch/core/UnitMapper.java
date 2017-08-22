@@ -26,6 +26,7 @@ import javax.measure.quantity.Volume;
 import tec.units.ri.quantity.Quantities;
 
 import static systems.uom.common.Imperial.GALLON_UK;
+import static systems.uom.common.Imperial.OUNCE_LIQUID;
 import static systems.uom.common.USCustomary.FAHRENHEIT;
 import static systems.uom.common.USCustomary.FLUID_OUNCE;
 import static systems.uom.common.USCustomary.GALLON_DRY;
@@ -53,44 +54,41 @@ public class UnitMapper {
     public static Unit<?> textAbbrToUnit(String abbr) {
         Unit<?> unit;
         switch (abbr) {
+            case "C":
+                unit = CELSIUS;
+                break;
+            case "F":
+                unit = FAHRENHEIT;
+                break;
             case "L":
                 unit = LITER;
                 break;
             case "gal_us":
                 unit = GALLON_LIQUID;
                 break;
-            case "gallon_dry_us":
+            case "gal_dry_us":
                 unit = GALLON_DRY;
                 break;
             case "gal_uk":
                 unit = GALLON_UK;
                 break;
-            case "lb":
-                unit = POUND;
-                break;
-            case "oz":
-                unit = OUNCE;
-                break;
-            case "oz_fl":
+            case "oz_fl_us":
                 unit = FLUID_OUNCE;
                 break;
             case "oz_fl_uk":
-                unit = FLUID_OUNCE;
-                // FIXME: OUNCE_LIQUID_UK is not public
-                // https://github.com/unitsofmeasurement/uom-systems/blob/master/common-java8/src/main/java/systems/uom/common/Imperial.java#L229
-                // unit = OUNCE_LIQUID_UK;
-                break;
-            case "kg":
-                unit = KILOGRAM;
+                unit = OUNCE_LIQUID;
                 break;
             case "g":
                 unit = GRAM;
                 break;
-            case "F":
-                unit = FAHRENHEIT;
+            case "kg":
+                unit = KILOGRAM;
                 break;
-            case "C":
-                unit = CELSIUS;
+            case "oz":
+                unit = OUNCE;
+                break;
+            case "lb":
+                unit = POUND;
                 break;
             default:
                 unit = null;
@@ -108,7 +106,7 @@ public class UnitMapper {
      * @return the standard or abbreviated name of the unit
      */
     public static String qtyToTextAbbr(Quantity<?> qty) {
-        if (qty == null){
+        if (qty == null) {
             return null;
         }
         return unitToTextAbbr(qty.getUnit());
@@ -126,46 +124,57 @@ public class UnitMapper {
         if (unit == null) {
             return null;
         }
-        String unitName = unit.getName();
-        String unitSymbol = unit.getSymbol();
         String unitString = unit.toString();
-        if (unitName == null && unitSymbol == null) {
-            unitName = unitString;
+
+        if (unitString == null) {
+            String unitName = unit.getName();
+            String unitSymbol = unit.getSymbol();
+            Log.e(TAG, String.format("Unit provided did not have a toString set. Unit name: %s\n Unit symbol: %s", unitName, unitSymbol));
+            return null;
         }
-        Log.d(TAG, String.format("Parsing Unit: %s\nUnit name: %s\n Unit symbol: %s", unit.toString(), unitName, unitSymbol));
-        if (unitSymbol == null) {
-            switch (unitName) {
-                case "°C":
-                    unitSymbol = "C";
-                    break;
-                case "°F":
-                    unitSymbol = "F";
-                    break;
-                case "g":
-                    // FIXME: this comes from the unitString
-                    unitSymbol = "g";
-                    break;
-                case "Liter":
-                    unitSymbol = "L";
-                    break;
-                case "Fluid Ounze":
-                    unitSymbol = "oz_fl";
-                    break;
-                case "oz":
-                    // FIXME: this comes from the unitString
-                    unitSymbol = "oz";
-                    break;
-                case "gal_uk":
-                    // FIXME: this comes from the unitString
-                    unitSymbol = "gal_uk";
-                    break;
-                case "US gallon":
-                    unitSymbol = "gal_us";
-                    break;
-            }
+        Log.d(TAG, String.format("Parsing Unit: %s", unit.toString()));
+
+        switch (unitString) {
+            case "°C":
+                unitString = "C";
+                break;
+            case "°F":
+                unitString = "F";
+                break;
+            case "L":
+                unitString = "L";
+                break;
+            case "fl oz":
+                unitString = "oz_fl_us";
+                break;
+            case "oz_fl":
+                unitString = "oz_fl_uk";
+                break;
+            case "gal_uk":
+                unitString = "gal_uk";
+                break;
+            case "gal_dry_us":
+                unitString = "gal_dry_us";
+                break;
+            case "gal":
+                unitString = "gal_us";
+                break;
+            case "g":
+                unitString = "g";
+                break;
+            case "kg":
+                unitString = "kg";
+                break;
+            case "oz":
+                unitString = "oz";
+                break;
+            case "lb":
+                unitString = "lb";
+                break;
         }
-        Log.d(TAG, String.format("Returning unit symbol: %s", unitSymbol));
-        return unitSymbol;
+
+        Log.d(TAG, String.format("Returning unit symbol: %s", unitString));
+        return unitString;
     }
 
     //
@@ -182,7 +191,7 @@ public class UnitMapper {
             Log.e(TAG, String.format("Failed to cast unit text %s to Unit<Volume>", unitText));
             return null;
         }
-        if (unit == null){
+        if (unit == null) {
             Log.e(TAG, String.format("Failed to get Unit<Volume> from text %s", unitText));
             return null;
         }

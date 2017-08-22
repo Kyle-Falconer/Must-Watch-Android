@@ -40,13 +40,17 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static systems.uom.common.Imperial.GALLON_UK;
+import static systems.uom.common.Imperial.OUNCE_LIQUID;
 import static systems.uom.common.USCustomary.FAHRENHEIT;
 import static systems.uom.common.USCustomary.FLUID_OUNCE;
+import static systems.uom.common.USCustomary.GALLON_DRY;
 import static systems.uom.common.USCustomary.GALLON_LIQUID;
 import static systems.uom.common.USCustomary.LITER;
 import static systems.uom.common.USCustomary.OUNCE;
+import static systems.uom.common.USCustomary.POUND;
 import static tec.units.ri.unit.Units.CELSIUS;
 import static tec.units.ri.unit.Units.GRAM;
+import static tec.units.ri.unit.Units.KILOGRAM;
 
 @RunWith(AndroidJUnit4.class)
 public class UnitMapping {
@@ -57,10 +61,13 @@ public class UnitMapping {
     private Quantity<Volume> literVol;
     private Quantity<Volume> ukgalVol;
     private Quantity<Volume> usgalVol;
+    private Quantity<Volume> usgalDryVol;
     private Quantity<Volume> flozVol;
     private Quantity<Volume> flozukVol;
     private Quantity<Mass> gramMass;
+    private Quantity<Mass> kgMass;
     private Quantity<Mass> ounceMass;
+    private Quantity<Mass> poundMass;
 
 
     @Before
@@ -72,18 +79,19 @@ public class UnitMapping {
 
         literVol = Quantities.getQuantity(2, LITER);
         usgalVol = Quantities.getQuantity(32, GALLON_LIQUID);
+        usgalDryVol = Quantities.getQuantity(32, GALLON_DRY);
         flozVol = Quantities.getQuantity(32, FLUID_OUNCE);
         ukgalVol = Quantities.getQuantity(32, GALLON_UK);
-        flozukVol = Quantities.getQuantity(32, FLUID_OUNCE);  // FIXME: access to OUNCE_LIQUID_UK is private!?
+        flozukVol = Quantities.getQuantity(32, OUNCE_LIQUID);
 
         gramMass = Quantities.getQuantity(2, GRAM);
+        kgMass = Quantities.getQuantity(2, KILOGRAM);
         ounceMass = Quantities.getQuantity(2, OUNCE);
+        poundMass = Quantities.getQuantity(2, POUND);
     }
-
 
     @Test
     public void unitsToStrings() {
-
         String cAbbr = qtyToTextAbbr(cTemp);
         assertThat(cAbbr, is(not(nullValue())));
         assertThat(cAbbr, is("C"));
@@ -100,33 +108,48 @@ public class UnitMapping {
         assertThat(usgalAbbr, is(not(nullValue())));
         assertThat(usgalAbbr, is("gal_us"));
 
+        String usgalDryAbbr = qtyToTextAbbr(usgalDryVol);
+        assertThat(usgalDryAbbr, is(not(nullValue())));
+        assertThat(usgalDryAbbr, is("gal_dry_us"));
+
+        String flozAbbr = qtyToTextAbbr(flozVol);
+        assertThat(flozAbbr, is(not(nullValue())));
+        assertThat(flozAbbr, is("oz_fl_us"));
+
+        String flozukAbbr = qtyToTextAbbr(flozukVol);
+        assertThat(flozukAbbr, is(not(nullValue())));
+        assertThat(flozukAbbr, is("oz_fl_uk"));
+
         String ukgalAbbr = qtyToTextAbbr(ukgalVol);
         assertThat(ukgalAbbr, is(not(nullValue())));
         assertThat(ukgalAbbr, is("gal_uk"));
 
-        String flozAbbr = qtyToTextAbbr(flozVol);
-        assertThat(flozAbbr, is(not(nullValue())));
-        assertThat(flozAbbr, is("oz_fl"));
+        String gramAbbr = qtyToTextAbbr(gramMass);
+        assertThat(gramAbbr, is(not(nullValue())));
+        assertThat(gramAbbr, is("g"));
 
-        // FIXME: ambiguous to US fluid ounce
-        String flozukAbbr = qtyToTextAbbr(flozukVol);
-        assertThat(flozukAbbr, is(not(nullValue())));
-        assertThat(flozukAbbr, is("oz_fl"));
+        String kgAbbr = qtyToTextAbbr(kgMass);
+        assertThat(kgAbbr, is(not(nullValue())));
+        assertThat(kgAbbr, is("kg"));
 
-        // FIXME
-        // This one is buggy; ounceMass' unit has no symbol or name
-        // relying on ounceMass.getUnit().toString
         String ounceAbbr = qtyToTextAbbr(ounceMass);
         assertThat(ounceAbbr, is(not(nullValue())));
         assertThat(ounceAbbr, is("oz"));
 
-        String gramAbbr = qtyToTextAbbr(gramMass);
-        assertThat(gramAbbr, is(not(nullValue())));
-        assertThat(gramAbbr, is("g"));
+        String poundAbbr = qtyToTextAbbr(poundMass);
+        assertThat(poundAbbr, is(not(nullValue())));
+        assertThat(poundAbbr, is("lb"));
     }
 
     @Test
     public void stringsToUnits() {
+        Unit<?> tempCUnit = textAbbrToUnit("C");
+        assertThat(tempCUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(tempCUnit), is("C"));
+
+        Unit<?> tempFUnit = textAbbrToUnit("F");
+        assertThat(tempFUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(tempFUnit), is("F"));
 
         Unit<?> literUnit = textAbbrToUnit("L");
         assertThat(literUnit, is(not(nullValue())));
@@ -136,25 +159,36 @@ public class UnitMapping {
         assertThat(usgalUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(usgalUnit), is("gal_us"));
 
-        Unit<?> usflozUnit = textAbbrToUnit("oz_fl");
-        assertThat(usflozUnit, is(not(nullValue())));
-        assertThat(unitToTextAbbr(usflozUnit), is("oz_fl"));
+        Unit<?> usgalDryAbbr = textAbbrToUnit("gal_dry_us");
+        assertThat(usgalDryAbbr, is(not(nullValue())));
+        assertThat(unitToTextAbbr(usgalDryAbbr), is("gal_dry_us"));
 
-        // FIXME: ambiguous to US fluid ounce
-        Unit<?> ukflozUnit = textAbbrToUnit("oz_fl_uk");
-        assertThat(ukflozUnit, is(not(nullValue())));
-        assertThat(unitToTextAbbr(ukflozUnit), is("oz_fl"));
+        Unit<?> usflozUnit = textAbbrToUnit("oz_fl_us");
+        assertThat(usflozUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(usflozUnit), is("oz_fl_us"));
 
         Unit<?> ukgalUnit = textAbbrToUnit("gal_uk");
         assertThat(ukgalUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ukgalUnit), is("gal_uk"));
 
-        Unit<?> ozUnit = textAbbrToUnit("oz");
-        assertThat(ozUnit, is(not(nullValue())));
-        assertThat(unitToTextAbbr(ozUnit), is("oz"));
+        Unit<?> ukflozUnit = textAbbrToUnit("oz_fl_uk");
+        assertThat(ukflozUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(ukflozUnit), is("oz_fl_uk"));
 
         Unit<?> gramUnit = textAbbrToUnit("g");
         assertThat(gramUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(gramUnit), is("g"));
+
+        Unit<?> kgUnit = textAbbrToUnit("kg");
+        assertThat(kgUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(kgUnit), is("kg"));
+
+        Unit<?> ozUnit = textAbbrToUnit("oz");
+        assertThat(ozUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(ozUnit), is("oz"));
+
+        Unit<?> lbUnit = textAbbrToUnit("lb");
+        assertThat(lbUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(lbUnit), is("lb"));
     }
 }

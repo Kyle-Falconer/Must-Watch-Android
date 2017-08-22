@@ -15,11 +15,15 @@
     <!-- ================================================================
                             UNITS
     ================================================================= -->
+    <string name="DEGREES_C">°C</string>
+    <string name="DEGREES_F">°F</string>
+
     <string name="LITER">L</string>
-    <string name="OUNCE_LIQUID_US">fl oz (US)</string>
     <string name="GALLON_LIQUID_US">gal (US)</string>
-    <string name="OUNCE_LIQUID_UK">fl oz (UK)</string>
+    <string name="GALLON_DRY_US">dry gal (US)</string>
+    <string name="OUNCE_LIQUID_US">fl oz (US)</string>
     <string name="GALLON_LIQUID_UK">gal (UK)</string>
+    <string name="OUNCE_LIQUID_UK">fl oz (UK)</string>
 
     <string name="KILOGRAM">kg</string>
     <string name="GRAM">g</string>
