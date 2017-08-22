@@ -41,6 +41,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
@@ -100,7 +101,8 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                             double volumeAmount = (double) viewModel.batch.outputVolume.getValue();
                             DecimalFormat f = new DecimalFormat("#.##");
                             dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
-                            dataBinding.outputVolumeAmountUnit.setText(viewModel.batch.outputVolume.getUnit().toString());
+                            String unitString = getResources().getString(unitToStringResource(viewModel.batch.outputVolume.getUnit()));
+                            dataBinding.outputVolumeAmountUnit.setText(unitString);
                         }
 
                         if (viewModel.batch.targetABV != null) {

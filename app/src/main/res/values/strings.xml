@@ -15,6 +15,7 @@
     <!-- ================================================================
                             UNITS
     ================================================================= -->
+    <string name="UNKNOWN_UNIT">-</string>
     <string name="DEGREES_C">°C</string>
     <string name="DEGREES_F">°F</string>
 

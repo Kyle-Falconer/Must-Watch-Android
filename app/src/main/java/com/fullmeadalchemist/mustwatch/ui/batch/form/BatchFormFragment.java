@@ -50,10 +50,14 @@ import com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
@@ -65,6 +69,18 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleD
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
 import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
+import static systems.uom.common.Imperial.GALLON_UK;
+import static systems.uom.common.Imperial.OUNCE_LIQUID;
+import static systems.uom.common.USCustomary.FAHRENHEIT;
+import static systems.uom.common.USCustomary.FLUID_OUNCE;
+import static systems.uom.common.USCustomary.GALLON_DRY;
+import static systems.uom.common.USCustomary.GALLON_LIQUID;
+import static systems.uom.common.USCustomary.LITER;
+import static systems.uom.common.USCustomary.OUNCE;
+import static systems.uom.common.USCustomary.POUND;
+import static tec.units.ri.unit.Units.CELSIUS;
+import static tec.units.ri.unit.Units.GRAM;
+import static tec.units.ri.unit.Units.KILOGRAM;
 
 
 public class BatchFormFragment extends LifecycleFragment implements Injectable {
@@ -107,12 +123,31 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         }
     };
 
+     Map<String, String> abbreviationMap = new HashMap<>();
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.batch_form_fragment,
                 container, false);
+
+        // FIXME: Mess. This should be moved somewhere else so other classes can use it
+        abbreviationMap.put(getResources().getString(R.string.DEGREES_C), unitToTextAbbr(CELSIUS));
+        abbreviationMap.put(getResources().getString(R.string.DEGREES_F), unitToTextAbbr(FAHRENHEIT));
+        abbreviationMap.put(getResources().getString(R.string.LITER), unitToTextAbbr(LITER));
+        abbreviationMap.put(getResources().getString(R.string.GALLON_LIQUID_US), unitToTextAbbr(GALLON_LIQUID));
+        abbreviationMap.put(getResources().getString(R.string.GALLON_DRY_US), unitToTextAbbr(GALLON_DRY));
+        abbreviationMap.put(getResources().getString(R.string.GALLON_LIQUID_UK), unitToTextAbbr(GALLON_UK));
+        abbreviationMap.put(getResources().getString(R.string.OUNCE_LIQUID_US), unitToTextAbbr(FLUID_OUNCE));
+        abbreviationMap.put(getResources().getString(R.string.OUNCE_LIQUID_UK), unitToTextAbbr(OUNCE_LIQUID));
+        abbreviationMap.put(getResources().getString(R.string.GRAM), unitToTextAbbr(GRAM));
+        abbreviationMap.put(getResources().getString(R.string.KILOGRAM), unitToTextAbbr(KILOGRAM));
+        abbreviationMap.put(getResources().getString(R.string.OUNCE), unitToTextAbbr(OUNCE));
+        abbreviationMap.put(getResources().getString(R.string.POUND), unitToTextAbbr(POUND));
+
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchFormViewModel.class);
 
@@ -220,11 +255,9 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
                 viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());
 
-
                 viewModel.batch.outputVolume = toVolume(
                         dataBinding.outputVolumeAmount.getText().toString(),
-                        dataBinding.outputVolumeAmountUnit.getSelectedItem().toString());
-
+                        abbreviationMap.get(dataBinding.outputVolumeAmountUnit.getSelectedItem().toString()));
 
                 viewModel.batch.status = BatchStatusEnum.fromString(dataBinding.status.getText().toString().trim());
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
@@ -283,18 +316,19 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             DecimalFormat f = new DecimalFormat("#.##");
             dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
             Spinner volSpin = dataBinding.outputVolumeAmountUnit;
-            volSpin.setSelection(getIndex(volSpin, batch.outputVolume.getUnit().toString()));
+            String unitString = getResources().getString(unitToStringResource(batch.outputVolume.getUnit()));
+            volSpin.setSelection(getIndex(volSpin, unitString));
 
-            volSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    Log.v(TAG, String.format("Volume spinner item selected: pos=%s, id=%s, string=%s", pos, id, volSpin.getItemAtPosition(pos).toString()));
-
-                    Object item = parent.getItemAtPosition(pos);
-                }
-
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
+//            volSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                    Log.v(TAG, String.format("Volume spinner item selected: pos=%s, id=%s, string=%s", pos, id, volSpin.getItemAtPosition(pos).toString()));
+//
+//                    Object item = parent.getItemAtPosition(pos);
+//                }
+//
+//                public void onNothingSelected(AdapterView<?> parent) {
+//                }
+//            });
         }
     }
 

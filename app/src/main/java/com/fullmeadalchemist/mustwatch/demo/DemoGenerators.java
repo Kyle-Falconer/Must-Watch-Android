@@ -178,7 +178,7 @@ public class DemoGenerators {
      * @param max Maximum value.  Must be greater than min.
      * @return Integer between min and max, inclusive.
      */
-    private static int randInt(int min, int max) {
+    public static int randInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 

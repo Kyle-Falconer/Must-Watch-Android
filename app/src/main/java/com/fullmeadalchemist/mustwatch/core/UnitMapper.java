@@ -16,11 +16,19 @@
 
 package com.fullmeadalchemist.mustwatch.core;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.fullmeadalchemist.mustwatch.R;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.measure.Quantity;
 import javax.measure.Unit;
+import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
@@ -42,6 +50,8 @@ import static tec.units.ri.unit.Units.KILOGRAM;
 public class UnitMapper {
 
     private static final String TAG = UnitMapper.class.getSimpleName();
+
+    // FIXME: These methods are repetitive
 
     /**
      * Convert standard unit names into jscience Units.
@@ -73,9 +83,11 @@ public class UnitMapper {
                 unit = GALLON_UK;
                 break;
             case "oz_fl_us":
+            case "fl oz":
                 unit = FLUID_OUNCE;
                 break;
             case "oz_fl_uk":
+            case "oz_fl":
                 unit = OUNCE_LIQUID;
                 break;
             case "g":
@@ -177,7 +189,7 @@ public class UnitMapper {
         return unitString;
     }
 
-    //
+
     @Nullable
     public static Quantity<Volume> toVolume(String floatText, String unitText) {
         Float scalar = ValueParsers.toFloat(floatText);
@@ -197,4 +209,55 @@ public class UnitMapper {
         }
         return Quantities.getQuantity(scalar, unit);
     }
+
+
+
+    public static int unitToStringResource(Unit<?> unit) {
+        String textAbbr = unitToTextAbbr(unit);
+        int resId;
+        switch (textAbbr) {
+            case "C":
+                resId = R.string.DEGREES_C;
+                break;
+            case "F":
+                resId = R.string.DEGREES_F;
+                break;
+            case "L":
+                resId = R.string.LITER;
+                break;
+            case "gal_us":
+                resId = R.string.GALLON_LIQUID_US;
+                break;
+            case "gal_dry_us":
+                resId = R.string.GALLON_DRY_US;
+                break;
+            case "gal_uk":
+                resId = R.string.GALLON_LIQUID_UK;
+                break;
+            case "oz_fl_us":
+                resId = R.string.OUNCE_LIQUID_US;
+                break;
+            case "oz_fl_uk":
+                resId = R.string.OUNCE_LIQUID_UK;
+                break;
+            case "g":
+                resId = R.string.GRAM;
+                break;
+            case "kg":
+                resId = R.string.KILOGRAM;
+                break;
+            case "oz":
+                resId = R.string.OUNCE;
+                break;
+            case "lb":
+                resId = R.string.POUND;
+                break;
+            default:
+                resId = R.string.UNKNOWN_UNIT;
+                break;
+        }
+        return resId;
+    }
+
+
 }
