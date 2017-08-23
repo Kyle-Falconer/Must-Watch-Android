@@ -34,7 +34,7 @@ public interface SugarDao {
     LiveData<Sugar> load(long sugarId);
 
     @Query("SELECT * FROM sugar")
-    LiveData<List<LogEntry>> getAll();
+    LiveData<List<Sugar>> getAll();
 
     @Insert
     Long insert(Sugar sugar);

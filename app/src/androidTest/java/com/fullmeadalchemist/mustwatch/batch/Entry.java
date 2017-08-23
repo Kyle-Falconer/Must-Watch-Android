@@ -48,12 +48,6 @@ import static org.hamcrest.core.AllOf.allOf;
 public class Entry {
 
     private Resources res;
-    private String volumeScalarToBetyped;
-    private String flozusResourceString;
-    private String flozukResourceString;
-    private String galliqusResourceString;
-    private String literResourceString;
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
@@ -61,16 +55,37 @@ public class Entry {
     @Before
     public void initValidString() {
         res = InstrumentationRegistry.getTargetContext().getResources();
-        volumeScalarToBetyped = "5";
-        flozusResourceString = res.getString(R.string.OUNCE_LIQUID_US);
-        flozukResourceString = res.getString(R.string.OUNCE_LIQUID_UK);
-        galliqusResourceString = res.getString(R.string.GALLON_LIQUID_US);
-        literResourceString = res.getString(R.string.LITER);
     }
 
     @Test
-    public void changeText_FlOzUs() {
-        volumeScalarToBetyped = Integer.toString(randInt(1,20));
+    public void changeText_volumeFlOzUs() {
+        changeText_volume(res.getString(R.string.OUNCE_LIQUID_US));
+    }
+
+    @Test
+    public void changeText_volumeFlOzUk() {
+        changeText_volume(res.getString(R.string.OUNCE_LIQUID_UK));
+    }
+
+    @Test
+    public void changeText_volumeGalUs() {
+        changeText_volume(res.getString(R.string.GALLON_LIQUID_US));
+    }
+
+    @Test
+    public void changeText_volumeGalUk() {
+        changeText_volume(res.getString(R.string.GALLON_LIQUID_UK));
+    }
+
+    @Test
+    public void changeText_volumeLiter() {
+        changeText_volume(res.getString(R.string.LITER));
+    }
+
+
+    public void changeText_volume(String volumeResourceString) {
+        String volumeScalarToBetyped;
+        volumeScalarToBetyped = Integer.toString(randInt(1, 20));
 
         // Navigate to the Add Batch screen
         onView((withId(R.id.batches_fab))).perform().perform(click());
@@ -79,7 +94,7 @@ public class Entry {
         onView(withId(R.id.outputVolumeAmount))
                 .perform(typeText(volumeScalarToBetyped), closeSoftKeyboard());
         onView(withId(R.id.outputVolumeAmountUnit)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(flozusResourceString))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(volumeResourceString))).perform(click());
 
         // Submit the form
         onView(withId(R.id.button_submit))
@@ -90,7 +105,7 @@ public class Entry {
         onView(withId(R.id.outputVolumeAmount))
                 .check(matches(withText(volumeScalarToBetyped)));
         onView(withId(R.id.outputVolumeAmountUnit))
-                .check(matches(withText(flozusResourceString)));
+                .check(matches(withText(volumeResourceString)));
 
         // Go back to the edit screen
         onView(withId(R.id.button_edit_batch))
@@ -101,115 +116,7 @@ public class Entry {
         onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBetyped)));
 
         // verify the volume unit is correct
-        onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(flozusResourceString)));
-    }
-
-    @Test
-    public void changeText_FlOzUk() {
-        volumeScalarToBetyped = Integer.toString(randInt(1,20));
-
-        // Navigate to the Add Batch screen
-        onView((withId(R.id.batches_fab))).perform().perform(click());
-
-        // Type add a volume amount and unit
-        onView(withId(R.id.outputVolumeAmount))
-                .perform(typeText(volumeScalarToBetyped), closeSoftKeyboard());
-        onView(withId(R.id.outputVolumeAmountUnit)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(flozukResourceString))).perform(click());
-
-        // Submit the form
-        onView(withId(R.id.button_submit))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // Check that the text was changed in the Batch detail view
-        onView(withId(R.id.outputVolumeAmount))
-                .check(matches(withText(volumeScalarToBetyped)));
-        onView(withId(R.id.outputVolumeAmountUnit))
-                .check(matches(withText(flozukResourceString)));
-
-        // Go back to the edit screen
-        onView(withId(R.id.button_edit_batch))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // verify the volume amount is correct
-        onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBetyped)));
-
-        // verify the volume unit is correct
-        onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(flozukResourceString)));
-    }
-
-    @Test
-    public void changeText_GalLiqUs() {
-        volumeScalarToBetyped = Integer.toString(randInt(1,20));
-
-        // Navigate to the Add Batch screen
-        onView((withId(R.id.batches_fab))).perform().perform(click());
-
-        // Type add a volume amount and unit
-        onView(withId(R.id.outputVolumeAmount))
-                .perform(typeText(volumeScalarToBetyped), closeSoftKeyboard());
-        onView(withId(R.id.outputVolumeAmountUnit)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(galliqusResourceString))).perform(click());
-
-        // Submit the form
-        onView(withId(R.id.button_submit))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // Check that the text was changed in the Batch detail view
-        onView(withId(R.id.outputVolumeAmount))
-                .check(matches(withText(volumeScalarToBetyped)));
-        onView(withId(R.id.outputVolumeAmountUnit))
-                .check(matches(withText(galliqusResourceString)));
-
-        // Go back to the edit screen
-        onView(withId(R.id.button_edit_batch))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // verify the volume amount is correct
-        onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBetyped)));
-
-        // verify the volume unit is correct
-        onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(galliqusResourceString)));
-    }
-
-    @Test
-    public void changeText_liter() {
-        volumeScalarToBetyped = Integer.toString(randInt(1,20));
-
-        // Navigate to the Add Batch screen
-        onView((withId(R.id.batches_fab))).perform().perform(click());
-
-        // Type add a volume amount and unit
-        onView(withId(R.id.outputVolumeAmount))
-                .perform(typeText(volumeScalarToBetyped), closeSoftKeyboard());
-        onView(withId(R.id.outputVolumeAmountUnit)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(literResourceString))).perform(click());
-
-        // Submit the form
-        onView(withId(R.id.button_submit))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // Check that the text was changed in the Batch detail view
-        onView(withId(R.id.outputVolumeAmount))
-                .check(matches(withText(volumeScalarToBetyped)));
-        onView(withId(R.id.outputVolumeAmountUnit))
-                .check(matches(withText(literResourceString)));
-
-        // Go back to the edit screen
-        onView(withId(R.id.button_edit_batch))
-                .perform(ViewActions.scrollTo())
-                .perform(click());
-
-        // verify the volume amount is correct
-        onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBetyped)));
-
-        // verify the volume unit is correct
-        onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(literResourceString)));
+        onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(volumeResourceString)));
     }
 
 }

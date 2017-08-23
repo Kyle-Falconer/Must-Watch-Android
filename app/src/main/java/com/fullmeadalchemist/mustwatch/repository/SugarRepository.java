@@ -59,7 +59,7 @@ public class SugarRepository {
                 .subscribe();
     }
 
-    public LiveData<List<LogEntry>> getSugarEntries() {
+    public LiveData<List<Sugar>> getSugarEntries() {
         return sugarDao.getAll();
     }
 }

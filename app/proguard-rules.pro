@@ -18,13 +18,18 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
 
+-keep class systems.uom.** { *; }
+#-dontwarn systems.uom.**
+
+-keep class tec.units.** { *; }
+#-dontwarn class tec.units.**
 
 
 # TODO: maybe include this? See https://github.com/bumptech/glide/tree/3.0

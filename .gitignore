@@ -6,4 +6,8 @@
 .DS_Store
 /build
 /captures
+*.apk
+/app/prod/release/*
 .externalNativeBuild
+release.properties
+fma_upload_key.jks
