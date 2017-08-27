@@ -19,8 +19,10 @@ package com.fullmeadalchemist.mustwatch;
 import android.app.Activity;
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.fullmeadalchemist.mustwatch.di.AppInjector;
 
+import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
@@ -37,6 +39,7 @@ public class MustWatchApp extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 //        if (BuildConfig.DEBUG) {
 //            Timber.plant(new Timber.DebugTree());
 //        }

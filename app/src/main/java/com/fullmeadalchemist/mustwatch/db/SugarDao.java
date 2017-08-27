@@ -22,27 +22,26 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.fullmeadalchemist.mustwatch.vo.LogEntry;
-import com.fullmeadalchemist.mustwatch.vo.Sugar;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.List;
 
 @Dao
 public interface SugarDao {
 
-    @Query("SELECT * FROM sugar WHERE id = :sugarId LIMIT 1")
-    LiveData<Sugar> load(long sugarId);
+    @Query("SELECT * FROM Ingredient WHERE id = :sugarId LIMIT 1")
+    LiveData<Ingredient> load(String sugarId);
 
-    @Query("SELECT * FROM sugar")
-    LiveData<List<Sugar>> getAll();
-
-    @Insert
-    Long insert(Sugar sugar);
+    @Query("SELECT * FROM Ingredient")
+    LiveData<List<Ingredient>> getAll();
 
     @Insert
-    List<Long> insertAll(Sugar... sugars);
+    Long insert(Ingredient ingredient);
+
+    @Insert
+    List<Long> insertAll(Ingredient... ingredients);
 
     @Delete
-    void delete(Sugar sugar);
+    void delete(Ingredient ingredient);
 
 }

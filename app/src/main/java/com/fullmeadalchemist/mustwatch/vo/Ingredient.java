@@ -24,50 +24,33 @@ import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(indices = {@Index(value = "name", unique = true)})
-public class Sugar {
-
-    @PrimaryKey(autoGenerate = true)
-    public Long id;
+@Entity(indices = {@Index(value = "id", unique = true)})
+public class Ingredient {
 
     @Expose
-    @SerializedName("name")
-    @ColumnInfo(name = "name")
-    public String name;
+    @PrimaryKey
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
+    public String id;
 
     @Expose
-    @SerializedName("density__kg_per_m3")
-    @ColumnInfo(name = "density__kg_per_m3")
-    public float density;
+    @SerializedName("type")
+    @ColumnInfo(name = "type")
+    public String type;
 
     @Expose
     @SerializedName("combined_sugars_total_pct")
     @ColumnInfo(name = "combined_sugars_total_pct")
-    public float totalPct;
+    public Float totalPct;
 
     @Expose
-    @SerializedName("sucrose_pct")
-    @ColumnInfo(name = "sucrose_pct")
-    public float sucrosePct;
+    @SerializedName("density__kg_per_m3")
+    @ColumnInfo(name = "density__kg_per_m3")
+    public Float density;
 
     @Expose
-    @SerializedName("fructose_pct")
-    @ColumnInfo(name = "fructose_pct")
-    public float fructosePct;
-
-    @Expose
-    @SerializedName("glucose_pct")
-    @ColumnInfo(name = "glucose_pct")
-    public float glucosePct;
-
-    @Expose
-    @SerializedName("maltose_pct")
-    @ColumnInfo(name = "maltose_pct")
-    public float maltosePct;
-
-    @Expose
-    @SerializedName("polysaccharides_pct")
-    @ColumnInfo(name = "polysaccharides_pct")
-    public float polysaccharidesPct;
+    @SerializedName("acidity")
+    @ColumnInfo(name = "acidity")
+    public Float acidity;
 
 }

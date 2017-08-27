@@ -1,4 +1,21 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        // Keep this updated to the latest version:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.24.1'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 
 android {
@@ -10,6 +27,17 @@ android {
             v2SigningEnabled true
         }
     }
+
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.fullmeadalchemist.mustwatch"
 
@@ -124,8 +152,8 @@ dependencies {
     //    })
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestCompile 'com.android.support.test:runner:1.0.0'
-    androidTestCompile 'com.android.support.test:rules:1.0.0'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
 
     // Espresso dependencies
     androidTestCompile "com.android.support.test.espresso:espresso-core:$espresso_version"
@@ -135,6 +163,9 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-web:$espresso_version"
     androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:$espresso_version"
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:$espresso_version"
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 // https://www.thoughtworks.com/insights/blog/signing-open-source-android-apps-without-disclosing-passwords

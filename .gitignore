@@ -11,3 +11,6 @@
 .externalNativeBuild
 release.properties
 fma_upload_key.jks
+fabric.properties
+.idea/dictionaries/
+.idea/

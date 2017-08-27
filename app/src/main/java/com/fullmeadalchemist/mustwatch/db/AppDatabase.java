@@ -26,7 +26,7 @@ import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.Group;
 import com.fullmeadalchemist.mustwatch.vo.GroupMembership;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
-import com.fullmeadalchemist.mustwatch.vo.Sugar;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 @Database(version = 1,
@@ -36,7 +36,7 @@ import com.fullmeadalchemist.mustwatch.vo.User;
                 LogEntry.class,
                 Group.class,
                 GroupMembership.class,
-                Sugar.class
+                Ingredient.class
         })
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

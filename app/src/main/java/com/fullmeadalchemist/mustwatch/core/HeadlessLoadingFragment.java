@@ -25,10 +25,10 @@ import android.util.Log;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
-import com.fullmeadalchemist.mustwatch.repository.SugarRepository;
+import com.fullmeadalchemist.mustwatch.repository.IngredientRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
-import com.fullmeadalchemist.mustwatch.vo.Sugar;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
     @Inject
     UserRepository userRepository;
     @Inject
-    SugarRepository sugarRepository;
+    IngredientRepository sugarRepository;
     private LifecycleOwner lifecycleContext;
 
     @Override
@@ -91,9 +91,9 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
         Observable.create(emitter -> {
             sugarRepository.getSugarEntries().observe(lifecycleContext, sugars -> {
                 if (sugars == null || sugars.size() == 0) {
-                    Log.i(TAG, "Populating the database with Sugar data");
-                    JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.sugars);
-                    Sugar[] jsonObj = reader.constructUsingGson(Sugar[].class);
+                    Log.i(TAG, "Populating the database with Ingredient data");
+                    JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.ingredients);
+                    Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
                     sugarRepository.addSugars(jsonObj);
                 } else {
                     Log.d(TAG, "Sugars already found in the database.");

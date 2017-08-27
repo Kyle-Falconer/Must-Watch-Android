@@ -29,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
@@ -96,9 +98,11 @@ public class BatchListFragment extends LifecycleFragment implements Injectable {
             }
         });
 
+
         if (fab != null) {
             fab.setOnClickListener(v -> {
                 Log.d(TAG, "Floating Action Button was clicked!");
+                Answers.getInstance().logCustom(new CustomEvent("FAB Clicked"));
                 navigationController.navigateToAddBatch();
             });
         } else {

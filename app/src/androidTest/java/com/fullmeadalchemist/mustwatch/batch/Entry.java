@@ -47,10 +47,10 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public class Entry {
 
-    private Resources res;
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
+    private Resources res;
 
     @Before
     public void initValidString() {

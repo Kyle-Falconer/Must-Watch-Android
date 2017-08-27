@@ -33,14 +33,20 @@
 
 
     <!-- ================================================================
+                        MEAD TYPES
+    ================================================================= -->
+    <string name="MEAD">MEAD</string>
+    <string name="MEAD_TRADITIONAL">traditional</string>
+    <string name="MELOMEL">melomel</string>
+    <string name="PYMENT">pyment</string>
+
+    <!-- ================================================================
                                 SUGARS
     ================================================================= -->
-    <string name="HONEY">honey</string>
-    <string name="SUCROSE">sugar</string>
     <string name="ACEROLA">acerola</string>
     <string name="APPLES">apples</string>
-    <string name="APRICOTS">apricots</string>
-    <string name="APRICOTS_DRIED">apricots, dried</string>
+    <string name="APRICOTS__FRESH">apricots</string>
+    <string name="APRICOTS__DRIED">apricots, dried</string>
     <string name="BANANAS">bananas</string>
     <string name="BLACKBERRY">blackberry</string>
     <string name="BLUEBERRY">blueberry</string>
@@ -48,28 +54,33 @@
     <string name="CANTALOUPE">cantaloupe</string>
     <string name="CARAMBOLA">carambola</string>
     <string name="CARROTS">carrots</string>
-    <string name="CASABA_MELON">casaba melon</string>
     <string name="CASHEWS">cashews</string>
     <string name="CELERY">celery</string>
-    <string name="CHERRY_DARK_SWEET">cherry, dark sweet</string>
-    <string name="CHERRY_MONTMORENCY">cherry, montmorency</string>
+    <string name="CHERRY__DARK">cherry, dark</string>
+    <string name="CHERRY__MONTMORENCY">cherry, montmorency</string>
+    <string name="CORN_SYRUP">corn syrup</string>
     <string name="CRABAPPLES">crabapples</string>
     <string name="CRANBERRY">cranberry</string>
-    <string name="CURRANT_BLACK">currant, black</string>
-    <string name="CURRANT_RED">currant, red</string>
+    <string name="CURRANT__BLACK">currant, black</string>
+    <string name="CURRANT__RED">currant, red</string>
     <string name="DATES">dates</string>
-    <string name="DATES_DRIED">dates dried</string>
+    <string name="DATES__DRIED">dates dried</string>
     <string name="DEWBERRY">dewberry</string>
     <string name="ELDERBERRY">elderberry</string>
     <string name="FIGS">figs</string>
-    <string name="FIGS_DRIED">figs, dried</string>
+    <string name="FIGS__DRIED">figs, dried</string>
     <string name="GOOSEBERRY">gooseberry</string>
-    <string name="GRAPE_CONCORD">grape, concord</string>
+    <string name="GRAPES_CONCORD">grape, concord</string>
     <string name="GRAPES">grapes</string>
     <string name="GRAPEFRUIT">grapefruit</string>
     <string name="GUANABANA">guanabana</string>
     <string name="GUAVAS">guavas</string>
-    <string name="HONEYDEW_MELON">honeydew melon</string>
+    <string name="HONEY">honey</string>
+    <string name="HONEY__BUCKWHEAT">honey, buckwheat</string>
+    <string name="HONEY__MIXED_FLORAL">honey, floral</string>
+    <string name="HONEY__ORANGE_BLOSSOM">honey, orange blossom</string>
+    <string name="HONEY__CLOVER">honey, clover</string>
+    <string name="MELON__HONEYDEW">honeydew melon</string>
     <string name="JACKFRUIT">jackfruit</string>
     <string name="KIWIS">kiwis</string>
     <string name="LEMON_JUICE">lemon juice</string>
@@ -94,32 +105,45 @@
     <string name="PRUNES_DRIED">prunes, dried</string>
     <string name="QUINCES">quinces</string>
     <string name="RAISINS_DRIED">raisins, dried</string>
-    <string name="RASPBERRY_BLACK">raspberry, black</string>
-    <string name="RASPBERRY_RED">raspberry, red</string>
+    <string name="RASPBERRY__BLACK">raspberry, black</string>
+    <string name="RASPBERRY__RED">raspberry, red</string>
     <string name="RHUBARB">rhubarb</string>
     <string name="STRAWBERRY">strawberry</string>
+    <string name="SUCROSE">ingredient</string>
     <string name="SULTANAS">sultanas</string>
     <string name="TANGERINES">tangerines</string>
     <string name="TANGELO">tangelo</string>
     <string name="TOMATOES">tomatoes</string>
     <string name="WATERMELONS">watermelons</string>
+    <string name="WELCHS_GRAPE_JUICE">Welch\'s Grape Juice</string>
     <string name="YOUNGBERRY">youngberry</string>
 
 
     <!-- ================================================================
                                 YEASTS
     ================================================================= -->
-    <string name="Lalvin_EC_1118">Lalvin EC-1118</string>
-    <string name="Lalvin_D_47">Lalvin D-47</string>
-    <string name="Lalvin_K1_V1116">Lalvin K1-V1116</string>
-    <string name="Lalvin_71B_1122">Lalvin 71B-1122</string>
-
+    <string name="LALVIN_EC_1118">Lalvin EC-1118</string>
+    <string name="LALVIN_D_47">Lalvin D-47</string>
+    <string name="LALVIN_K1_V1116">Lalvin K1-V1116</string>
+    <string name="LALVIN_71B_1122">Lalvin 71B-1122</string>
+    <string name="SAFALE_US_05">Safale US-05</string>
 
     <!-- ================================================================
                                 NUTRIENTS
     ================================================================= -->
-    <string name="Diammonium_Phosphate">Diammonium Phosphate (DAP)</string>
-    <string name="Fermaid_O">Fermaid O</string>
-    <string name="Fermaid_K">Fermaid K</string>
-    <string name="GoFerm">GoFerm</string>
+    <string name="DAP">Diammonium Phosphate</string>
+    <string name="FERMAID_O">Fermaid O</string>
+    <string name="FERMAID_K">Fermaid K</string>
+    <string name="GOFERM">GoFerm</string>
+
+    <!-- ================================================================
+                            STABILIZER
+    ================================================================= -->
+    <string name="CAMPDEN">Campden</string>
+
+    <!-- ================================================================
+                        ENERGIZER
+    ================================================================= -->
+    <string name="YEAST_HULLS">yeast hulls</string>
+
 </resources>

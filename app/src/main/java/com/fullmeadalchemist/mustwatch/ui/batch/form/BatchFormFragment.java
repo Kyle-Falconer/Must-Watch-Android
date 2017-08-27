@@ -38,6 +38,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
@@ -272,8 +274,10 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
                             Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG);
                             snackbar.show();
+                            Answers.getInstance().logCustom(new CustomEvent("Batch create success"));
                             navigationController.navigateFromAddBatch(savedBatchId);
                         } else {
+                            Answers.getInstance().logCustom(new CustomEvent("Batch create failed"));
                             Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Failed to save batch!", Snackbar.LENGTH_LONG);
                             snackbar.show();
                         }
@@ -286,6 +290,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
                     Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG);
                     snackbar.show();
+                    Answers.getInstance().logCustom(new CustomEvent("Batch edit success"));
                     navigationController.navigateFromEditBatch(viewModel.batch.id);
                 }
 

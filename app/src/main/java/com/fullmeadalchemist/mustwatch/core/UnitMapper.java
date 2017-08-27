@@ -16,19 +16,13 @@
 
 package com.fullmeadalchemist.mustwatch.core;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.R;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.measure.Quantity;
 import javax.measure.Unit;
-import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;

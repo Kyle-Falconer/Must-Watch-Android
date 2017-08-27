@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c4d9070a107d204de16e89701da134bf",
+    "identityHash": "26a62e7b2ec958026823e3f3be6648ba",
     "entities": [
       {
         "tableName": "User",
@@ -330,78 +330,54 @@
         ]
       },
       {
-        "tableName": "Sugar",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `density__kg_per_m3` REAL NOT NULL, `combined_sugars_total_pct` REAL NOT NULL, `sucrose_pct` REAL NOT NULL, `fructose_pct` REAL NOT NULL, `glucose_pct` REAL NOT NULL, `maltose_pct` REAL NOT NULL, `polysaccharides_pct` REAL NOT NULL)",
+        "tableName": "Ingredient",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT, `type` TEXT, `combined_sugars_total_pct` REAL, `density__kg_per_m3` REAL, `acidity` REAL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalPct",
+            "columnName": "combined_sugars_total_pct",
+            "affinity": "REAL",
             "notNull": false
           },
           {
             "fieldPath": "density",
             "columnName": "density__kg_per_m3",
             "affinity": "REAL",
-            "notNull": true
+            "notNull": false
           },
           {
-            "fieldPath": "totalPct",
-            "columnName": "combined_sugars_total_pct",
+            "fieldPath": "acidity",
+            "columnName": "acidity",
             "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sucrosePct",
-            "columnName": "sucrose_pct",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "fructosePct",
-            "columnName": "fructose_pct",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "glucosePct",
-            "columnName": "glucose_pct",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "maltosePct",
-            "columnName": "maltose_pct",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "polysaccharidesPct",
-            "columnName": "polysaccharides_pct",
-            "affinity": "REAL",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
-            "name": "index_Sugar_name",
+            "name": "index_Ingredient_id",
             "unique": true,
             "columnNames": [
-              "name"
+              "id"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_Sugar_name`\nON `${TABLE_NAME}` (`name`)"
+            "createSql": "CREATE UNIQUE INDEX `index_Ingredient_id`\nON `${TABLE_NAME}` (`id`)"
           }
         ],
         "foreignKeys": []
@@ -409,7 +385,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c4d9070a107d204de16e89701da134bf\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"26a62e7b2ec958026823e3f3be6648ba\")"
     ]
   }
 }

@@ -20,8 +20,7 @@ import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.SugarDao;
-import com.fullmeadalchemist.mustwatch.vo.LogEntry;
-import com.fullmeadalchemist.mustwatch.vo.Sugar;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.List;
 
@@ -33,33 +32,33 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
-public class SugarRepository {
-    private static final String TAG = SugarRepository.class.getSimpleName();
+public class IngredientRepository {
+    private static final String TAG = IngredientRepository.class.getSimpleName();
 
     private final SugarDao sugarDao;
 
     @Inject
-    public SugarRepository(SugarDao sugarDao) {
+    public IngredientRepository(SugarDao sugarDao) {
         this.sugarDao = sugarDao;
     }
 
-    public void addSugars(List<Sugar> sugars) {
-        Log.d(TAG, String.format("Adding %s Sugar objects to the db", sugars.size()));
-        Observable.fromCallable(() -> sugarDao.insertAll(sugars.toArray(new Sugar[sugars.size()])))
+    public void addSugars(List<Ingredient> ingredients) {
+        Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.size()));
+        Observable.fromCallable(() -> sugarDao.insertAll(ingredients.toArray(new Ingredient[ingredients.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
-    public void addSugars(Sugar[] sugars) {
-        Log.d(TAG, String.format("Adding %s Sugar objects to the db", sugars.length));
-        Observable.fromCallable(() -> sugarDao.insertAll(sugars))
+    public void addSugars(Ingredient[] ingredients) {
+        Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.length));
+        Observable.fromCallable(() -> sugarDao.insertAll(ingredients))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
-    public LiveData<List<Sugar>> getSugarEntries() {
+    public LiveData<List<Ingredient>> getSugarEntries() {
         return sugarDao.getAll();
     }
 }

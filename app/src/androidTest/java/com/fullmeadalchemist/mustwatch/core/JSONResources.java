@@ -21,19 +21,57 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.fullmeadalchemist.mustwatch.R;
-import com.fullmeadalchemist.mustwatch.vo.Sugar;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.nullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class JSONResources {
 
+    private Resources res;
+    private String packageName;
+
+    @Before
+    public void init() {
+        res = InstrumentationRegistry.getTargetContext().getResources();
+        packageName = InstrumentationRegistry.getTargetContext().getPackageName();
+    }
+
     @Test
-    public void loadSugars() {
-        Resources res = InstrumentationRegistry.getTargetContext().getResources();
-        JSONResourceReader reader = new JSONResourceReader(res, R.raw.sugars);
-        Sugar[] jsonObj = reader.constructUsingGson(Sugar[].class);
-        // This should work without crashing.
+    public void loadIngredients() {
+        JSONResourceReader reader = new JSONResourceReader(res, R.raw.ingredients);
+        Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
+        assertThat(jsonObj, is(not(nullValue())));
+        assertTrue(jsonObj.length > 0);
+
+        for (Ingredient ingredient : jsonObj) {
+            if ("SUGAR".equals(ingredient.type)) {
+                assertTrue(ingredient.totalPct > 0);
+                if (ingredient.density != null) {
+                    assertTrue(ingredient.density > 0);
+                }
+            }
+            assertStringResourceNotNull(ingredient.id);
+        }
+    }
+
+
+
+    private void assertStringResourceNotNull(String stringId) {
+        try {
+            int resId = res.getIdentifier(stringId, "string", packageName);
+            assertThat(res.getString(resId), is(not(nullValue())));
+        } catch (Resources.NotFoundException e) {
+            System.out.println("\"" + stringId + "\" not found in strings.xml");
+            throw e;
+        }
     }
 }
