@@ -23,11 +23,11 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.fullmeadalchemist.mustwatch.di.AppInjector;
 
-import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 
@@ -43,7 +43,7 @@ public class MustWatchApp extends Application implements HasActivityInjector {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
             Timber.plant(new Timber.DebugTree());
         }

@@ -20,7 +20,6 @@ import android.util.Log;
 
 import javax.measure.quantity.Volume;
 
-
 import tec.units.ri.AbstractQuantity;
 
 import static systems.uom.common.USCustomary.LITER;

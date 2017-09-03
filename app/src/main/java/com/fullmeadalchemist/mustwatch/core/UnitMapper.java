@@ -205,7 +205,6 @@ public class UnitMapper {
     }
 
 
-
     public static int unitToStringResource(Unit<?> unit) {
         String textAbbr = unitToTextAbbr(unit);
         int resId;

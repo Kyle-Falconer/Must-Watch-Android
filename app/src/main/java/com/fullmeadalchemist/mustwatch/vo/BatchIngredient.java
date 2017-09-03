@@ -26,7 +26,7 @@ import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
 
 @Entity(tableName = "batch_ingredient",
-        indices = {@Index(value = "ingredient_id"), @Index(value = "batch_id"), @Index(value = "recipe_id") },
+        indices = {@Index(value = "ingredient_id"), @Index(value = "batch_id"), @Index(value = "recipe_id")},
         foreignKeys = {
                 @ForeignKey(entity = Batch.class,
                         parentColumns = "id",

@@ -33,7 +33,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,6 +59,7 @@ import javax.inject.Inject;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
+import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
@@ -69,7 +69,6 @@ import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUT
 import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
-import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 import static systems.uom.common.Imperial.GALLON_UK;
 import static systems.uom.common.Imperial.OUNCE_LIQUID;
@@ -96,6 +95,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
     @Inject
     NavigationController navigationController;
     BatchFormFragmentBinding dataBinding;
+    Map<String, String> abbreviationMap = new HashMap<>();
     private MODES FORM_MODE;
     private BatchFormViewModel viewModel;
     private BroadcastReceiver timePickerMessageReceiver = new BroadcastReceiver() {
@@ -124,10 +124,6 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             updateUiDateTime();
         }
     };
-
-     Map<String, String> abbreviationMap = new HashMap<>();
-
-
 
     @Nullable
     @Override

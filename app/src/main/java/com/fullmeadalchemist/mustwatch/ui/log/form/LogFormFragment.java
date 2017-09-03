@@ -44,6 +44,7 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
+import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
@@ -53,7 +54,6 @@ import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUT
 import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
-import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
