@@ -21,36 +21,39 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
-import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.List;
 
-
 @Dao
-public interface BatchDao {
-    @Query("SELECT * FROM batch")
-    LiveData<List<Batch>> getAll();
+public interface IngredientDao {
 
-    @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    LiveData<List<Batch>> getAll(long user_id);
+    @Query("SELECT * FROM Ingredient WHERE id = :ingredientId LIMIT 1")
+    LiveData<Ingredient> getById(String ingredientId);
 
-    @Query("SELECT * FROM batch WHERE id = :batch_id LIMIT 1")
-    LiveData<Batch> get(Long batch_id);
+    @Query("SELECT * FROM Ingredient")
+    LiveData<List<Ingredient>> getAll();
 
-    @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    LiveData<List<Batch>> loadBatchesForUser(long user_id);
+    @Query("SELECT * FROM Ingredient WHERE type=\"SUGAR\"")
+    LiveData<List<Ingredient>> getAllSugars();
+
+    @Query("SELECT * FROM Ingredient WHERE type=\"NUTRIENT\"")
+    LiveData<List<Ingredient>> getAllNutrients();
+
+    @Query("SELECT * FROM Ingredient WHERE type=\"YEAST\"")
+    LiveData<List<Ingredient>> getAllYeasts();
+
+    @Query("SELECT * FROM Ingredient WHERE type=\"STABILIZER\"")
+    LiveData<List<Ingredient>> getAllStabilizers();
 
     @Insert
-    long insert(Batch batch);
+    Long insert(Ingredient ingredient);
 
     @Insert
-    List<Long> insertAll(Batch... batches);
+    List<Long> insertAll(Ingredient... ingredients);
 
     @Delete
-    void delete(Batch batch);
+    void delete(Ingredient ingredient);
 
-    @Update
-    int updateBatch(Batch batch);
 }

@@ -19,7 +19,7 @@ package com.fullmeadalchemist.mustwatch.repository;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
-import com.fullmeadalchemist.mustwatch.db.SugarDao;
+import com.fullmeadalchemist.mustwatch.db.IngredientDao;
 import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.List;
@@ -35,16 +35,16 @@ import io.reactivex.schedulers.Schedulers;
 public class IngredientRepository {
     private static final String TAG = IngredientRepository.class.getSimpleName();
 
-    private final SugarDao sugarDao;
+    private final IngredientDao ingredientDao;
 
     @Inject
-    public IngredientRepository(SugarDao sugarDao) {
-        this.sugarDao = sugarDao;
+    public IngredientRepository(IngredientDao ingredientDao) {
+        this.ingredientDao = ingredientDao;
     }
 
     public void addSugars(List<Ingredient> ingredients) {
         Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.size()));
-        Observable.fromCallable(() -> sugarDao.insertAll(ingredients.toArray(new Ingredient[ingredients.size()])))
+        Observable.fromCallable(() -> ingredientDao.insertAll(ingredients.toArray(new Ingredient[ingredients.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
@@ -52,13 +52,13 @@ public class IngredientRepository {
 
     public void addSugars(Ingredient[] ingredients) {
         Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.length));
-        Observable.fromCallable(() -> sugarDao.insertAll(ingredients))
+        Observable.fromCallable(() -> ingredientDao.insertAll(ingredients))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
     public LiveData<List<Ingredient>> getSugarEntries() {
-        return sugarDao.getAll();
+        return ingredientDao.getAll();
     }
 }

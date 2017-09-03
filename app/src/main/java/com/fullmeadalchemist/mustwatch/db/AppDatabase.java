@@ -23,20 +23,24 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.Group;
 import com.fullmeadalchemist.mustwatch.vo.GroupMembership;
-import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 import com.fullmeadalchemist.mustwatch.vo.Ingredient;
+import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+import com.fullmeadalchemist.mustwatch.vo.Recipe;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 @Database(version = 1,
         entities = {
                 User.class,
                 Batch.class,
+                BatchIngredient.class,
                 LogEntry.class,
                 Group.class,
                 GroupMembership.class,
-                Ingredient.class
+                Ingredient.class,
+                Recipe.class
         })
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -70,5 +74,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract GroupDao groupDao();
 
-    public abstract SugarDao sugarDao();
+    public abstract IngredientDao ingredientDao();
+
+    public abstract BatchIngredientDao batchIngredientDao();
+
+    public abstract RecipeDao recipeDao();
 }

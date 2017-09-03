@@ -22,8 +22,10 @@ import android.arch.persistence.room.Room;
 import com.fullmeadalchemist.mustwatch.MustWatchPreferences;
 import com.fullmeadalchemist.mustwatch.db.AppDatabase;
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
+import com.fullmeadalchemist.mustwatch.db.BatchIngredientDao;
+import com.fullmeadalchemist.mustwatch.db.IngredientDao;
 import com.fullmeadalchemist.mustwatch.db.LogEntryDao;
-import com.fullmeadalchemist.mustwatch.db.SugarDao;
+import com.fullmeadalchemist.mustwatch.db.RecipeDao;
 import com.fullmeadalchemist.mustwatch.db.UserDao;
 
 import javax.inject.Singleton;
@@ -62,8 +64,20 @@ class AppModule {
 
     @Singleton
     @Provides
-    SugarDao provideSugarDao(AppDatabase db) {
-        return db.sugarDao();
+    IngredientDao provideIngredientDao(AppDatabase db) {
+        return db.ingredientDao();
+    }
+
+    @Singleton
+    @Provides
+    BatchIngredientDao provideBatchIngredientDao(AppDatabase db) {
+        return db.batchIngredientDao();
+    }
+
+    @Singleton
+    @Provides
+    RecipeDao provideRecipeDao(AppDatabase db) {
+        return db.recipeDao();
     }
 
     @Singleton

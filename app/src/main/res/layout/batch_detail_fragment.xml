@@ -55,6 +55,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Date Created"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -73,6 +74,7 @@
                     android:id="@+id/createDate_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -96,6 +98,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Status"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -104,6 +107,7 @@
                     android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -121,6 +125,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Output Volume"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -140,6 +145,7 @@
                     android:id="@+id/outputVolumeAmountUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:text="Gallons"
@@ -158,6 +164,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target ABV"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -166,6 +173,7 @@
                     android:id="@+id/targetABV"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -183,6 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target starting Specific Gravity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -191,9 +200,10 @@
                     android:id="@+id/targetSgStarting"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.targetSgStarting}"
+                    android:text="@{safeUnbox(batch.targetSgStarting)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="1.115" />
             </LinearLayout>
@@ -209,6 +219,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target final Specific Gravity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -217,9 +228,10 @@
                     android:id="@+id/targetSgFinal"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.targetSgFinal}"
+                    android:text="@{safeUnbox(batch.targetSgFinal)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="1.05" />
             </LinearLayout>
@@ -235,6 +247,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Starting pH level"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -243,9 +256,10 @@
                     android:id="@+id/startingPh"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.startingPh}"
+                    android:text="@{safeUnbox(batch.startingPh)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="4.2" />
             </LinearLayout>
@@ -261,6 +275,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Starting Temperature"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -273,7 +288,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{batch.startingTemp}"
+                    android:text="@{safeUnbox(batch.startingTemp)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="68" />
 
@@ -281,6 +296,7 @@
                     android:id="@+id/startingTempUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:text="\u00B0F"

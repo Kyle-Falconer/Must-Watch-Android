@@ -21,27 +21,39 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
-import com.fullmeadalchemist.mustwatch.vo.Ingredient;
+import com.fullmeadalchemist.mustwatch.vo.Recipe;
 
 import java.util.List;
 
 @Dao
-public interface SugarDao {
+public interface RecipeDao {
 
-    @Query("SELECT * FROM Ingredient WHERE id = :sugarId LIMIT 1")
-    LiveData<Ingredient> load(String sugarId);
+    @Query("SELECT * FROM recipe WHERE id = :recipe_id LIMIT 1")
+    LiveData<Recipe> get(Long recipe_id);
 
-    @Query("SELECT * FROM Ingredient")
-    LiveData<List<Ingredient>> getAll();
+    @Query("SELECT * FROM recipe WHERE creator_user_id = :user_id")
+    LiveData<List<Recipe>> getRecipesForCreator(long user_id);
+
+    @Query("SELECT * FROM recipe WHERE owner_user_id = :user_id")
+    LiveData<List<Recipe>> getRecipesForOwner(long user_id);
+
+    @Query("SELECT * FROM recipe WHERE owner_group_id = :group_id")
+    LiveData<List<Recipe>> getRecipesForGroup(long group_id);
+
+    @Query("SELECT * FROM recipe WHERE public_readable=1")
+    LiveData<List<Recipe>> getPublicRecipes();
 
     @Insert
-    Long insert(Ingredient ingredient);
+    long insert(Recipe recipe);
 
     @Insert
-    List<Long> insertAll(Ingredient... ingredients);
+    List<Long> insertAll(Recipe... recipes);
 
     @Delete
-    void delete(Ingredient ingredient);
+    void delete(Recipe recipe);
 
+    @Update
+    int updateRecipe(Recipe recipe);
 }

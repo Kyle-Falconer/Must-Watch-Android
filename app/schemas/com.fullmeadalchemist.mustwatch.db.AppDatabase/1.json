@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "26a62e7b2ec958026823e3f3be6648ba",
+    "identityHash": "b271c742d4d2d33669b1930409911833",
     "entities": [
       {
         "tableName": "User",
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "batch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `name` TEXT, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` TEXT, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER, `name` TEXT, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` TEXT, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -141,10 +141,113 @@
         "foreignKeys": [
           {
             "table": "User",
-            "onDelete": "NO ACTION",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "user_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "batch_ingredient",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `ingredient_id` TEXT, `batch_id` INTEGER, `recipe_id` INTEGER, `quantity` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredient_id`) REFERENCES `Ingredient`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ingredientId",
+            "columnName": "ingredient_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "batchId",
+            "columnName": "batch_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipe_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_batch_ingredient_ingredient_id",
+            "unique": false,
+            "columnNames": [
+              "ingredient_id"
+            ],
+            "createSql": "CREATE  INDEX `index_batch_ingredient_ingredient_id`\nON `${TABLE_NAME}` (`ingredient_id`)"
+          },
+          {
+            "name": "index_batch_ingredient_batch_id",
+            "unique": false,
+            "columnNames": [
+              "batch_id"
+            ],
+            "createSql": "CREATE  INDEX `index_batch_ingredient_batch_id`\nON `${TABLE_NAME}` (`batch_id`)"
+          },
+          {
+            "name": "index_batch_ingredient_recipe_id",
+            "unique": false,
+            "columnNames": [
+              "recipe_id"
+            ],
+            "createSql": "CREATE  INDEX `index_batch_ingredient_recipe_id`\nON `${TABLE_NAME}` (`recipe_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "batch",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "batch_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "recipe",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipe_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Ingredient",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ingredient_id"
             ],
             "referencedColumns": [
               "id"
@@ -381,11 +484,120 @@
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "recipe",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `creator_user_id` INTEGER NOT NULL, `owner_user_id` INTEGER NOT NULL, `owner_group_id` INTEGER NOT NULL, `public_readable` INTEGER NOT NULL, `carbonation` REAL, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creatorUserId",
+            "columnName": "creator_user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerUserId",
+            "columnName": "owner_user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerGroupId",
+            "columnName": "owner_group_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "publicReadable",
+            "columnName": "public_readable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "carbonation",
+            "columnName": "carbonation",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_recipe_creator_user_id",
+            "unique": false,
+            "columnNames": [
+              "creator_user_id"
+            ],
+            "createSql": "CREATE  INDEX `index_recipe_creator_user_id`\nON `${TABLE_NAME}` (`creator_user_id`)"
+          },
+          {
+            "name": "index_recipe_owner_user_id",
+            "unique": false,
+            "columnNames": [
+              "owner_user_id"
+            ],
+            "createSql": "CREATE  INDEX `index_recipe_owner_user_id`\nON `${TABLE_NAME}` (`owner_user_id`)"
+          },
+          {
+            "name": "index_recipe_owner_group_id",
+            "unique": false,
+            "columnNames": [
+              "owner_group_id"
+            ],
+            "createSql": "CREATE  INDEX `index_recipe_owner_group_id`\nON `${TABLE_NAME}` (`owner_group_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "User",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "creator_user_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "User",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "owner_user_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "groups",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "owner_group_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"26a62e7b2ec958026823e3f3be6648ba\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b271c742d4d2d33669b1930409911833\")"
     ]
   }
 }

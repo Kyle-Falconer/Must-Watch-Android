@@ -21,36 +21,33 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
-import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 
 import java.util.List;
 
-
 @Dao
-public interface BatchDao {
-    @Query("SELECT * FROM batch")
-    LiveData<List<Batch>> getAll();
+public interface BatchIngredientDao {
 
-    @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    LiveData<List<Batch>> getAll(long user_id);
+    @Query("SELECT * FROM batch_ingredient WHERE id = :batchIngredientId LIMIT 1")
+    LiveData<BatchIngredient> load(String batchIngredientId);
 
-    @Query("SELECT * FROM batch WHERE id = :batch_id LIMIT 1")
-    LiveData<Batch> get(Long batch_id);
+    @Query("SELECT * FROM batch_ingredient "
+            + "WHERE batch_id = :batch_id")
+    LiveData<List<BatchIngredient>> getIngredientsForBatch(long batch_id);
 
-    @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    LiveData<List<Batch>> loadBatchesForUser(long user_id);
 
-    @Insert
-    long insert(Batch batch);
+    @Query("SELECT * FROM batch_ingredient "
+            + "WHERE recipe_id = :recipe_id")
+    LiveData<List<BatchIngredient>> getIngredientsForRecipe(long recipe_id);
 
     @Insert
-    List<Long> insertAll(Batch... batches);
+    Long insert(BatchIngredient batchIngredient);
+
+    @Insert
+    List<Long> insertAll(BatchIngredient... batchIngredient);
 
     @Delete
-    void delete(Batch batch);
+    void delete(BatchIngredient batchIngredient);
 
-    @Update
-    int updateBatch(Batch batch);
 }

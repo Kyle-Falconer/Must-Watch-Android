@@ -250,7 +250,7 @@
                     android:hint="Target ABV%"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{batch.targetABV}" />
+                    android:text="@{safeUnbox(batch.targetABV)}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -265,7 +265,7 @@
                     android:hint="Target starting Specific Gravity (example: 1.115)"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{batch.targetSgStarting}" />
+                    android:text="@{safeUnbox(batch.targetSgStarting)}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -280,7 +280,7 @@
                     android:hint="Target final Specific Gravity (example: 1.05)"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{batch.targetSgFinal}" />
+                    android:text="@{safeUnbox(batch.targetSgFinal)}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -295,7 +295,7 @@
                     android:hint="Starting pH level (example: 3.7)"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{batch.startingPh}" />
+                    android:text="@{safeUnbox(batch.startingPh)}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -310,7 +310,7 @@
                     android:hint="starting temperature"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:text="@{batch.startingTemp}" />
+                    android:text="@{safeUnbox(batch.startingTemp)}" />
 
             </android.support.design.widget.TextInputLayout>
 

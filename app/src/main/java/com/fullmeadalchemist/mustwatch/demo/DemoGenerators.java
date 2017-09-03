@@ -17,6 +17,7 @@
 package com.fullmeadalchemist.mustwatch.demo;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
@@ -179,12 +180,20 @@ public class DemoGenerators {
      * @return Integer between min and max, inclusive.
      */
     public static int randInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return ThreadLocalRandom.current().nextInt(min, max + 1);
+        } else {
+            Random rand = new Random();
+            return rand.nextInt((max - min) + 1) + min;
+        }
     }
 
     private static float randFloat(float low, float high) {
-        Random r = new Random();
-        return r.nextFloat() * (high - low) + low;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return ThreadLocalRandom.current().nextFloat() * (high - low) + low;
+        } else {
+            Random r = new Random();
+            return r.nextFloat() * (high - low) + low;
+        }
     }
-
 }

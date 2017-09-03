@@ -168,7 +168,7 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:$espresso_version"
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:$espresso_version"
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
+        transitive = true
     }
 }
 

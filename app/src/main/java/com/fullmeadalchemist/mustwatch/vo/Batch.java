@@ -39,7 +39,8 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleD
         indices = {@Index(value = "user_id")},
         foreignKeys = @ForeignKey(entity = User.class,
                 parentColumns = "id",
-                childColumns = "user_id"))
+                childColumns = "user_id",
+                onDelete = ForeignKey.CASCADE))
 @TypeConverters({Converters.class})
 public class Batch {
 
