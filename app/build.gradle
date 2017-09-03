@@ -144,14 +144,18 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
 
+    //
+    // DEBUG ONLY
+    //
+    // http://facebook.github.io/stetho/
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    //
+    // https://github.com/JakeWharton/timber
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
+
     testCompile "android.arch.persistence.room:testing:$arch_version"
     testCompile "junit:junit:$junit_version"
-
-    //    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-    //        exclude group: 'com.android.support', module: 'support-annotations'
-    //    })
-
-    // AndroidJUnitRunner and JUnit Rules
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test:rules:1.0.1'
 
