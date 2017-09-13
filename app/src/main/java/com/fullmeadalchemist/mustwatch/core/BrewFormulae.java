@@ -16,11 +16,10 @@
 
 package com.fullmeadalchemist.mustwatch.core;
 
-import android.util.Log;
-
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.AbstractQuantity;
+import timber.log.Timber;
 
 import static systems.uom.common.USCustomary.LITER;
 
@@ -78,7 +77,7 @@ public class BrewFormulae {
          */
         double OG = (targetStartingSG != null) ? targetStartingSG : sugarConcToSG(totalSugars, outputVolume);
         double FG = targetFinalSG;
-        Log.d(TAG, String.format("Read the target final specific gravity to be %4.3f", FG));
+        Timber.d("Read the target final specific gravity to be %4.3f", FG);
         //double brix = ( 135.997 * Math.pow(SG,3))  - ( 630.272*Math.pow(SG,2) ) + (111.14*SG) - 616.868;
         double brix = (182.9622 * Math.pow(FG, 3)) - (777.3009 * Math.pow(FG, 2)) + (1264.517 * FG) - 670.1832;
         double baume = 145 / (145 - brix); // 145 * (1 - (1 / SG));
@@ -98,8 +97,8 @@ public class BrewFormulae {
 
         double abv_pct = (76.08 * (OG - FG) / (1.775 - OG)) * (FG / 0.794);
         double abw_pct = 0.8 * baume;
-        Log.d(TAG, String.format("Estimated percent of Alcohol by Weight to be %4.3f", abw_pct));
-        Log.d(TAG, String.format("Estimated percent of Alcohol by Volume to be %4.3f", abv_pct));
+        Timber.d("Estimated percent of Alcohol by Weight to be %4.3f", abw_pct);
+        Timber.d("Estimated percent of Alcohol by Volume to be %4.3f", abv_pct);
         return abv_pct;
     }
 }

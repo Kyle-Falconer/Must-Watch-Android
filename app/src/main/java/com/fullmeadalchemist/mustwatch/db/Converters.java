@@ -29,6 +29,7 @@ import java.util.TimeZone;
 
 import javax.measure.Quantity;
 import javax.measure.Unit;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
@@ -107,6 +108,44 @@ public class Converters {
                 volume.getValue(),
                 SEPARATOR,
                 qtyToTextAbbr(volume));
+    }
+
+
+    @TypeConverter
+    public static Quantity<Mass> fromMassText(String massText) {
+        if (TextUtils.isEmpty(massText)) {
+            return null;
+        }
+
+        String[] valueTexts = TextUtils.split(massText.trim(), SEPARATOR);
+        if (valueTexts.length != 2) {
+            Log.e(TAG, String.format("Could not parse Amount<Mass> from \"%s\"", massText));
+            return null;
+        }
+
+        Log.v(TAG, String.format("Parsing Amount<Mass> from string %s", massText));
+        Double value = Double.parseDouble(valueTexts[0]);
+        String unitText = valueTexts[1];
+
+        Unit<Mass> unit;
+        try {
+            unit = (Unit<Mass>) textAbbrToUnit(unitText);
+        } catch (ClassCastException e) {
+            Log.e(TAG, String.format("Failed to cast unit text %s to Unit<Mass>", unitText));
+            return null;
+        }
+        return Quantities.getQuantity(value, unit);
+    }
+
+    @TypeConverter
+    public static String toMassText(Quantity<Mass> mass) {
+        if (mass == null) {
+            return null;
+        }
+        return String.format("%s%s%s",
+                mass.getValue(),
+                SEPARATOR,
+                qtyToTextAbbr(mass));
     }
 
 

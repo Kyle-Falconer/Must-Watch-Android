@@ -48,8 +48,8 @@ import static org.hamcrest.core.AllOf.allOf;
 public class Entry {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
-            MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+
     private Resources res;
 
     @Before

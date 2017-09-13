@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.repository;
 
 import android.arch.lifecycle.LiveData;
-import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.IngredientDao;
 import com.fullmeadalchemist.mustwatch.vo.Ingredient;
@@ -30,11 +29,10 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 @Singleton
 public class IngredientRepository {
-    private static final String TAG = IngredientRepository.class.getSimpleName();
-
     private final IngredientDao ingredientDao;
 
     @Inject
@@ -42,16 +40,16 @@ public class IngredientRepository {
         this.ingredientDao = ingredientDao;
     }
 
-    public void addSugars(List<Ingredient> ingredients) {
-        Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.size()));
+    public void addIngredients(List<Ingredient> ingredients) {
+        Timber.d("Adding %s Ingredient objects to the db", ingredients.size());
         Observable.fromCallable(() -> ingredientDao.insertAll(ingredients.toArray(new Ingredient[ingredients.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
-    public void addSugars(Ingredient[] ingredients) {
-        Log.d(TAG, String.format("Adding %s Ingredient objects to the db", ingredients.length));
+    public void addIngredients(Ingredient[] ingredients) {
+        Timber.d("Adding %s Ingredient objects to the db", ingredients.length);
         Observable.fromCallable(() -> ingredientDao.insertAll(ingredients))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -59,6 +57,10 @@ public class IngredientRepository {
     }
 
     public LiveData<List<Ingredient>> getSugarEntries() {
+        return ingredientDao.getAllSugars();
+    }
+
+    public LiveData<List<Ingredient>> getAll() {
         return ingredientDao.getAll();
     }
 }

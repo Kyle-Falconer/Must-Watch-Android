@@ -1,119 +1,66 @@
 [
   {
     "name": "Beginner Traditional",
-    "type": [
-      "MEAD",
-      "TRADITIONAL"
-    ],
     "min_days_to_ferment": 7,
     "max_days_to_ferment": 14,
     "min_days_to_age": 90,
     "starting_sg": 1.126,
     "final_sg": 1.03,
     "carbonation": 0,
-    "output_volume_amount": 1,
-    "output_volume_unit": "gal_us",
+    "output_volume": "1 gal_us",
     "ingredients": [
       {
-        "type": "sugar",
-        "kind": "HONEY__ORANGE_BLOSSOM",
-        "qty_amount": 3.5,
-        "qty_unit": "lb"
+        "ingredient_id": "HONEY__ORANGE_BLOSSOM",
+        "quantity_mass": "3.5 lb"
       },
       {
-        "type": "nutrient",
-        "kind": "DAP",
-        "qty_amount": 1,
-        "qty_unit": "tsp"
+        "ingredient_id": "DAP",
+        "quantity_vol": "1 tsp"
       },
       {
-        "type": "energizer",
-        "kind": "YEAST_HULLS",
-        "qty_amount": 0.5,
-        "qty_unit": "tsp"
+        "ingredient_id": "YEAST_HULLS",
+        "quantity_vol": "0.5 tsp"
       },
       {
-        "type": "stabilizer",
-        "kind": "CAMPDEN",
-        "qty_amount": 0.125,
-        "qty_unit": "tsp"
+        "ingredient_id": "CAMPDEN",
+        "quantity_vol": "0.125 tsp"
       },
       {
-        "type": "yeast",
-        "kind": "SAFALE_US_05",
-        "qty_amount": 5,
-        "qty_unit": "g"
+        "ingredient_id": "SAFALE_US_05",
+        "quantity_mass": "5 g"
       }
     ],
-    "method": [
-      "Make sure that you sanitize everything.",
-      "In your fermentation vessel, add room temperature honey, then add room temperature water until the total volume of the must is 1 gallon.",
-      "Pour dry yeast into must.",
-      "Add the DAP and Yeast Hulls.",
-      "If using a bucket, stir vigorously for 3-5 minutes. If using a carboy, seal with a cap or stopper and shake vigorously for 3-5 minutes, then unseal the container.",
-      "Take and record a gravity reading, if desired.",
-      "Close the container with a drilled stopper or drilled lid and airlock. Don't forget to add sanitizer or vodka to your airlock!",
-      "Place in a dark location at 60-75° F.",
-      "Signs of fermentation should appear in 24-48 hours. Fermentation should complete in 1-2 weeks. This is highly variable depending upon dozens of factors.",
-      "When fermentation is complete, siphon the mead (it is now mead!) into a new vessel. Be careful not to splash too much, nor to suck up too much of the sediment on the bottom (but some doesn't hurt anything). At this stage, you can add the crushed campden tablet to the new vessel. The siphoning action should dissolve it sufficiently.",
-      "When it is clear enough that you can read a newspaper print through it, it is ready to bottle, but you can also allow it to bulk age."
-    ],
+    "notes": "Signs of fermentation should appear in 24-48 hours. Fermentation should complete in 1-2 weeks.",
     "url_found": "https://www.reddit.com/r/mead/wiki/recipes#wiki_beginner_traditional"
   },
   {
     "name": "Joe's Grape Mead",
-    "type": [
-      "MEAD",
-      "MELOMEL",
-      "PYMENT"
-    ],
     "min_days_to_ferment": 14,
     "max_days_to_ferment": 21,
     "min_days_to_age": 14,
     "starting_sg": 1.120,
     "final_sg": 1.0,
-    "abv_pct": 0.13,
     "carbonation": 0,
-    "output_volume_amount": 1,
-    "output_volume_unit": "gal_us",
+    "output_volume": "1 gal_us",
     "ingredients": [
       {
-        "type": "sugar",
-        "kind": "HONEY__CLOVER",
-        "mass": {
-          "amount": 2,
-          "unit": "lb"
-        }
+        "ingredient_id": "HONEY__CLOVER",
+        "quantity_mass": "2 lb"
       },
       {
-        "type": "sugar",
-        "kind": "HONEY__BUCKWHEAT",
-        "mass": {
-          "amount": 6,
-          "unit": "oz"
-        }
+        "ingredient_id": "HONEY__BUCKWHEAT",
+        "quantity_mass": "6 oz"
       },
       {
-        "type": "sugar",
-        "kind": "WELCHS_GRAPE_JUICE",
-        "volume": {
-          "amount": 64,
-          "unit": "oz_fl_us"
-        }
+        "ingredient_id": "WELCHS_GRAPE_JUICE",
+        "quantity_vol": "64 oz_fl_us"
       },
       {
-        "type": "yeast",
-        "kind": "LALVIN_EC_1118"
+        "ingredient_id": "LALVIN_EC_1118",
+        "quantity_mass": "5 g"
       }
     ],
-    "method": [
-      "It will ferment super fast to dry (about 13% alcohol) because of type of yeast and all the nutrients and natural sugars in Welch's grape juice. It should be to SG=1.000 or less in 14-21 days max.",
-      "Rack to clean carboy over mixture of 6 oz honey, 6 fl oz Welch's grape juice, 1/2t of Sorbate and 1/2 crushed campden tablet.",
-      "It will stabilize and clear fast. Let it clear and set for another 2 weeks and it will be ready to bottle and drink.",
-      "It will be medium sweet but smooth and drinkable right away. If you want it semi sweet use 4 oz honey instead of 6 oz / gal.",
-      "The only reason I used the Campden (Sulphite) is because my understanding is that using both Potassium Sorbate and Sulphite together will definitely inhibit renewed fermentation and it did for me.",
-      "Color is deep red, has nice legs on sides of glass after swirling, good nose and great balanced taste) Just don't tell everybody you used Welch's. I won't. Because the juice is clear to start, clearing is naturally fast, fast, fast."
-    ],
+    "notes": "It will ferment super fast to dry (about 13% alcohol) because of type of yeast and all the nutrients and natural sugars in Welch's grape juice. Rack to clean carboy over mixture of 6 oz honey, 6 fl oz Welch's grape juice, 1/2t of Sorbate and 1/2 crushed campden tablet. It will stabilize and clear fast. Let it clear and set for another 2 weeks and it will be ready to bottle and drink. It will be medium sweet but smooth and drinkable right away.",
     "url_found": "http://www.homebrewtalk.com/showthread.php?t=57190"
   }
 ]

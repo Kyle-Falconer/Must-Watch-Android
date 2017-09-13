@@ -28,6 +28,10 @@
     "type":"NUTRIENT"
   },
   {
+    "id": "YEAST_HULLS",
+    "type":"NUTRIENT"
+  },
+  {
     "id": "FERMAID_O",
     "type":"NUTRIENT"
   },

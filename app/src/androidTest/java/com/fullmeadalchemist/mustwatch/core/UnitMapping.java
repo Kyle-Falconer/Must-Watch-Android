@@ -48,6 +48,7 @@ import static systems.uom.common.USCustomary.GALLON_LIQUID;
 import static systems.uom.common.USCustomary.LITER;
 import static systems.uom.common.USCustomary.OUNCE;
 import static systems.uom.common.USCustomary.POUND;
+import static systems.uom.common.USCustomary.TEASPOON;
 import static tec.units.ri.unit.Units.CELSIUS;
 import static tec.units.ri.unit.Units.GRAM;
 import static tec.units.ri.unit.Units.KILOGRAM;
@@ -64,6 +65,7 @@ public class UnitMapping {
     private Quantity<Volume> usgalDryVol;
     private Quantity<Volume> flozVol;
     private Quantity<Volume> flozukVol;
+    private Quantity<Volume> teaspoonMass;
     private Quantity<Mass> gramMass;
     private Quantity<Mass> kgMass;
     private Quantity<Mass> ounceMass;
@@ -88,6 +90,7 @@ public class UnitMapping {
         kgMass = Quantities.getQuantity(2, KILOGRAM);
         ounceMass = Quantities.getQuantity(2, OUNCE);
         poundMass = Quantities.getQuantity(2, POUND);
+        teaspoonMass = Quantities.getQuantity(2, TEASPOON);
     }
 
     @Test
@@ -123,6 +126,10 @@ public class UnitMapping {
         String ukgalAbbr = qtyToTextAbbr(ukgalVol);
         assertThat(ukgalAbbr, is(not(nullValue())));
         assertThat(ukgalAbbr, is("gal_uk"));
+
+        String teaspoonAbbr = qtyToTextAbbr(teaspoonMass);
+        assertThat(teaspoonAbbr, is(not(nullValue())));
+        assertThat(teaspoonAbbr, is("tsp"));
 
         String gramAbbr = qtyToTextAbbr(gramMass);
         assertThat(gramAbbr, is(not(nullValue())));
@@ -174,6 +181,10 @@ public class UnitMapping {
         Unit<?> ukflozUnit = textAbbrToUnit("oz_fl_uk");
         assertThat(ukflozUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ukflozUnit), is("oz_fl_uk"));
+
+        Unit<?> tspUnit = textAbbrToUnit("tsp");
+        assertThat(tspUnit, is(not(nullValue())));
+        assertThat(unitToTextAbbr(tspUnit), is("tsp"));
 
         Unit<?> gramUnit = textAbbrToUnit("g");
         assertThat(gramUnit, is(not(nullValue())));

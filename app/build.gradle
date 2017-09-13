@@ -72,18 +72,20 @@ android {
     flavorDimensions "default"
     productFlavors {
         beta {
-            versionNameSuffix '-beta'
-            applicationIdSuffix ".beta"
             dimension "default"
+            versionNameSuffix '-beta'
+            applicationIdSuffix '.beta'
         }
         prod {
             dimension "default"
+            versionNameSuffix '-prod'
         }
     }
     buildTypes {
         debug {
             minifyEnabled false
             pseudoLocalesEnabled true
+            applicationIdSuffix '.debug'
         }
         release {
             minifyEnabled false

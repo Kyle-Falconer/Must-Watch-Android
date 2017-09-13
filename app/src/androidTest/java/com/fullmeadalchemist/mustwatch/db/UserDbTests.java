@@ -10,6 +10,7 @@ import com.fullmeadalchemist.mustwatch.vo.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.fullmeadalchemist.mustwatch.util.LiveDataTestUtil.getValue;
@@ -22,19 +23,19 @@ public class UserDbTests extends DbTest {
 
     @Test
     public void insertAndLoad() throws InterruptedException {
-        final User user = TestUtil.createUser("foo", "foo@email.com");
+        final User user = TestUtil.createUser();
         db.userDao().insert(user);
 
         final User loaded = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded.name, is("foo"));
-        assertThat(loaded.email, is("foo@email.com"));
+        assertThat(loaded.name, is(user.name));
+        assertThat(loaded.email, is(user.email));
 
-        final User replacement = TestUtil.createUser("foo2", "foo2@email.com");
+        final User replacement = TestUtil.createUser();
         db.userDao().insert(replacement);
 
-        final User loadedReplacement = getValue(db.userDao().findByEmail("foo2@email.com"));
-        assertThat(loadedReplacement.name, is("foo2"));
-        assertThat(loadedReplacement.email, is("foo2@email.com"));
+        final User loadedReplacement = getValue(db.userDao().findByEmail(replacement.email));
+        assertThat(loadedReplacement.name, is(replacement.name));
+        assertThat(loadedReplacement.email, is(replacement.email));
     }
 
     @Test
@@ -55,14 +56,12 @@ public class UserDbTests extends DbTest {
         final Group group1_loaded = getValue(db.groupDao().findByName(group1.name));
         assertThat(group1_loaded.name, is("Group Foo"));
 
-        for (int i = 0; i < n; i++) {
-            User member = TestUtil.createUser("foo" + i, "foo" + i + "@email.com");
-            db.userDao().insert(member);
-        }
+        List<User> usersToAdd = TestUtil.createUsers(n);
+        db.userDao().insertAll(usersToAdd);
 
-        for (int i = 0; i < n; i++) {
-            User member_loaded = getValue(db.userDao().findByEmail("foo" + i + "@email.com"));
-            assertThat(member_loaded.name, is("foo" + i));
+        for (User member : usersToAdd) {
+            User member_loaded = getValue(db.userDao().findByEmail(member.email));
+            assertThat(member_loaded.name, is(member.name));
             GroupMembership membership = new GroupMembership();
             membership.userId = member_loaded.id;
             membership.groupId = group1_loaded.id;
@@ -83,14 +82,12 @@ public class UserDbTests extends DbTest {
         final Group group1_loaded = getValue(db.groupDao().findByName(group1.name));
         assertThat(group1_loaded.name, is("Group Foo"));
 
-        for (int i = 0; i < n; i++) {
-            User member = TestUtil.createUser("foo" + i, "foo" + i + "@email.com");
-            db.userDao().insert(member);
-        }
+        List<User> usersToAdd = TestUtil.createUsers(n);
+        db.userDao().insertAll(usersToAdd);
 
-        for (int i = 0; i < n; i++) {
-            User member_loaded = getValue(db.userDao().findByEmail("foo" + i + "@email.com"));
-            assertThat(member_loaded.name, is("foo" + i));
+        for (User member : usersToAdd) {
+            User member_loaded = getValue(db.userDao().findByEmail(member.email));
+            assertThat(member_loaded.name, is(member.name));
             GroupMembership membership = new GroupMembership();
             membership.userId = member_loaded.id;
             membership.groupId = group1_loaded.id;

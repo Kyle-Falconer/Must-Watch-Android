@@ -22,7 +22,11 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import javax.measure.Quantity;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Volume;
 
 @Entity(tableName = "batch_ingredient",
@@ -42,18 +46,49 @@ import javax.measure.quantity.Volume;
                         onDelete = ForeignKey.CASCADE)
         })
 public class BatchIngredient {
+    @Expose
     @PrimaryKey(autoGenerate = true)
     public Long id;
 
+    @Expose
+    @SerializedName("ingredient_id")
     @ColumnInfo(name = "ingredient_id")
     public String ingredientId;
 
+    @Expose
+    @SerializedName("batch_id")
     @ColumnInfo(name = "batch_id")
     public Long batchId;
 
+    @Expose
+    @SerializedName("recipe_id")
     @ColumnInfo(name = "recipe_id")
     public Long recipeId;
 
-    @ColumnInfo(name = "quantity")
-    public Quantity<Volume> quantity;
+    // FIXME: combine quantityVol and quantityMass into one
+    // use the javax.measure lib to check if the types are compatible to parse to/from
+    @Expose
+    @SerializedName("quantity_vol")
+    @ColumnInfo(name = "quantity_vol")
+    public Quantity<Volume> quantityVol;
+
+    @Expose
+    @SerializedName("quantity_mass")
+    @ColumnInfo(name = "quantity_mass")
+    public Quantity<Mass> quantityMass;
+
+    @Override
+    public String toString() {
+        String quantity;
+        if (quantityVol != null) {
+            quantity = quantityVol.toString();
+        } else if (quantityMass != null) {
+            quantity = quantityMass.toString();
+        } else {
+            quantity = "null";
+        }
+        return String.format("{ %s, %s }",
+                ingredientId,
+                quantity);
+    }
 }

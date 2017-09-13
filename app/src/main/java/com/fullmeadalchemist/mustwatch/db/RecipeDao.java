@@ -45,6 +45,10 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE public_readable=1")
     LiveData<List<Recipe>> getPublicRecipes();
 
+    // FIXME: pull from groups this user has read+ access to as well
+    @Query("SELECT * FROM recipe WHERE creator_user_id = :user_id OR owner_user_id = :user_id OR public_readable=1")
+    LiveData<List<Recipe>> getRecipesForUser(long user_id);
+
     @Insert
     long insert(Recipe recipe);
 
@@ -56,4 +60,5 @@ public interface RecipeDao {
 
     @Update
     int updateRecipe(Recipe recipe);
+
 }

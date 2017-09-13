@@ -33,7 +33,7 @@ import dagger.android.AndroidInjectionModule;
         MainActivityModule.class
 })
 public interface AppComponent {
-    void inject(MustWatchApp githubApp);
+    void inject(MustWatchApp mustWatchApp);
 
     @Component.Builder
     interface Builder {

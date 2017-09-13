@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b271c742d4d2d33669b1930409911833",
+    "identityHash": "5deb6d11572eb1f93bb68ce107f6ec13",
     "entities": [
       {
         "tableName": "User",
@@ -154,7 +154,7 @@
       },
       {
         "tableName": "batch_ingredient",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `ingredient_id` TEXT, `batch_id` INTEGER, `recipe_id` INTEGER, `quantity` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredient_id`) REFERENCES `Ingredient`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `ingredient_id` TEXT, `batch_id` INTEGER, `recipe_id` INTEGER, `quantity_vol` TEXT, `quantity_mass` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredient_id`) REFERENCES `Ingredient`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -181,8 +181,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "quantity",
-            "columnName": "quantity",
+            "fieldPath": "quantityVol",
+            "columnName": "quantity_vol",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityMass",
+            "columnName": "quantity_mass",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -487,7 +493,7 @@
       },
       {
         "tableName": "recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `creator_user_id` INTEGER NOT NULL, `owner_user_id` INTEGER NOT NULL, `owner_group_id` INTEGER NOT NULL, `public_readable` INTEGER NOT NULL, `carbonation` REAL, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `creator_user_id` INTEGER, `owner_user_id` INTEGER, `owner_group_id` INTEGER, `public_readable` INTEGER NOT NULL, `output_volume` TEXT, `carbonation` REAL, `min_days_to_ferment` INTEGER, `max_days_to_ferment` INTEGER, `starting_sg` REAL, `final_sg` REAL, `notes` TEXT, `url_found` TEXT, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -496,22 +502,28 @@
             "notNull": false
           },
           {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "creatorUserId",
             "columnName": "creator_user_id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "ownerUserId",
             "columnName": "owner_user_id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "ownerGroupId",
             "columnName": "owner_group_id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "publicReadable",
@@ -520,9 +532,51 @@
             "notNull": true
           },
           {
+            "fieldPath": "outputVol",
+            "columnName": "output_volume",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "carbonation",
             "columnName": "carbonation",
             "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "minDaysToFerment",
+            "columnName": "min_days_to_ferment",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maxDaysToFerment",
+            "columnName": "max_days_to_ferment",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startingSG",
+            "columnName": "starting_sg",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finalSG",
+            "columnName": "final_sg",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "urlFound",
+            "columnName": "url_found",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -597,7 +651,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b271c742d4d2d33669b1930409911833\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5deb6d11572eb1f93bb68ce107f6ec13\")"
     ]
   }
 }

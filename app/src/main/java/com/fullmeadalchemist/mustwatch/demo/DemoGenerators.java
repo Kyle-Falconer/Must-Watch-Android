@@ -93,7 +93,7 @@ public class DemoGenerators {
         return batches;
     }
 
-    private static Batch.BatchStatusEnum getStatus() {
+    public static Batch.BatchStatusEnum getStatus() {
         int n = randInt(1, 4);
         Batch.BatchStatusEnum statusEnum;
         switch (n) {
@@ -122,7 +122,7 @@ public class DemoGenerators {
         return String.format("%s #%s", RECIPE_LABELS[recipe_index], rNo);
     }
 
-    private static Quantity<Volume> getRandVolume() {
+    public static Quantity<Volume> getRandVolume() {
         int n = randInt(1, 3);
         Quantity<Volume> vol;
         switch (n) {
@@ -139,25 +139,25 @@ public class DemoGenerators {
         return vol;
     }
 
-    private static float round(float n) {
+    public static float round(float n) {
         return (float) Math.floor(n);
     }
 
-    private static float roundOneDecimalPlace(float n) {
+    public static float roundOneDecimalPlace(float n) {
         return (float) (Math.round(n * 10.0) / 10.0);
     }
 
-    private static float roundTwoDecimalPlaces(float n) {
+    public static float roundTwoDecimalPlaces(float n) {
         return (float) (Math.round(n * 100.0) / 100.0);
     }
 
-    private static float roundThreeDecimalPlaces(float n) {
+    public static float roundThreeDecimalPlaces(float n) {
         return (float) (Math.round(n * 1000.0) / 1000.0);
     }
 
 
     @SuppressLint("DefaultLocale")
-    private static void addLogsToBatchItem(Long batchId, int numLogsToGenerate, Calendar batchCreateDate) {
+    public static void addLogsToBatchItem(Long batchId, int numLogsToGenerate, Calendar batchCreateDate) {
         for (int i = 0; i < numLogsToGenerate; i++) {
             LogEntry l = new LogEntry();
             l.note = String.format("Dummy Log entry #%d", i);
@@ -188,7 +188,7 @@ public class DemoGenerators {
         }
     }
 
-    private static float randFloat(float low, float high) {
+    public static float randFloat(float low, float high) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextFloat() * (high - low) + low;
         } else {

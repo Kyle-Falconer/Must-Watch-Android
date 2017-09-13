@@ -47,7 +47,9 @@ public interface BatchIngredientDao {
     @Insert
     List<Long> insertAll(BatchIngredient... batchIngredient);
 
+    @Insert
+    List<Long> insertAll(List<BatchIngredient> ingredients);
+
     @Delete
     void delete(BatchIngredient batchIngredient);
-
 }

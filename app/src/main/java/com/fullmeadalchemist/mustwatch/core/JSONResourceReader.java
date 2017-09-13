@@ -18,16 +18,32 @@ package com.fullmeadalchemist.mustwatch.core;
 
 
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
+
+import javax.measure.Quantity;
+import javax.measure.quantity.Mass;
+import javax.measure.quantity.Volume;
+
+import timber.log.Timber;
+
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toMass;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
 
 
 /**
@@ -76,7 +92,46 @@ public class JSONResourceReader {
      * @return An object of type T, with member fields populated using Gson.
      */
     public <T> T constructUsingGson(Class<T> type) {
-        Gson gson = new GsonBuilder().create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Type volumeType = new TypeToken<Quantity<Volume>>() {
+        }.getType();
+        JsonDeserializer<Quantity<Volume>> volumeDeserializer = new VolumeDeserializer();
+        gsonBuilder.registerTypeAdapter(volumeType, volumeDeserializer);
+
+        Type massType = new TypeToken<Quantity<Mass>>() {
+        }.getType();
+        JsonDeserializer<Quantity<Mass>> massDeserializer = new MassDeserializer();
+        gsonBuilder.registerTypeAdapter(massType, massDeserializer);
+
+        Gson gson = gsonBuilder.create();
+
         return gson.fromJson(jsonString, type);
+    }
+
+
+    private class VolumeDeserializer implements JsonDeserializer<Quantity<Volume>> {
+        public Quantity<Volume> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            String volString = json.getAsJsonPrimitive().getAsString();
+            if (!TextUtils.isEmpty(volString)) {
+                String[] components = volString.split(" ");
+                return toVolume(components[0], components[1]);
+            }
+            Timber.e("Failed to parse volume from string\"%s\"", volString);
+            return null;
+        }
+    }
+
+    private class MassDeserializer implements JsonDeserializer<Quantity<Mass>> {
+        public Quantity<Mass> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            String volString = json.getAsJsonPrimitive().getAsString();
+            if (!TextUtils.isEmpty(volString)) {
+                String[] components = volString.split(" ");
+                return toMass(components[0], components[1]);
+            }
+            Timber.e("Failed to parse mass from string\"%s\"", volString);
+            return null;
+        }
     }
 }

@@ -23,9 +23,11 @@ import com.fullmeadalchemist.mustwatch.R;
 
 import javax.measure.Quantity;
 import javax.measure.Unit;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
+import timber.log.Timber;
 
 import static systems.uom.common.Imperial.GALLON_UK;
 import static systems.uom.common.Imperial.OUNCE_LIQUID;
@@ -36,6 +38,7 @@ import static systems.uom.common.USCustomary.GALLON_LIQUID;
 import static systems.uom.common.USCustomary.LITER;
 import static systems.uom.common.USCustomary.OUNCE;
 import static systems.uom.common.USCustomary.POUND;
+import static systems.uom.common.USCustomary.TEASPOON;
 import static tec.units.ri.unit.Units.CELSIUS;
 import static tec.units.ri.unit.Units.GRAM;
 import static tec.units.ri.unit.Units.KILOGRAM;
@@ -83,6 +86,9 @@ public class UnitMapper {
             case "oz_fl_uk":
             case "oz_fl":
                 unit = OUNCE_LIQUID;
+                break;
+            case "tsp":
+                unit = TEASPOON;
                 break;
             case "g":
                 unit = GRAM;
@@ -165,6 +171,9 @@ public class UnitMapper {
             case "gal":
                 unitString = "gal_us";
                 break;
+            case "tsp":
+                unitString = "tsp";
+                break;
             case "g":
                 unitString = "g";
                 break;
@@ -185,6 +194,27 @@ public class UnitMapper {
 
 
     @Nullable
+    public static Quantity<Mass> toMass(String floatText, String unitText) {
+        Float scalar = ValueParsers.toFloat(floatText);
+        if (scalar == null || unitText == null) {
+            return null;
+        }
+        Unit<Mass> unit;
+        try {
+            unit = (Unit<Mass>) textAbbrToUnit(unitText);
+        } catch (ClassCastException e) {
+            Timber.e("Failed to cast unit text %s to Unit<Mass>", unitText);
+            return null;
+        }
+        if (unit == null) {
+            Timber.e("Failed to get Unit<Mass> from text %s", unitText);
+            return null;
+        }
+        return Quantities.getQuantity(scalar, unit);
+    }
+
+
+    @Nullable
     public static Quantity<Volume> toVolume(String floatText, String unitText) {
         Float scalar = ValueParsers.toFloat(floatText);
         if (scalar == null || unitText == null) {
@@ -194,11 +224,11 @@ public class UnitMapper {
         try {
             unit = (Unit<Volume>) textAbbrToUnit(unitText);
         } catch (ClassCastException e) {
-            Log.e(TAG, String.format("Failed to cast unit text %s to Unit<Volume>", unitText));
+            Timber.e("Failed to cast unit text %s to Unit<Volume>", unitText);
             return null;
         }
         if (unit == null) {
-            Log.e(TAG, String.format("Failed to get Unit<Volume> from text %s", unitText));
+            Timber.e("Failed to get Unit<Volume> from text %s", unitText);
             return null;
         }
         return Quantities.getQuantity(scalar, unit);

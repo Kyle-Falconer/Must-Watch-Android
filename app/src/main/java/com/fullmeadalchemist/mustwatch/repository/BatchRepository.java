@@ -53,7 +53,7 @@ public class BatchRepository {
 
     public LiveData<Long> addBatch(Batch batch) {
         MutableLiveData<Long> batchIdLiveData = new MutableLiveData<>();
-        Log.d(TAG, "Adding batch to db: " + batch.toString());
+        Log.d(TAG, "Adding batch to db:\n" + batch.toString());
         Observable.fromCallable(() -> batchDao.insert(batch))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -63,7 +63,7 @@ public class BatchRepository {
 
     public LiveData<List<Long>> addBatches(List<Batch> batches) {
         MutableLiveData<List<Long>> batchIdsLiveData = new MutableLiveData<>();
-        Log.d(TAG, String.format("Adding %d batch to db: %s", batches.size(), TextUtils.join("\n", batches)));
+        Log.d(TAG, String.format("Adding %d batches to db:\n%s", batches.size(), TextUtils.join("\n", batches)));
         Observable.fromCallable(() -> batchDao.insertAll(batches.toArray(new Batch[batches.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

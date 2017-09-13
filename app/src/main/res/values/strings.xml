@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Must Watch</string>
+    <string name="app_name">Full Mead Alchemist</string>
     <string name="save_batch">Save Batch</string>
     <string name="add_log_entry">Add Log Entry</string>
     <string name="edit_batch_title">Editing Batch #%d</string>
@@ -35,7 +35,7 @@
     <!-- ================================================================
                         MEAD TYPES
     ================================================================= -->
-    <string name="MEAD">MEAD</string>
+    <string name="MEAD">mead</string>
     <string name="MEAD_TRADITIONAL">traditional</string>
     <string name="MELOMEL">melomel</string>
     <string name="PYMENT">pyment</string>
@@ -131,19 +131,16 @@
     <!-- ================================================================
                                 NUTRIENTS
     ================================================================= -->
-    <string name="DAP">Diammonium Phosphate</string>
+    <string name="DAP">Diammonium Phosphate (DAP)</string>
     <string name="FERMAID_O">Fermaid O</string>
     <string name="FERMAID_K">Fermaid K</string>
     <string name="GOFERM">GoFerm</string>
+    <string name="YEAST_HULLS">yeast hulls</string>
 
     <!-- ================================================================
                             STABILIZER
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
 
-    <!-- ================================================================
-                        ENERGIZER
-    ================================================================= -->
-    <string name="YEAST_HULLS">yeast hulls</string>
 
 </resources>

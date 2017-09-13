@@ -17,16 +17,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import tec.units.ri.quantity.Quantities;
 
 import static com.fullmeadalchemist.mustwatch.util.LiveDataTestUtil.getValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static systems.uom.common.USCustomary.LITER;
+import static systems.uom.common.USCustomary.FLUID_OUNCE;
+import static systems.uom.common.USCustomary.POUND;
 
 @RunWith(AndroidJUnit4.class)
 public class BatchDbTests extends DbTest {
@@ -43,14 +42,12 @@ public class BatchDbTests extends DbTest {
     @Test
     public void insertAndLoad() throws InterruptedException {
 
-        final User user = TestUtil.createUser("foo", "foo@email.com");
+        final User user = TestUtil.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is("foo"));
+        assertThat(loaded_user.name, is(user.name));
 
-        final Batch batch = TestUtil.createBatch();
-        batch.createDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        batch.userId = loaded_user.id;
+        final Batch batch = TestUtil.createBatch(loaded_user.id);
         db.batchDao().insert(batch);
 
         final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.id));
@@ -61,14 +58,12 @@ public class BatchDbTests extends DbTest {
     @Test
     public void insertAndLoad10LogEntries() throws InterruptedException {
         int n = 10;
-        final User user = TestUtil.createUser("foo", "foo@email.com");
+        final User user = TestUtil.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is("foo"));
+        assertThat(loaded_user.name, is(user.name));
 
-        final Batch batch = TestUtil.createBatch();
-        batch.createDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        batch.userId = loaded_user.id;
+        final Batch batch = TestUtil.createBatch(loaded_user.id);
         db.batchDao().insert(batch);
 
         // loadLogEntriesForBatch
@@ -89,16 +84,14 @@ public class BatchDbTests extends DbTest {
     }
 
     @Test
-    public void insertAndLoadWithOneIngredient() throws InterruptedException {
+    public void insertAndLoadWithTwoIngredients() throws InterruptedException {
 
-        final User user = TestUtil.createUser("foo", "foo@email.com");
+        final User user = TestUtil.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is("foo"));
+        assertThat(loaded_user.name, is(user.name));
 
-        final Batch batch = TestUtil.createBatch();
-        batch.createDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        batch.userId = loaded_user.id;
+        final Batch batch = TestUtil.createBatch(loaded_user.id);
         db.batchDao().insert(batch);
 
         final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.id));
@@ -107,19 +100,18 @@ public class BatchDbTests extends DbTest {
         Batch added_batch = loaded_batch.get(0);
         assertThat(added_batch.createDate.getTime(), is(batch.createDate.getTime()));
 
-
         Ingredient cloverHoneyIngredient = getValue(db.ingredientDao().getById("HONEY__CLOVER"));
         BatchIngredient ingredient1 = new BatchIngredient();
         ingredient1.batchId = added_batch.id;
         ingredient1.ingredientId = cloverHoneyIngredient.id;
-        ingredient1.quantity = Quantities.getQuantity(2.5, LITER);
+        ingredient1.quantityMass = Quantities.getQuantity(2, POUND);
         db.batchIngredientDao().insert(ingredient1);
 
         Ingredient grapeJuiceIngredient = getValue(db.ingredientDao().getById("WELCHS_GRAPE_JUICE"));
         BatchIngredient ingredient2 = new BatchIngredient();
         ingredient2.batchId = added_batch.id;
         ingredient2.ingredientId = grapeJuiceIngredient.id;
-        ingredient2.quantity = Quantities.getQuantity(2.5, LITER);
+        ingredient2.quantityVol = Quantities.getQuantity(64, FLUID_OUNCE);
         db.batchIngredientDao().insert(ingredient2);
 
         List<BatchIngredient> addedBatchIngredients = getValue(db.batchIngredientDao().getIngredientsForBatch(added_batch.id));

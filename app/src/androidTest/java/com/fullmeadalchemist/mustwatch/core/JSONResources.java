@@ -22,6 +22,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.vo.Ingredient;
+import com.fullmeadalchemist.mustwatch.vo.Recipe;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,14 +46,18 @@ public class JSONResources {
         packageName = InstrumentationRegistry.getTargetContext().getPackageName();
     }
 
+    /**
+     * Verify that each of the ingredients defined in the resource files map to a corresponding
+     * string resource.
+     */
     @Test
     public void loadIngredients() {
         JSONResourceReader reader = new JSONResourceReader(res, R.raw.ingredients);
-        Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
-        assertThat(jsonObj, is(not(nullValue())));
-        assertTrue(jsonObj.length > 0);
+        Ingredient[] ingredients = reader.constructUsingGson(Ingredient[].class);
+        assertThat(ingredients, is(not(nullValue())));
+        assertTrue(ingredients.length > 0);
 
-        for (Ingredient ingredient : jsonObj) {
+        for (Ingredient ingredient : ingredients) {
             if ("SUGAR".equals(ingredient.type)) {
                 assertTrue(ingredient.totalPct > 0);
                 if (ingredient.density != null) {
@@ -63,7 +68,18 @@ public class JSONResources {
         }
     }
 
+    @Test
+    public void loadRecipes() {
+        JSONResourceReader reader = new JSONResourceReader(res, R.raw.recipes);
+        Recipe[] recipes = reader.constructUsingGson(Recipe[].class);
+        assertThat(recipes, is(not(nullValue())));
+        assertTrue(recipes.length > 0);
 
+        for (Recipe recipe : recipes) {
+            assertThat(recipe.ingredients, is(not(nullValue())));
+            assertTrue(recipe.ingredients.size() > 0);
+        }
+    }
 
     private void assertStringResourceNotNull(String stringId) {
         try {
