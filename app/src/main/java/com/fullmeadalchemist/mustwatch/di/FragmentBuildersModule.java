@@ -23,6 +23,7 @@ import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.LogListFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
+import com.fullmeadalchemist.mustwatch.ui.meta.AboutFragment;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import dagger.Module;
@@ -51,4 +52,6 @@ public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
     abstract HeadlessLoadingFragment contributeHeadlessLoadingFragment();
 
+    @ContributesAndroidInjector
+    abstract AboutFragment contributeAboutFragment();
 }

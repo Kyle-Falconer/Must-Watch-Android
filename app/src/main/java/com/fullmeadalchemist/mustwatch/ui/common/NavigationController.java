@@ -26,6 +26,7 @@ import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
+import com.fullmeadalchemist.mustwatch.ui.meta.AboutFragment;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import javax.inject.Inject;
@@ -127,6 +128,17 @@ public class NavigationController {
                 .replace(containerId, userProfileFragment, tag)
                 .addToBackStack(tag)
                 .commitAllowingStateLoss();
+    }
+
+    public void navigateToAbout(){
+        String tag = "about";
+        AboutFragment aboutFragment = new AboutFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, aboutFragment, tag)
+                .addToBackStack(tag)
+                .commitAllowingStateLoss();
+
     }
 
 }

@@ -141,6 +141,9 @@
                             STABILIZER
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
+    <string name="copyright">© 2017 Full Mead Alchemist, LLC.</string>
+    <string name="github_url">https://github.com/Kyle-Falconer/Must-Watch-Android</string>
+    <string name="email">email</string>
 
 
 </resources>

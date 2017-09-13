@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,8 @@ import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 public class LogListFragment extends LifecycleFragment implements Injectable {
 
@@ -71,7 +72,7 @@ public class LogListFragment extends LifecycleFragment implements Injectable {
         viewModel.getLogEntries(batchId).observe(this, logEntries -> {
             // update UI
             if (logEntries != null) {
-                Log.d(TAG, String.format("Got %d log entries for batch #%d", logEntries.size(), batchId));
+                Timber.d("Got %d log entries for batch #%d", logEntries.size(), batchId);
             }
             mAdapter.dataSet = logEntries;
             mAdapter.notifyDataSetChanged();
@@ -80,8 +81,6 @@ public class LogListFragment extends LifecycleFragment implements Injectable {
         fab = rootView.findViewById(R.id.logs_fab);
         mRecyclerView = rootView.findViewById(R.id.recyclerView);
 
-        FloatingActionButton fab = rootView.findViewById(R.id.logs_fab);
-
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -89,14 +88,14 @@ public class LogListFragment extends LifecycleFragment implements Injectable {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 //FloatingActionButton floater = recyclerView.findViewById(R.id.batches_fab);
                 if (fab == null) {
-                    Log.e(TAG, "The FloatingActionButton is null!");
+                    Timber.e("The FloatingActionButton is null!");
                     return;
                 }
                 if (dy > 0 && fab.isShown()) {
-                    Log.d(TAG, "hiding FAB");
+                    Timber.d("hiding FAB");
                     fab.hide();
                 } else if (dy < 20 && !fab.isShown()) {
-                    Log.d(TAG, "showing FAB");
+                    Timber.d("showing FAB");
                     fab.show();
                 }
             }
@@ -104,11 +103,11 @@ public class LogListFragment extends LifecycleFragment implements Injectable {
 
         if (fab != null) {
             fab.setOnClickListener(v -> {
-                Log.d(TAG, "Floating Action Button was clicked!");
+                Timber.d("Floating Action Button was clicked!");
                 navigationController.navigateToAddBatch();
             });
         } else {
-            Log.e(TAG, "FloatingActionButton at R.id.logs_fab is null!");
+            Timber.e("FloatingActionButton at R.id.logs_fab is null!");
         }
 
 

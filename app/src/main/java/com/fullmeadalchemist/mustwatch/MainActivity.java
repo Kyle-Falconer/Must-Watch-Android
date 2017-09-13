@@ -166,6 +166,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
                 Log.w(TAG, "Settings view not yet implemented");
                 navigationController.navigateToBatches();
                 break;
+            case R.id.nav_about:
+                Log.i(TAG, "nav_about selected from Drawer");
+                navigationController.navigateToAbout();
+                break;
             default:
                 Log.w(TAG, String.format("unknown selected from Drawer: %s", item.getTitle()));
                 break;
