@@ -25,10 +25,10 @@
 #-renamesourcefileattribute SourceFile
 
 
+-keep class javax.measure.** { *; }
 -keep class systems.uom.** { *; }
-#-dontwarn systems.uom.**
-
 -keep class tec.units.** { *; }
+#-dontwarn systems.uom.**
 #-dontwarn class tec.units.**
 
 
