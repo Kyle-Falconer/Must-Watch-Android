@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5deb6d11572eb1f93bb68ce107f6ec13",
+    "identityHash": "e55f1bab4b5e3e75276bf76891022174",
     "entities": [
       {
         "tableName": "User",
@@ -493,7 +493,7 @@
       },
       {
         "tableName": "recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `creator_user_id` INTEGER, `owner_user_id` INTEGER, `owner_group_id` INTEGER, `public_readable` INTEGER NOT NULL, `output_volume` TEXT, `carbonation` REAL, `min_days_to_ferment` INTEGER, `max_days_to_ferment` INTEGER, `starting_sg` REAL, `final_sg` REAL, `notes` TEXT, `url_found` TEXT, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `creator_user_id` INTEGER, `owner_user_id` INTEGER, `owner_group_id` INTEGER, `public_readable` INTEGER NOT NULL, `output_volume` TEXT, `carbonation` REAL, `min_days_to_ferment` INTEGER, `max_days_to_ferment` INTEGER, `min_days_to_age` INTEGER, `starting_sg` REAL, `final_sg` REAL, `notes` TEXT, `url_found` TEXT, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -552,6 +552,12 @@
           {
             "fieldPath": "maxDaysToFerment",
             "columnName": "max_days_to_ferment",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "minDaysToAge",
+            "columnName": "min_days_to_age",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -651,7 +657,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5deb6d11572eb1f93bb68ce107f6ec13\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e55f1bab4b5e3e75276bf76891022174\")"
     ]
   }
 }

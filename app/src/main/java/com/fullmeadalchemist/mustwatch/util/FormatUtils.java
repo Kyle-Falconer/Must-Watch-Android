@@ -23,7 +23,6 @@ import java.util.Date;
 
 public class FormatUtils {
 
-
     public static String calendarToLocaleDateTimeLong(Calendar c) {
         if (c == null) {
             return "null";
@@ -39,14 +38,6 @@ public class FormatUtils {
         DateFormat timeInstance = DateFormat.getDateTimeInstance();
         return timeInstance.format(d);
     }
-//
-//    public static String calendarToLocaleDateTimeLong(Calendar c) {
-//        if (c == null) {
-//            return "null";
-//        }
-//        Date d = c.getTime();
-//        return dateToLocaleDateTimeLong(d);
-//    }
 
     public static String calendarToLocaleDate(Calendar c) {
         if (c == null) {

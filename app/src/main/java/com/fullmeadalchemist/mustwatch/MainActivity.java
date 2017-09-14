@@ -151,21 +151,20 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
                 Log.i(TAG, "nav_batches selected from Drawer");
                 navigationController.navigateToBatches();
                 break;
-            case R.id.nav_groups:
-                Log.i(TAG, "nav_groups selected from Drawer");
-                Log.w(TAG, "Groups view not yet implemented");
-                navigationController.navigateToBatches();
-                break;
             case R.id.nav_recipes:
                 Log.i(TAG, "nav_recipes selected from Drawer");
-                Log.w(TAG, "Recipes view not yet implemented");
-                navigationController.navigateToBatches();
+                navigationController.navigateToRecipes();
                 break;
-            case R.id.nav_settings:
-                Log.i(TAG, "nav_settings selected from Drawer");
-                Log.w(TAG, "Settings view not yet implemented");
-                navigationController.navigateToBatches();
-                break;
+//            case R.id.nav_groups:
+//                Log.i(TAG, "nav_groups selected from Drawer");
+//                Log.w(TAG, "Groups view not yet implemented");
+//                navigationController.navigateToBatches();
+//                break;
+//            case R.id.nav_settings:
+//                Log.i(TAG, "nav_settings selected from Drawer");
+//                Log.w(TAG, "Settings view not yet implemented");
+//                navigationController.navigateToBatches();
+//                break;
             case R.id.nav_about:
                 Log.i(TAG, "nav_about selected from Drawer");
                 navigationController.navigateToAbout();

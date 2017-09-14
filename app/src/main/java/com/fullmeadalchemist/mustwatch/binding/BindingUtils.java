@@ -22,8 +22,15 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.fullmeadalchemist.mustwatch.R;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import javax.measure.Quantity;
+import javax.measure.quantity.Volume;
+
+import tec.units.ri.quantity.Quantities;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
 
@@ -46,6 +53,23 @@ public class BindingUtils {
         } catch (NumberFormatException e) {
             return 0.0F;
         }
+    }
+
+    @BindingAdapter("android:text")
+    public static void setVolume(TextView view, Quantity<Volume> volumeQuantity) {
+        if (volumeQuantity == null) {
+            view.setText(R.string.none);
+        } else {
+            view.setText(volumeQuantity.toString());
+        }
+    }
+
+    @InverseBindingAdapter(attribute = "android:text")
+    public static Quantity<Volume> getVolume(TextView view) {
+        // FIXME: make safer?
+        String num = view.getText().toString();
+        Quantity<Volume> vol = (Quantity<Volume>) Quantities.getQuantity(num);
+        return vol;
     }
 
     @BindingAdapter("android:text")

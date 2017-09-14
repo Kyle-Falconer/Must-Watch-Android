@@ -70,6 +70,8 @@ import static com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
+import static com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum.PLANNING;
+import static com.fullmeadalchemist.mustwatch.vo.Recipe.RECIPE_ID;
 import static systems.uom.common.Imperial.GALLON_UK;
 import static systems.uom.common.Imperial.OUNCE_LIQUID;
 import static systems.uom.common.USCustomary.FAHRENHEIT;
@@ -79,6 +81,7 @@ import static systems.uom.common.USCustomary.GALLON_LIQUID;
 import static systems.uom.common.USCustomary.LITER;
 import static systems.uom.common.USCustomary.OUNCE;
 import static systems.uom.common.USCustomary.POUND;
+import static systems.uom.common.USCustomary.TEASPOON;
 import static tec.units.ri.unit.Units.CELSIUS;
 import static tec.units.ri.unit.Units.GRAM;
 import static tec.units.ri.unit.Units.KILOGRAM;
@@ -141,6 +144,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         abbreviationMap.put(getResources().getString(R.string.GALLON_LIQUID_UK), unitToTextAbbr(GALLON_UK));
         abbreviationMap.put(getResources().getString(R.string.OUNCE_LIQUID_US), unitToTextAbbr(FLUID_OUNCE));
         abbreviationMap.put(getResources().getString(R.string.OUNCE_LIQUID_UK), unitToTextAbbr(OUNCE_LIQUID));
+        abbreviationMap.put(getResources().getString(R.string.TEASPOON), unitToTextAbbr(TEASPOON));
         abbreviationMap.put(getResources().getString(R.string.GRAM), unitToTextAbbr(GRAM));
         abbreviationMap.put(getResources().getString(R.string.KILOGRAM), unitToTextAbbr(KILOGRAM));
         abbreviationMap.put(getResources().getString(R.string.OUNCE), unitToTextAbbr(OUNCE));
@@ -154,6 +158,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             Log.i(TAG, "Got Batch ID %d from the NavigationController. Acting as a Batch Editor.");
 
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
+            long recipeId = bundle.getLong(RECIPE_ID, Long.MIN_VALUE);
             if (batchId != Long.MIN_VALUE) {
                 viewModel.getBatch(batchId).observe(this, batch -> {
                     if (batch != null) {
@@ -163,12 +168,40 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                         if (batch.status != null) {
                             dataBinding.status.setText(batch.status.toString());
                         } else {
-                            dataBinding.status.setText(BatchStatusEnum.PLANNING.toString());
+                            dataBinding.status.setText(PLANNING.toString());
                         }
                         updateUiDateTime();
                         updateSpinners(viewModel.batch);
                     } else {
                         Log.e(TAG, "Got a null Batch!");
+                    }
+                });
+            } else if (recipeId != Long.MIN_VALUE) {
+                viewModel.getRecipe(recipeId).observe(this, recipe -> {
+                    if (recipe != null) {
+                        Log.i(TAG, String.format("Loaded Recipe with ID %d:\n%s", recipe.id, recipe));
+                        viewModel.batch = new Batch();
+                        viewModel.batch.name = recipe.name;
+                        viewModel.batch.outputVolume = recipe.outputVol;
+                        viewModel.batch.targetSgStarting = recipe.startingSG;
+                        viewModel.batch.targetSgFinal = recipe.finalSG;
+                        viewModel.batch.status = PLANNING;
+                        viewModel.batch.createDate = Calendar.getInstance();
+                        viewModel.getCurrentUserId().observe(this, userId -> {
+                            if (userId == null) {
+                                Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
+                                return;
+                            }
+                            Log.d(TAG, String.format("Setting batch user ID to %s", userId));
+                            viewModel.batch.userId = userId;
+                        });
+                        dataBinding.setBatch(viewModel.batch);
+
+                        dataBinding.status.setText(viewModel.batch.status.toString());
+                        updateUiDateTime();
+                        updateSpinners(viewModel.batch);
+                    } else {
+                        Log.e(TAG, "Got a null Recipe!");
                     }
                 });
             }

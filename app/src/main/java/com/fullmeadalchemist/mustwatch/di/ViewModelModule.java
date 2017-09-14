@@ -24,6 +24,8 @@ import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailViewModel;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormViewModel;
 import com.fullmeadalchemist.mustwatch.ui.log.LogViewModel;
 import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormViewModel;
+import com.fullmeadalchemist.mustwatch.ui.recipe.RecipeViewModel;
+import com.fullmeadalchemist.mustwatch.ui.recipe.detail.RecipeDetailViewModel;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileViewModel;
 import com.fullmeadalchemist.mustwatch.viewmodel.MustWatchViewModelFactory;
 
@@ -63,6 +65,15 @@ abstract class ViewModelModule {
     @ViewModelKey(LogFormViewModel.class)
     abstract ViewModel bindLogFormViewModel(LogFormViewModel logFormViewModel);
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(RecipeViewModel.class)
+    abstract ViewModel bindRecipeViewModel(RecipeViewModel recipeViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RecipeDetailViewModel.class)
+    abstract ViewModel bindRecipeDetailViewModel(RecipeDetailViewModel recipeDetailViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(MustWatchViewModelFactory factory);

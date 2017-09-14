@@ -27,11 +27,14 @@ import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.meta.AboutFragment;
+import com.fullmeadalchemist.mustwatch.ui.recipe.RecipeListFragment;
+import com.fullmeadalchemist.mustwatch.ui.recipe.detail.RecipeDetailFragment;
 import com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment;
 
 import javax.inject.Inject;
 
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
+import static com.fullmeadalchemist.mustwatch.vo.Recipe.RECIPE_ID;
 
 /**
  * A utility class that handles navigation in {@link MainActivity}.
@@ -47,6 +50,38 @@ public class NavigationController {
         this.fragmentManager = mainActivity.getSupportFragmentManager();
     }
 
+
+    /*===================================
+     ===========     Meta     ===========
+     ===================================*/
+    public void navigateToAbout() {
+        String tag = "about";
+        AboutFragment aboutFragment = new AboutFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, aboutFragment, tag)
+                .addToBackStack(tag)
+                .commitAllowingStateLoss();
+    }
+
+
+    /*===================================
+    ==========       Users     ==========
+    ===================================*/
+    public void navigateToUserProfile() {
+        String tag = "user/view";
+        UserProfileFragment userProfileFragment = new UserProfileFragment();
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, userProfileFragment, tag)
+                .addToBackStack(tag)
+                .commitAllowingStateLoss();
+    }
+
+
+    /*===================================
+     ==========     Batches    ==========
+     ===================================*/
     public void navigateToBatches() {
         String tag = "batch/list";
         BatchListFragment batchesFragment = new BatchListFragment();
@@ -93,6 +128,17 @@ public class NavigationController {
                 .commitAllowingStateLoss();
     }
 
+    public void navigateFromAddBatch(Long batchId) {
+        Log.i(TAG, "Popping backstack");
+        fragmentManager.popBackStack();
+        navigateToBatchDetail(batchId);
+    }
+
+    public void navigateFromEditBatch(Long batchId) {
+        String tag = "batch/view/" + batchId;
+        Log.i(TAG, String.format("Popping backstack to: %s", tag));
+        fragmentManager.popBackStack(tag, 0);
+    }
 
     public void navigateToAddLog(Long batchId) {
         String tag = "batch/" + batchId + "/log/add";
@@ -107,38 +153,43 @@ public class NavigationController {
                 .commitAllowingStateLoss();
     }
 
-    public void navigateFromAddBatch(Long batchId) {
-        Log.i(TAG, "Popping backstack");
-        fragmentManager.popBackStack();
-        navigateToBatchDetail(batchId);
-    }
 
-    public void navigateFromEditBatch(Long batchId) {
-        String tag = "batch/view/" + batchId;
-        Log.i(TAG, String.format("Popping backstack to: %s", tag));
-        fragmentManager.popBackStack(tag, 0);
-    }
-
-
-    public void navigateToUserProfile() {
-        String tag = "user/view";
-        UserProfileFragment userProfileFragment = new UserProfileFragment();
+    /*===================================
+     ==========     Recipes     =========
+     ===================================*/
+    public void navigateToRecipes() {
+        String tag = "recipes/list";
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
-                .replace(containerId, userProfileFragment, tag)
+                .replace(containerId, recipeListFragment, tag)
                 .addToBackStack(tag)
                 .commitAllowingStateLoss();
     }
 
-    public void navigateToAbout(){
-        String tag = "about";
-        AboutFragment aboutFragment = new AboutFragment();
+    public void navigateToRecipeDetail(Long recipeId) {
+        String tag = "recipe/view/" + recipeId;
+        RecipeDetailFragment recipesFragment = new RecipeDetailFragment();
+        Bundle data = new Bundle();
+        data.putLong(RECIPE_ID, recipeId);
+        recipesFragment.setArguments(data);
         Log.i(TAG, String.format("Navigating to path: %s", tag));
         fragmentManager.beginTransaction()
-                .replace(containerId, aboutFragment, tag)
+                .replace(containerId, recipesFragment, tag)
                 .addToBackStack(tag)
                 .commitAllowingStateLoss();
-
     }
 
+    public void navigateToCreateFromBatch(Long recipeId) {
+        String tag = "batch/add";
+        BatchFormFragment batchesFragment = new BatchFormFragment();
+        Bundle data = new Bundle();
+        data.putLong(RECIPE_ID, recipeId);
+        batchesFragment.setArguments(data);
+        Log.i(TAG, String.format("Navigating to path: %s", tag));
+        fragmentManager.beginTransaction()
+                .replace(containerId, batchesFragment, tag)
+                .addToBackStack(tag)
+                .commitAllowingStateLoss();
+    }
 }

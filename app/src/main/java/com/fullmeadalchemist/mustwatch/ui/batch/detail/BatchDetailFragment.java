@@ -115,7 +115,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                             dataBinding.status.setText(viewModel.batch.status.toString());
                         }
                     } else {
-                        Log.w(TAG, "Received a null Batch from the BatchDetailViewModel.");
+                        Log.w(TAG, "Received a null Batch from the RecipeDetailViewModel.");
                     }
                 });
                 viewModel.getLogsForBatch(batchId).observe(this, batches -> {

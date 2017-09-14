@@ -19,7 +19,6 @@ package com.fullmeadalchemist.mustwatch.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.MustWatchPreferences;
 import com.fullmeadalchemist.mustwatch.db.UserDao;
@@ -31,6 +30,7 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Repository that handles User objects.
@@ -58,17 +58,22 @@ public class UserRepository {
 
 
     public LiveData<Long> addUser(User user) {
-        Log.d(TAG, String.format("Adding user to db:\n%s", user.toString()));
+        Timber.d("Adding user to db:\n%s", user.toString());
         MutableLiveData<Long> userLiveData = new MutableLiveData<>();
         Observable.fromCallable(() -> userDao.insert(user))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userLiveData::setValue);
+                .subscribe(uid -> {
+                    prefs.setCurrentUserId(uid);
+                    userLiveData.postValue(uid);
+                }, e -> {
+                    Timber.e("Failed to add user", e);
+                });
         return userLiveData;
     }
 
     public LiveData<User> getUser(long userId) {
-        Log.d(TAG, String.format("Getting user from User ID %d", userId));
+        Timber.d("Getting user from User ID %d", userId);
         return userDao.load(userId);
     }
 
@@ -76,17 +81,18 @@ public class UserRepository {
         MutableLiveData<Long> userIdLiveData = new MutableLiveData<>();
         Long stored_id = prefs.getCurrentUserID();
         if (stored_id != null) {
-            Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
-            userIdLiveData.setValue(stored_id);
+            Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id);
+            userIdLiveData.postValue(stored_id);
             return userIdLiveData;
         }
 
         if (this.user == null) {
-            Log.i(TAG, "No User found locally. Preparing an Anonymous User.");
+            Timber.i("No User found locally. Preparing an Anonymous User.");
             User anon = new User(null, null);
             return addUser(anon);
         }
-        userIdLiveData.setValue(this.user.id);
+        prefs.setCurrentUserId(this.user.id);
+        userIdLiveData.postValue(this.user.id);
         return userIdLiveData;
     }
 
@@ -117,7 +123,7 @@ public class UserRepository {
 //    }
 
     private void setCurrentUser(User user) {
-        Log.d(TAG, "Setting current User to: " + user.toString());
+        Timber.d("Setting current User to: %s", user.toString());
         if (user.id != null) {
             prefs.setCurrentUserId(user.id);
         }

@@ -79,10 +79,18 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
         // Ingredients loader
         Observable.create(emitter -> {
             ingredientRepository.getAll().observe(lifecycleContext, ingredients -> {
-                if (ingredients == null || ingredients.size() == 0) {
+
+                // FIXME: move to IngredientRepository
+
+                JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.ingredients);
+                Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
+                if (jsonObj.length == 0) {
+                    Timber.e("Loaded no ingredients from the JSON resources!");
+                    return;
+                }
+                // FIXME: check for differences as well and update existing
+                if (ingredients == null || ingredients.size() != jsonObj.length) {
                     Timber.i("Populating the database with Ingredient data");
-                    JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.ingredients);
-                    Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
                     ingredientRepository.addIngredients(jsonObj);
                 } else {
                     Timber.d("Ingredients already found in the database.");
@@ -95,15 +103,22 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
             userRepository.getCurrentUserId().observe(lifecycleContext, userId -> {
                 ingredientRepository.getAll().observe(lifecycleContext, ingredients -> {
                     if (ingredients != null && ingredients.size() > 0) {
-                        Timber.d("Found %s ingredients in the database.", ingredients.size());
                         recipeRepository.getRecipes(userId).observe(lifecycleContext, recipes -> {
-                            if (recipes == null || recipes.size() == 0) {
+
+                            // FIXME: move to RecipeRepository
+
+                            JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.recipes);
+                            Recipe[] jsonObj = reader.constructUsingGson(Recipe[].class);
+                            if (jsonObj.length == 0) {
+                                Timber.e("Loaded no recipes from the JSON resources!");
+                                return;
+                            }
+                            for (Recipe r : jsonObj) {
+                                r.publicReadable = true;
+                            }
+                            // FIXME: check for differences as well and update existing
+                            if (recipes == null || recipes.size() != jsonObj.length) {
                                 Timber.i("Populating the database with Recipe data");
-                                JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.recipes);
-                                Recipe[] jsonObj = reader.constructUsingGson(Recipe[].class);
-                                for (Recipe r : jsonObj) {
-                                    r.publicReadable = true;
-                                }
                                 recipeRepository.addRecipes(jsonObj);
                             } else {
                                 Timber.d("Recipes already found in the database.");
@@ -117,15 +132,17 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
         // Dummy data loader
         Observable.create(emitter -> {
             userRepository.getCurrentUserId().observe(lifecycleContext, userId -> {
-                batchRepository.getBatches().observe(lifecycleContext, batches -> {
-                    if (batches == null || batches.size() == 0) {
-                        Timber.d("Got user with no batches; generating batches...");
-                        List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 20);
-                        batchRepository.addBatches(dummyBatches);
-                    } else {
-                        Timber.d("Got user with %d batches.", batches.size());
-                    }
-                });
+                if (userId != null) {
+                    batchRepository.getBatches().observe(lifecycleContext, batches -> {
+                        if (batches == null || batches.size() == 0) {
+                            Timber.d("Got user with no batches; generating batches...");
+                            List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 20);
+                            batchRepository.addBatches(dummyBatches);
+                        } else {
+                            Timber.d("Got user with %d batches.", batches.size());
+                        }
+                    });
+                }
             });
         }).subscribeOn(Schedulers.io()).subscribe();
     }

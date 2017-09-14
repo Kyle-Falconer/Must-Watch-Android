@@ -23,6 +23,8 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 import static com.fullmeadalchemist.mustwatch.MustWatchApp.MUST_WATCH_SHARED_PREFS;
 
 public class MustWatchPreferences {
@@ -56,6 +58,10 @@ public class MustWatchPreferences {
     }
 
     public void setCurrentUserId(Long id) {
+        if (id == null){
+            Timber.w("Attempted to set current user to null");
+            return;
+        }
         SharedPreferences pSharedPref = app.getSharedPreferences(MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE);
         if (pSharedPref != null) {
             SharedPreferences.Editor editor = pSharedPref.edit();

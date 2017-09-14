@@ -17,14 +17,12 @@
 package com.fullmeadalchemist.mustwatch.ui.batch;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 
 import java.text.DecimalFormat;
@@ -32,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
+import timber.log.Timber;
 
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 
@@ -41,8 +39,6 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
     private static final String TAG = BatchListViewAdapter.class.getSimpleName();
     private final BatchClickCallback batchClickCallback;
     List<Batch> dataSet;
-    @Inject
-    NavigationController navigationController;
     private Locale defaultLocale = Locale.getDefault();
 
     /**
@@ -57,27 +53,17 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         this.batchClickCallback = batchClickCallback;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view.
-        //View v = LayoutInflater.from(viewGroup.getContext())
-        //        .inflate(R.layout.batch_item_list, viewGroup, false);
-
-
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.batch_card_view, viewGroup, false);
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Log.d(TAG, "Element " + position + " set.");
+        Timber.d("Element " + position + " set.");
 
         final Batch b = dataSet.get(position);
-
-        // Get element from your dataset at this position and replace the contents of the view
-        // with that element
 
         viewHolder.getBatchLabelTextView().setText(String.format(defaultLocale, "%s", b.name));
         viewHolder.getBatchNumberTextView().setText(String.format(defaultLocale, "Batch %d", b.id));
@@ -109,17 +95,14 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
 
         viewHolder.itemView.setOnClickListener(v -> {
             if (batchClickCallback != null) {
-                Log.d(TAG, String.format("Element for batch #%s was clicked.", b.id));
+                Timber.d("Element for batch #%s was clicked.", b.id);
                 batchClickCallback.onClick(b);
             } else {
-                Log.wtf(TAG, "No click listener set or Batch is null!?");
+                Timber.e("No click listener set or Batch is null!?");
             }
         });
-
-
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return dataSet == null ? 0 : dataSet.size();
@@ -129,9 +112,6 @@ public class BatchListViewAdapter extends RecyclerView.Adapter<BatchListViewAdap
         void onClick(Batch repo);
     }
 
-    /**
-     * Provide a reference to the type of views that you are using (custom ViewHolder)
-     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView batchLabelTextView;
         private final TextView batchNumberTextView;

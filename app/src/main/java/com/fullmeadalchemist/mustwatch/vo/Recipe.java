@@ -50,6 +50,9 @@ import javax.measure.quantity.Volume;
         })
 public class Recipe {
 
+    @Ignore
+    public static final String RECIPE_ID = "RECIPE_ID";
+
     @PrimaryKey(autoGenerate = true)
     public Long id;
 
@@ -97,6 +100,11 @@ public class Recipe {
     @SerializedName("max_days_to_ferment")
     @ColumnInfo(name = "max_days_to_ferment")
     public Integer maxDaysToFerment;
+
+    @Expose
+    @SerializedName("min_days_to_age")
+    @ColumnInfo(name = "min_days_to_age")
+    public Integer minDaysToAge;
 
     @Expose
     @SerializedName("starting_sg")

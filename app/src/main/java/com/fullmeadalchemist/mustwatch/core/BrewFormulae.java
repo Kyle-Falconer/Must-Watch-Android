@@ -64,6 +64,11 @@ public class BrewFormulae {
         return 0d;
     }
 
+
+    public static double calcAbvPct(Double OG, Double FG) {
+        return (76.08 * (OG - FG) / (1.775 - OG)) * (FG / 0.794);
+    }
+
     public static double getFinalABV_pct(Double targetStartingSG, Double targetFinalSG, Double totalSugars, AbstractQuantity<Volume> outputVolume) {
         // http://www.boulder.nist.gov/div838/publications.html
         // https://www.brewersfriend.com/2011/06/16/alcohol-by-volume-calculator-updated/
@@ -95,7 +100,7 @@ public class BrewFormulae {
         BRIX = (((182.4601 × GRAVITY - 775.6821) × GRAVITY + 1262.7794) × GRAVITY - 669.5622)
         */
 
-        double abv_pct = (76.08 * (OG - FG) / (1.775 - OG)) * (FG / 0.794);
+        double abv_pct = calcAbvPct(OG, FG);
         double abw_pct = 0.8 * baume;
         Timber.d("Estimated percent of Alcohol by Weight to be %4.3f", abw_pct);
         Timber.d("Estimated percent of Alcohol by Volume to be %4.3f", abv_pct);

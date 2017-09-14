@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Full Mead Alchemist</string>
+    <string name="copyright">© 2017 Full Mead Alchemist, LLC.</string>
     <string name="save_batch">Save Batch</string>
     <string name="add_log_entry">Add Log Entry</string>
     <string name="edit_batch_title">Editing Batch #%d</string>
@@ -10,6 +11,18 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="edit_batch">Edit Batch</string>
     <string name="save_entry">Save Log Entry</string>
+    <string name="github_url">https://github.com/Kyle-Falconer/Must-Watch-Android</string>
+    <string name="email">email</string>
+    <string name="recipes">Recipes</string>
+    <string name="batches">Batches</string>
+    <string name="about">About</string>
+    <string name="edit_recipe">Edit Recipe</string>
+    <string name="output_volume">Output Volume</string>
+    <string name="target_final_specific_gravity">Target final Specific Gravity</string>
+    <string name="target_starting_specific_gravity">Target starting Specific Gravity</string>
+    <string name="target_abv">Target ABV</string>
+    <string name="carbonation">carbonation</string>
+    <string name="none">none</string>
 
 
     <!-- ================================================================
@@ -141,9 +154,7 @@
                             STABILIZER
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
-    <string name="copyright">© 2017 Full Mead Alchemist, LLC.</string>
-    <string name="github_url">https://github.com/Kyle-Falconer/Must-Watch-Android</string>
-    <string name="email">email</string>
-
+    <string name="create_a_batch_using_this_recipe">create a batch using this recipe</string>
+    <string name="TEASPOON">tsp</string>
 
 </resources>

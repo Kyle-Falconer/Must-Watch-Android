@@ -3,27 +3,31 @@
 
     <group android:checkableBehavior="single">
 
-        <!-- Icon made by Freepik from www.flaticon.com is licensed by Creative Commons BY 3.0 -->
         <item
             android:id="@+id/nav_batches"
             android:icon="@drawable/ic_batches_icon"
-            android:title="Batches" />
-        <item
-            android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_group_black_24dp"
-            android:title="Groups" />
+            android:title="@string/batches" />
+
+        <!-- TODO: implement Groups -->
+        <!--<item-->
+            <!--android:id="@+id/nav_groups"-->
+            <!--android:icon="@drawable/ic_group_black_24dp"-->
+            <!--android:title="Groups" />-->
         <item
             android:id="@+id/nav_recipes"
             android:icon="@drawable/ic_recipe_icon"
-            android:title="Recipes" />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Settings" />
+            android:title="@string/recipes" />
+
+        <!-- TODO: implement Settings -->
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:icon="@drawable/ic_settings_black_24dp"-->
+            <!--android:title="Settings" />-->
+
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="About" />
+            android:title="@string/about" />
     </group>
 
     <!--<item android:title="Communicate">-->

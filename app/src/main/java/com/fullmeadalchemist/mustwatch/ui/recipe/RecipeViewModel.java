@@ -14,55 +14,44 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.ui.batch.form;
+package com.fullmeadalchemist.mustwatch.ui.recipe;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
 import com.fullmeadalchemist.mustwatch.repository.RecipeRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
-import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.Recipe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-
-public class BatchFormViewModel extends ViewModel {
-
-    protected Batch batch;
-    private BatchRepository batchRepository;
+public class RecipeViewModel extends ViewModel {
+    private LiveData<List<Recipe>> recipes;
     private RecipeRepository recipeRepository;
     private UserRepository userRepository;
 
     @Inject
-    public BatchFormViewModel(BatchRepository batchRepository, RecipeRepository recipeRepository, UserRepository userRepository) {
-        this.batchRepository = batchRepository;
+    public RecipeViewModel(RecipeRepository recipeRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
     }
 
-    public LiveData<Batch> getBatch(Long id) {
-        return batchRepository.getBatch(id);
+    public LiveData<List<Recipe>> getRecipes(Long userId) {
+        if (userId == null) {
+            return recipeRepository.getPublicRecipes();
+        } else {
+            return recipeRepository.getRecipes(userId);
+        }
     }
 
-    public void addBatch(Batch batch) {
-        batchRepository.addBatch(batch);
+    public void addRecipe(Recipe recipe) {
+        recipeRepository.addRecipe(recipe);
     }
 
     public LiveData<Long> getCurrentUserId() {
         return userRepository.getCurrentUserId();
     }
 
-    public void updateBatch() {
-        batchRepository.updateBatch(batch);
-    }
-
-    public LiveData<Long> saveNewBatch() {
-        return batchRepository.addBatch(batch);
-    }
-
-    public LiveData<Recipe> getRecipe(long recipeId) {
-        return recipeRepository.getRecipe(recipeId);
-    }
 }
