@@ -16,17 +16,30 @@
 
 package com.fullmeadalchemist.mustwatch.vo;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 
 @Entity(tableName = "groups",
         indices = {@Index(value = {"name"}, unique = true)})
 public class Group {
 
+    @NonNull
+    @Expose
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     public long id;
+
+    @Expose
+    @SerializedName("name")
+    @ColumnInfo(name = "name")
     public String name;
 
     public Group(String name) {

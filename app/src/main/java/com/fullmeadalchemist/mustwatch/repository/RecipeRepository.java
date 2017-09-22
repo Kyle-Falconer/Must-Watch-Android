@@ -90,13 +90,10 @@ public class RecipeRepository {
                     Timber.v("Got Recipe ID %s after inserting it into the database", r_id);
                     recipeIdLiveData.setValue(r_id);
                     if (recipe.ingredients.size() > 0) {
-                        List<BatchIngredient> batchIngredients = new ArrayList<>();
-                        for (int i = 0; i < recipe.ingredients.size(); i++) {
-                            BatchIngredient bi = recipe.ingredients.get(i);
+                        for (BatchIngredient bi : recipe.ingredients) {
                             bi.recipeId = r_id;
-                            batchIngredients.add(bi);
                         }
-                        Observable.fromCallable(() -> batchIngredientDao.insertAll(batchIngredients))
+                        Observable.fromCallable(() -> batchIngredientDao.insertAll(recipe.ingredients))
                                 .subscribeOn(Schedulers.io())
                                 .subscribe();
                     }

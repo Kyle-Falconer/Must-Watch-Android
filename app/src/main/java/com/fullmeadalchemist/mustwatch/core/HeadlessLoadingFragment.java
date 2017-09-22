@@ -76,72 +76,68 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
     }
 
     private void populateDb() {
-        if (updated){
+        if (updated) {
             return;
         }
-
         updated = true;
 
         Timber.i("Populating database...");
-        // Ingredients loader
+
+
         Observable.create(emitter -> {
+
             ingredientRepository.getAll().observe(lifecycleContext, ingredients -> {
+                Timber.w("was notified that the ingredients have changed");
 
+                // Ingredients loader
                 // FIXME: move to IngredientRepository
-
-                JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.ingredients);
-                Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
-                if (jsonObj.length == 0) {
-                    Timber.e("Loaded no ingredients from the JSON resources!");
-                    return;
-                }
                 // FIXME: check for differences as well and update existing
-                if (ingredients == null || ingredients.size() != jsonObj.length) {
+                if (ingredients != null && ingredients.size() == 0) {
+                    JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.ingredients);
+                    Ingredient[] jsonObj = reader.constructUsingGson(Ingredient[].class);
+                    if (jsonObj.length == 0) {
+                        Timber.e("Loaded no ingredients from the JSON resources!");
+                        return;
+                    }
+
                     Timber.i("Populating the database with Ingredient data");
                     ingredientRepository.addIngredients(jsonObj);
+
+                } else if (ingredients != null && ingredients.size() > 0) {
+                    recipeRepository.getPublicRecipes().observe(lifecycleContext, recipes -> {
+                        Timber.w("was notified that the recipes have changed");
+
+                        // Recipes loader
+                        // FIXME: move to RecipeRepository
+                        // FIXME: check for differences as well and update existing
+                        if (recipes != null && recipes.size() == 0) {
+                            JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.recipes);
+                            Recipe[] recipeJsonObj = reader.constructUsingGson(Recipe[].class);
+                            if (recipeJsonObj.length == 0) {
+                                Timber.e("Loaded no recipes from the JSON resources!");
+                                return;
+                            }
+                            for (Recipe r : recipeJsonObj) {
+                                r.publicReadable = true;
+                            }
+
+                            Timber.d("Populating the database with Recipe data");
+                            recipeRepository.addRecipes(recipeJsonObj);
+                        } else {
+                            Timber.d("Recipes already found in the database.");
+                        }
+                    });
                 } else {
                     Timber.d("Ingredients already found in the database.");
                 }
             });
-        }).subscribeOn(Schedulers.io()).subscribe();
 
-        // Recipes loader
-        Observable.create(emitter -> {
+            // Dummy data loader
             userRepository.getCurrentUserId().observe(lifecycleContext, userId -> {
-                ingredientRepository.getAll().observe(lifecycleContext, ingredients -> {
-                    if (ingredients != null && ingredients.size() > 0) {
-                        recipeRepository.getRecipes(userId).observe(lifecycleContext, recipes -> {
-
-                            // FIXME: move to RecipeRepository
-
-                            JSONResourceReader reader = new JSONResourceReader(getResources(), R.raw.recipes);
-                            Recipe[] jsonObj = reader.constructUsingGson(Recipe[].class);
-                            if (jsonObj.length == 0) {
-                                Timber.e("Loaded no recipes from the JSON resources!");
-                                return;
-                            }
-                            for (Recipe r : jsonObj) {
-                                r.publicReadable = true;
-                            }
-                            // FIXME: check for differences as well and update existing
-                            if (recipes == null || recipes.size() != jsonObj.length) {
-                                Timber.i("Populating the database with Recipe data");
-                                recipeRepository.addRecipes(jsonObj);
-                            } else {
-                                Timber.d("Recipes already found in the database.");
-                            }
-                        });
-                    }
-                });
-            });
-        }).subscribeOn(Schedulers.io()).subscribe();
-
-        // Dummy data loader
-        Observable.create(emitter -> {
-            userRepository.getCurrentUserId().observe(lifecycleContext, userId -> {
+                Timber.w("was notified that the current user has changed");
                 if (userId != null) {
                     batchRepository.getBatches().observe(lifecycleContext, batches -> {
-                        if (batches == null || batches.size() == 0) {
+                        if (batches != null && batches.size() == 0) {
                             Timber.d("Got user with no batches; generating batches...");
                             List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 20);
                             batchRepository.addBatches(dummyBatches);

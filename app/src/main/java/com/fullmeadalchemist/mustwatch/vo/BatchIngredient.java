@@ -21,6 +21,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -46,7 +47,11 @@ import javax.measure.quantity.Volume;
                         onDelete = ForeignKey.CASCADE)
         })
 public class BatchIngredient {
+
+    @NonNull
     @Expose
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     public Long id;
 

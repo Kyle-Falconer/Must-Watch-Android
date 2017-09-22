@@ -24,8 +24,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.fullmeadalchemist.mustwatch.db.Converters;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -47,6 +50,10 @@ public class Batch {
     @Ignore
     public static final String BATCH_ID = "BATCH_ID";
 
+    @NonNull
+    @Expose
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     public Long id;
 

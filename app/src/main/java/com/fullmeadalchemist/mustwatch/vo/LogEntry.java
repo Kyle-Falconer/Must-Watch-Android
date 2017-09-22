@@ -24,8 +24,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.fullmeadalchemist.mustwatch.db.Converters;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
 
@@ -40,6 +43,10 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleD
 @TypeConverters({Converters.class})
 public class LogEntry {
 
+    @NonNull
+    @Expose
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     public Long id;
 

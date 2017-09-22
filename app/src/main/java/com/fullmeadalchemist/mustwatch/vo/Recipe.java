@@ -22,6 +22,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -53,6 +54,10 @@ public class Recipe {
     @Ignore
     public static final String RECIPE_ID = "RECIPE_ID";
 
+    @NonNull
+    @Expose
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     public Long id;
 
