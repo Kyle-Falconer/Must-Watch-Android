@@ -21,7 +21,10 @@ import android.arch.lifecycle.ViewModel;
 
 import com.fullmeadalchemist.mustwatch.repository.RecipeRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.Recipe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,6 +43,10 @@ public class RecipeDetailViewModel extends ViewModel {
 
     public LiveData<Recipe> getRecipe(Long id) {
         return recipeRepository.getRecipe(id);
+    }
+
+    public LiveData<List<BatchIngredient>> getRecipeIngredients(Long recipeId) {
+        return recipeRepository.getRecipeIngredients(recipeId);
     }
 
     public LiveData<Long> getCurrentUserId() {

@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -76,19 +77,24 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 
         toggle.syncState();
 
-
-        headlessLoadingFragment = (HeadlessLoadingFragment) getSupportFragmentManager().findFragmentByTag(HEADLESS_FRAGMENT_TAG);
+        FragmentManager fm = getSupportFragmentManager();
+        headlessLoadingFragment = (HeadlessLoadingFragment) fm.findFragmentByTag(HEADLESS_FRAGMENT_TAG);
         if (headlessLoadingFragment == null) {
             headlessLoadingFragment = new HeadlessLoadingFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(headlessLoadingFragment, TAG)
-                    .commit();
+            fm.beginTransaction().add(headlessLoadingFragment, HEADLESS_FRAGMENT_TAG).commit();
         }
-
 
         if (savedInstanceState == null) {
             navigationController.navigateToBatches();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().remove(headlessLoadingFragment).commitAllowingStateLoss();
         }
     }
 

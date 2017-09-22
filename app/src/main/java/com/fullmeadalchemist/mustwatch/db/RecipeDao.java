@@ -23,6 +23,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.Recipe;
 
 import java.util.List;
@@ -44,6 +45,9 @@ public interface RecipeDao {
 
     @Query("SELECT * FROM recipe WHERE public_readable=1")
     LiveData<List<Recipe>> getPublicRecipes();
+
+    @Query("SELECT * FROM batch_ingredient WHERE recipe_id=:recipe_id")
+    LiveData<List<BatchIngredient>> getIngredientsForRecipe(long recipe_id);
 
     // FIXME: pull from groups this user has read+ access to as well
     @Query("SELECT * FROM recipe WHERE creator_user_id = :user_id OR owner_user_id = :user_id OR public_readable=1")

@@ -26,12 +26,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
-import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -46,7 +49,6 @@ import static com.fullmeadalchemist.mustwatch.vo.Recipe.RECIPE_ID;
 
 public class RecipeDetailFragment extends LifecycleFragment implements Injectable {
 
-    protected LogRecyclerViewAdapter logsAdapter;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     @Inject
@@ -63,11 +65,6 @@ public class RecipeDetailFragment extends LifecycleFragment implements Injectabl
                 container, false);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailViewModel.class);
-
-        logsAdapter = new LogRecyclerViewAdapter(null, logEntry -> {
-            Timber.i("Log entry clicked:\n%s", logEntry.toString());
-        });
-
         return dataBinding.getRoot();
     }
 
@@ -80,30 +77,68 @@ public class RecipeDetailFragment extends LifecycleFragment implements Injectabl
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             long recipeId = bundle.getLong(RECIPE_ID, Long.MIN_VALUE);
-            Timber.i("Got Recipe ID %d from the NavigationController. Acting as a Batch Editor.", recipeId);
+            Timber.v("Got Recipe ID %d from the NavigationController.", recipeId);
 
             if (recipeId != Long.MIN_VALUE) {
-                viewModel.getRecipe(recipeId).observe(this, recipe -> {
-                    if (recipe != null) {
-                        Timber.i("Loaded Recipe with ID %d:\n%s", recipe.id, recipe);
-                        dataBinding.setRecipe(recipe);
-                        viewModel.recipe = recipe;
+                if (viewModel.recipe != null) {
+                    Timber.v("Reusing viewmodel data");
+                    dataBinding.setRecipe(viewModel.recipe);
+                    updateRecipeUiInfo();
+                    updateRecipeIngredientUiInfo();
+                } else {
+                    Timber.v("Going to the RecipeRepository to get the Recipe with id %s", recipeId);
+                    viewModel.getRecipe(recipeId).observe(this, recipe -> {
+                        if (recipe != null) {
+                            Timber.v("Loaded Recipe with ID %d:\n%s", recipe.id, recipe);
 
+                            viewModel.recipe = recipe;
+                            dataBinding.setRecipe(viewModel.recipe);
+                            updateRecipeUiInfo();
 
-                        if (viewModel.recipe.startingSG != null && viewModel.recipe.finalSG != null) {
-                            double abv_pct = calcAbvPct((double) viewModel.recipe.startingSG, (double) viewModel.recipe.finalSG);
-                            DecimalFormat f = new DecimalFormat("0.##");
-                            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
+                            viewModel.getRecipeIngredients(recipeId).observe(this, recipeIngredients -> {
+                                if (recipeIngredients != null) {
+                                    Timber.v("Loaded %s Recipe ingredients", recipeIngredients.size());
+                                    viewModel.recipe.ingredients = recipeIngredients;
+                                    updateRecipeIngredientUiInfo();
+                                } else {
+                                    Timber.w("Received nothing from the RecipeRepository when trying to get Recipe ingredients for Recipe %s", recipeId);
+                                }
+                            });
+
+                        } else {
+                            Timber.w("Received a null Batch from the RecipeDetailViewModel.");
                         }
-
-                    } else {
-                        Timber.w("Received a null Batch from the RecipeDetailViewModel.");
-                    }
-                });
+                    });
+                }
             }
         } else {
-            Timber.i("No Recipe ID was received. Redirecting to the Recipe Creation form.");
+            Timber.i("No Recipe ID was received. Redirecting to the Batch Creation form.");
             navigationController.navigateToAddBatch();
+        }
+    }
+
+    private void updateRecipeUiInfo() {
+        if (viewModel.recipe.startingSG != null && viewModel.recipe.finalSG != null) {
+            double abv_pct = calcAbvPct((double) viewModel.recipe.startingSG, (double) viewModel.recipe.finalSG);
+            DecimalFormat f = new DecimalFormat("0.##");
+            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
+        }
+    }
+
+    private void updateRecipeIngredientUiInfo() {
+        if (viewModel.recipe.ingredients != null) {
+            Timber.d("Found %s BatchIngredients for this Recipe; adding them to the ingredientsTable", viewModel.recipe.ingredients.size());
+            TableLayout ingredientsTable = getActivity().findViewById(R.id.ingredientsTable);
+            for (BatchIngredient ingredient : viewModel.recipe.ingredients) {
+                TableRow tr = new TableRow(getActivity());
+                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                TextView ingredientText = new TextView(getActivity());
+                ingredientText.setText(ingredient.toString());
+                tr.addView(ingredientText);
+                ingredientsTable.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            }
+        } else {
+            Timber.d("No Ingredients found for this Recipe.");
         }
     }
 

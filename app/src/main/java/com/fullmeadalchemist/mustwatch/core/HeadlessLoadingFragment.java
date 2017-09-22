@@ -43,6 +43,8 @@ import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.generateDummyB
 
 public class HeadlessLoadingFragment extends LifecycleFragment implements Injectable {
 
+    private boolean updated = false;
+
     @Inject
     BatchRepository batchRepository;
     @Inject
@@ -57,15 +59,14 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Timber.i("Startup tasks running...");
+        setRetainInstance(true);
         lifecycleContext = this;
-        populateDb();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+    public void onStart() {
+        super.onStart();
+        populateDb();
     }
 
     @Override
@@ -75,7 +76,13 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
     }
 
     private void populateDb() {
+        if (updated){
+            return;
+        }
 
+        updated = true;
+
+        Timber.i("Populating database...");
         // Ingredients loader
         Observable.create(emitter -> {
             ingredientRepository.getAll().observe(lifecycleContext, ingredients -> {

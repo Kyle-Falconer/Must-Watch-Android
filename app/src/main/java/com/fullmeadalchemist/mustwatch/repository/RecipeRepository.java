@@ -25,6 +25,7 @@ import com.fullmeadalchemist.mustwatch.db.RecipeDao;
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -89,12 +90,14 @@ public class RecipeRepository {
                     Timber.v("Got Recipe ID %s after inserting it into the database", r_id);
                     recipeIdLiveData.setValue(r_id);
                     if (recipe.ingredients.size() > 0) {
-                        for (BatchIngredient bi : recipe.ingredients) {
+                        List<BatchIngredient> batchIngredients = new ArrayList<>();
+                        for (int i = 0; i < recipe.ingredients.size(); i++) {
+                            BatchIngredient bi = recipe.ingredients.get(i);
                             bi.recipeId = r_id;
+                            batchIngredients.add(bi);
                         }
-                        Observable.fromCallable(() -> batchIngredientDao.insertAll(recipe.ingredients))
+                        Observable.fromCallable(() -> batchIngredientDao.insertAll(batchIngredients))
                                 .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe();
                     }
                 }, e -> {
@@ -128,5 +131,9 @@ public class RecipeRepository {
                     Timber.e("Failed to update batch:\n%s", e.toString());
                 });
         return updatedLiveData;
+    }
+
+    public LiveData<List<BatchIngredient>> getRecipeIngredients(Long recipeId) {
+        return recipeDao.getIngredientsForRecipe(recipeId);
     }
 }

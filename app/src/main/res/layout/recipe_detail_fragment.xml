@@ -31,6 +31,11 @@
                 tools:text="Joe's Quick Grape Mead" />
 
 
+            <TableLayout
+                android:id="@+id/ingredientsTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TableLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
