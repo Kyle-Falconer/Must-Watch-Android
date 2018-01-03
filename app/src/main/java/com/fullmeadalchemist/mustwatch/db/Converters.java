@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -160,6 +161,19 @@ public class Converters {
     @TypeConverter
     public static String toBatchStatusString(Batch.BatchStatusEnum statusEnum) {
         return (statusEnum == null) ? null : statusEnum.toString();
+    }
+
+    @TypeConverter
+    public static Ingredient.IngredientType fromIngredientTypeString(String type) {
+        if (type == null) {
+            return null;
+        }
+        return Ingredient.IngredientType.fromString(type);
+    }
+
+    @TypeConverter
+    public static String toIngredientTypeString(Ingredient.IngredientType typeEnum) {
+        return (typeEnum == null) ? null : typeEnum.toString();
     }
 
 

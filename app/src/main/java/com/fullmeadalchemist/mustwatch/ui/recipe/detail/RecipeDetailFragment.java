@@ -101,7 +101,7 @@ public class RecipeDetailFragment extends LifecycleFragment implements Injectabl
                                     viewModel.recipe.ingredients = recipeIngredients;
                                     updateRecipeIngredientUiInfo();
                                 } else {
-                                    Timber.w("Received nothing from the RecipeRepository when trying to get Recipe ingredients for Recipe %s", recipeId);
+                                    Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Recipe %s", recipeId);
                                 }
                             });
 

@@ -29,13 +29,14 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import timber.log.Timber;
+
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     public static final String TIME_SET_EVENT = "TIME_SET_EVENT";
     public static final String HOUR = "HOUR";
     public static final String MINUTE = "MINUTE";
-    private static final String TAG = DatePickerFragment.class.getSimpleName();
 
     @NonNull
     @Override
@@ -51,7 +52,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.d(TAG, String.format("Broadcasting TIME_SET_EVENT with time: %s:%s", hourOfDay, minute));
+        Timber.d("Broadcasting %s with time: %s:%s", TIME_SET_EVENT, hourOfDay, minute);
 
         Intent intent = new Intent(TIME_SET_EVENT);
         intent.putExtra(HOUR, hourOfDay);

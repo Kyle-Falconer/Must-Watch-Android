@@ -38,7 +38,7 @@ public class Ingredient {
     @Expose
     @SerializedName("type")
     @ColumnInfo(name = "type")
-    public String type;
+    public IngredientType type;
 
     @Expose
     @SerializedName("combined_sugars_total_pct")
@@ -55,4 +55,30 @@ public class Ingredient {
     @ColumnInfo(name = "acidity")
     public Float acidity;
 
+    public enum IngredientType {
+
+        YEAST("YEAST"),
+        NUTRIENT("NUTRIENT"),
+        SUGAR("SUGAR"),
+        STABILIZER("STABILIZER");
+
+        private String name;
+
+        IngredientType(String stringVal) {
+            name = stringVal;
+        }
+
+        public static IngredientType fromString(String text) {
+            for (IngredientType b : IngredientType.values()) {
+                if (b.name.equalsIgnoreCase(text)) {
+                    return b;
+                }
+            }
+            return null;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
 }

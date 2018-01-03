@@ -23,10 +23,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+
+import timber.log.Timber;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -34,7 +35,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     public static final String YEAR = "YEAR";
     public static final String MONTH = "MONTH";
     public static final String DAY_OF_MONTH = "DAY_OF_MONTH";
-    private static final String TAG = DatePickerFragment.class.getSimpleName();
 
     @NonNull
     @Override
@@ -51,7 +51,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Log.d(TAG, String.format("Date was set by user with DatePickerFragment to mm/dd/yyyy : %s/%s/%s", month, dayOfMonth, year));
+        Timber.d("Broadcasting %s with date: %s/%s/%s", DATE_SET_EVENT, dayOfMonth, month, year);
 
         Intent intent = new Intent(DATE_SET_EVENT);
         intent.putExtra(YEAR, year);

@@ -17,11 +17,27 @@
 package com.fullmeadalchemist.mustwatch.core;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import timber.log.Timber;
+
 public class ValueParsers {
     private static final String TAG = ValueParsers.class.getSimpleName();
+
+    @NonNull
+    public static Float toFloat(String value, float defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        try {
+            return Float.parseFloat(value);
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.w("Failed to parse value \"%s\" to a Float", value);
+            return defaultValue;
+        }
+    }
 
     @Nullable
     public static Float toFloat(String value) {
@@ -31,9 +47,22 @@ public class ValueParsers {
         try {
             return Float.parseFloat(value);
         } catch (NullPointerException | NumberFormatException e) {
-            Log.w(TAG, String.format("Failed to parse value \"%s\" to a Float", value));
+            Timber.w("Failed to parse value \"%s\" to a Float", value);
             return null;
         }
+    }
+
+    /**
+     * https://stackoverflow.com/a/1590842/940217
+     * @param l
+     * @return
+     */
+    public static int safeLongToInt(long l) {
+        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException
+                    (l + " cannot be cast to int without changing its value.");
+        }
+        return (int) l;
     }
 
 }

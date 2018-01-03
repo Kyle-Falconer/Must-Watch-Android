@@ -192,10 +192,14 @@ public class UnitMapper {
         return unitString;
     }
 
+    @Nullable
+    public static Quantity<Mass> toMass(String scalarText, String unitText) {
+        Float scalar = ValueParsers.toFloat(scalarText);
+        return toMass(scalar, unitText);
+    }
 
     @Nullable
-    public static Quantity<Mass> toMass(String floatText, String unitText) {
-        Float scalar = ValueParsers.toFloat(floatText);
+    public static Quantity<Mass> toMass(Float scalar, String unitText) {
         if (scalar == null || unitText == null) {
             return null;
         }
@@ -213,10 +217,14 @@ public class UnitMapper {
         return Quantities.getQuantity(scalar, unit);
     }
 
+    @Nullable
+    public static Quantity<Volume> toVolume(String scalarText, String unitText) {
+        Float scalar = ValueParsers.toFloat(scalarText);
+        return toVolume(scalar, unitText);
+    }
 
     @Nullable
-    public static Quantity<Volume> toVolume(String floatText, String unitText) {
-        Float scalar = ValueParsers.toFloat(floatText);
+    public static Quantity<Volume> toVolume(Float scalar, String unitText) {
         if (scalar == null || unitText == null) {
             return null;
         }

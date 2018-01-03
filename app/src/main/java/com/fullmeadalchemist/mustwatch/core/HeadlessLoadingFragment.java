@@ -142,7 +142,8 @@ public class HeadlessLoadingFragment extends LifecycleFragment implements Inject
                             List<Batch> dummyBatches = generateDummyBatchesWithData(userId, 20);
                             batchRepository.addBatches(dummyBatches);
                         } else {
-                            Timber.d("Got user with %d batches.", batches.size());
+                            Timber.d("Got user with %d batches.",
+                                    (batches == null) ? "null" : batches.size());
                         }
                     });
                 }

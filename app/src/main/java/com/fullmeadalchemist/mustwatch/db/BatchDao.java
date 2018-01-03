@@ -20,10 +20,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 
 import java.util.List;
 
@@ -42,10 +44,16 @@ public interface BatchDao {
     @Query("SELECT * FROM batch WHERE user_id = :user_id")
     LiveData<List<Batch>> loadBatchesForUser(long user_id);
 
-    @Insert
+    @Query("SELECT * FROM batch_ingredient WHERE batch_id=:batch_id")
+    LiveData<List<BatchIngredient>> getIngredientsForBatch(long batch_id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long[] upsertBatchIngredients(List<BatchIngredient> batchIngredients);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Batch batch);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertAll(Batch... batches);
 
     @Delete

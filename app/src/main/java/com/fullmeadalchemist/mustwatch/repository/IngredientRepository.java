@@ -60,7 +60,23 @@ public class IngredientRepository {
         return ingredientDao.getAllSugars();
     }
 
+    public LiveData<List<Ingredient>> getNutrientEntries() {
+        return ingredientDao.getAllNutrients();
+    }
+
+    public LiveData<List<Ingredient>> getYeastEntries() {
+        return ingredientDao.getAllYeasts();
+    }
+
+    public LiveData<List<Ingredient>> getStabilizerEntries() {
+        return ingredientDao.getAllStabilizers();
+    }
+
     public LiveData<List<Ingredient>> getAll() {
         return ingredientDao.getAll();
+    }
+
+    public LiveData<Ingredient> getIngredientById(String id) {
+        return ingredientDao.getById(id);
     }
 }

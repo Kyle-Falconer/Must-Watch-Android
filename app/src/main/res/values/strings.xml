@@ -23,7 +23,8 @@
     <string name="target_abv">Target ABV</string>
     <string name="carbonation">carbonation</string>
     <string name="none">none</string>
-
+    <string name="create_a_batch_using_this_recipe">create a batch using this recipe</string>
+    <string name="qty_amount">amount</string>
 
     <!-- ================================================================
                             UNITS
@@ -43,6 +44,7 @@
     <string name="GRAM">g</string>
     <string name="POUND">lb</string>
     <string name="OUNCE">oz</string>
+    <string name="TEASPOON">tsp</string>
 
 
     <!-- ================================================================
@@ -154,7 +156,5 @@
                             STABILIZER
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
-    <string name="create_a_batch_using_this_recipe">create a batch using this recipe</string>
-    <string name="TEASPOON">tsp</string>
 
 </resources>

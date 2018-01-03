@@ -20,6 +20,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
@@ -41,13 +42,13 @@ public interface BatchIngredientDao {
             + "WHERE recipe_id = :recipe_id")
     LiveData<List<BatchIngredient>> getIngredientsForRecipe(long recipe_id);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insert(BatchIngredient batchIngredient);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertAll(BatchIngredient... batchIngredient);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertAll(List<BatchIngredient> ingredients);
 
     @Delete

@@ -23,6 +23,7 @@ import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
 import com.fullmeadalchemist.mustwatch.repository.LogEntryRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
 
 import java.util.List;
@@ -54,5 +55,9 @@ public class BatchDetailViewModel extends ViewModel {
 
     public LiveData<List<LogEntry>> getLogsForBatch(long batchId) {
         return logEntryRepository.getLogEntries(batchId);
+    }
+
+    public LiveData<List<BatchIngredient>> getBatchIngredients(long batchId) {
+        return batchRepository.getBatchIngredients(batchId);
     }
 }

@@ -44,6 +44,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
                 tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
 
+            <TableLayout
+                android:id="@+id/ingredients_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TableLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
@@ -305,30 +310,34 @@
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/button_edit_batch"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/edit_batch" />
+                tools:layout_editor_absoluteX="4dp"
+                tools:layout_editor_absoluteY="406dp">
 
+                <Button
+                    android:id="@+id/button_edit_batch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/edit_batch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/button_add_log_entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/add_log_entry" />
+                <Button
+                    android:id="@+id/button_add_log_entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/add_log_entry"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/logs_list"

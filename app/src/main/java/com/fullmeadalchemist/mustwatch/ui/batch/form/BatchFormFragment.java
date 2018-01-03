@@ -16,6 +16,7 @@
 
 package com.fullmeadalchemist.mustwatch.ui.batch.form;
 
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -29,12 +30,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -42,12 +44,12 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
-import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -56,10 +58,17 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
 import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
+import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.AMOUNT;
+import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.INGREDIENT;
+import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.INGREDIENT_SET_EVENT;
+import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.INGREDIENT_TYPE;
+import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.UNIT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DATE_SET_EVENT;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.DAY_OF_MONTH;
 import static com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.MONTH;
@@ -71,6 +80,10 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleD
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum.PLANNING;
+import static com.fullmeadalchemist.mustwatch.vo.Ingredient.IngredientType.NUTRIENT;
+import static com.fullmeadalchemist.mustwatch.vo.Ingredient.IngredientType.STABILIZER;
+import static com.fullmeadalchemist.mustwatch.vo.Ingredient.IngredientType.SUGAR;
+import static com.fullmeadalchemist.mustwatch.vo.Ingredient.IngredientType.YEAST;
 import static com.fullmeadalchemist.mustwatch.vo.Recipe.RECIPE_ID;
 import static systems.uom.common.Imperial.GALLON_UK;
 import static systems.uom.common.Imperial.OUNCE_LIQUID;
@@ -89,9 +102,12 @@ import static tec.units.ri.unit.Units.KILOGRAM;
 
 public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
-    private static final String TAG = BatchListFragment.class.getSimpleName();
     private static final int DATE_REQUEST_CODE = 1;
     private static final int TIME_REQUEST_CODE = 2;
+    private static final int INGREDIENT_REQUEST_CODE = 3;
+
+    private Activity activity;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -104,29 +120,76 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
     private BroadcastReceiver timePickerMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received TIME_SET_EVENT");
+            Timber.d("Received TIME_SET_EVENT");
             Integer hourOfDay = intent.getIntExtra(HOUR, 0);
             Integer minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0);
             viewModel.batch.createDate.set(Calendar.HOUR, hourOfDay);
             viewModel.batch.createDate.set(Calendar.MINUTE, minute);
-            Log.d(TAG, String.format("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute));
+            Timber.d("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute);
             updateUiDateTime();
         }
     };
     private BroadcastReceiver datePickerMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Received DATE_SET_EVENT");
+            Timber.d("Received DATE_SET_EVENT");
             Integer year = intent.getIntExtra(DatePickerFragment.YEAR, 0);
             Integer month = intent.getIntExtra(DatePickerFragment.MONTH, 0);
             Integer dayOfMonth = intent.getIntExtra(DatePickerFragment.DAY_OF_MONTH, 0);
             viewModel.batch.createDate.set(Calendar.YEAR, year);
             viewModel.batch.createDate.set(Calendar.MONTH, month);
             viewModel.batch.createDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            Log.d(TAG, String.format("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year));
+            Timber.d("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year);
             updateUiDateTime();
         }
     };
+
+    private BroadcastReceiver ingredientPickerMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (activity == null){
+                // FIXME: the app will crash if this is true.
+                Timber.e("Application Context is null");
+            }
+            Timber.d("Received INGREDIENT_SET_EVENT");
+            String ingredientString = intent.getStringExtra(INGREDIENT);
+            float amount = intent.getFloatExtra(AMOUNT, 0.0f);
+            String unitString = intent.getStringExtra(UNIT);
+            Timber.v("Got values from AddIngredientDialog: %s %s %s", ingredientString, amount, unitString);
+            BatchIngredient batchIngredient = new BatchIngredient();
+            batchIngredient.ingredientId = ingredientString;
+
+            batchIngredient.quantityVol = toVolume(amount, abbreviationMap.get(unitString));
+            viewModel.addIngredient(batchIngredient);
+            updateUiIngredientsTable();
+        }
+    };
+
+    private void updateUiIngredientsTable() {
+        if (viewModel.batch.ingredients != null) {
+            // FIXME: this is not performant and looks ghetto.
+            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsTable", viewModel.batch.ingredients.size());
+            TableLayout ingredientsTable = activity.findViewById(R.id.ingredients_table);
+            ingredientsTable.removeAllViews();
+            for (BatchIngredient ingredient : viewModel.batch.ingredients) {
+                TableRow tr = new TableRow(activity);
+                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                TextView ingredientText = new TextView(activity);
+                ingredientText.setText(ingredient.toString());
+                tr.addView(ingredientText);
+                ingredientsTable.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            }
+        } else {
+            Timber.d("No Ingredients found for this Recipe.");
+        }
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = (Activity) context;
+    }
 
     @Nullable
     @Override
@@ -155,14 +218,13 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Log.i(TAG, "Got Batch ID %d from the NavigationController. Acting as a Batch Editor.");
+            Timber.i("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.");
 
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
             long recipeId = bundle.getLong(RECIPE_ID, Long.MIN_VALUE);
             if (batchId != Long.MIN_VALUE) {
                 viewModel.getBatch(batchId).observe(this, batch -> {
                     if (batch != null) {
-                        Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
                         viewModel.batch = batch;
                         dataBinding.setBatch(batch);
                         if (batch.status != null) {
@@ -171,15 +233,24 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                             dataBinding.status.setText(PLANNING.toString());
                         }
                         updateUiDateTime();
+                        viewModel.getBatchIngredients(batchId).observe(this, batchIngredients -> {
+                            if (batchIngredients != null) {
+                                Timber.v("Loaded %s Batch ingredients", batchIngredients.size());
+                                viewModel.batch.ingredients = batchIngredients;
+                                updateUiIngredientsTable();
+                            } else {
+                                Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId);
+                            }
+                            Timber.i("Loaded Batch with ID %d:\n%s", batch.id, batch);
+                        });
                         updateSpinners(viewModel.batch);
                     } else {
-                        Log.e(TAG, "Got a null Batch!");
+                        Timber.e("Got a null Batch!");
                     }
                 });
             } else if (recipeId != Long.MIN_VALUE) {
                 viewModel.getRecipe(recipeId).observe(this, recipe -> {
                     if (recipe != null) {
-                        Log.i(TAG, String.format("Loaded Recipe with ID %d:\n%s", recipe.id, recipe));
                         viewModel.batch = new Batch();
                         viewModel.batch.name = recipe.name;
                         viewModel.batch.outputVolume = recipe.outputVol;
@@ -189,32 +260,42 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                         viewModel.batch.createDate = Calendar.getInstance();
                         viewModel.getCurrentUserId().observe(this, userId -> {
                             if (userId == null) {
-                                Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
+                                Timber.e("Could not set the Batch User ID, since it's null?!");
                                 return;
                             }
-                            Log.d(TAG, String.format("Setting batch user ID to %s", userId));
+                            Timber.d("Setting batch user ID to %s", userId);
                             viewModel.batch.userId = userId;
                         });
                         dataBinding.setBatch(viewModel.batch);
 
                         dataBinding.status.setText(viewModel.batch.status.toString());
                         updateUiDateTime();
+                        viewModel.getRecipeIngredients(recipeId).observe(this, recipeIngredients -> {
+                            if (recipeIngredients != null) {
+                                Timber.v("Loaded %s Recipe ingredients", recipeIngredients.size());
+                                viewModel.batch.ingredients = recipeIngredients;
+                                updateUiIngredientsTable();
+                            } else {
+                                Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId);
+                            }
+                            Timber.i("Loaded Recipe with ID %d:\n%s", recipe.id, recipe);
+                        });
                         updateSpinners(viewModel.batch);
                     } else {
-                        Log.e(TAG, "Got a null Recipe!");
+                        Timber.e("Got a null Recipe!");
                     }
                 });
             }
         } else {
-            Log.i(TAG, "No Batch ID was received. Acting as a Batch Creation form.");
+            Timber.i("No Batch ID was received. Acting as a Batch Creation form.");
             viewModel.batch = new Batch();
             viewModel.batch.createDate = Calendar.getInstance();
             viewModel.getCurrentUserId().observe(this, userId -> {
                 if (userId == null) {
-                    Log.e(TAG, "Could not set the Batch User ID, since it's null?!");
+                    Timber.e("Could not set the Batch User ID, since it's null?!");
                     return;
                 }
-                Log.d(TAG, String.format("Setting batch user ID to %s", userId));
+                Timber.d("Setting batch user ID to %s", userId);
                 viewModel.batch.userId = userId;
             });
             dataBinding.setBatch(viewModel.batch);
@@ -226,7 +307,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (viewModel.batch != null && viewModel.batch.id != null) {
+        if (viewModel.batch != null) {
             // We're in "edit" mode, so set the title accordingly
             FORM_MODE = MODES.EDIT;
             TextView formTitle = getActivity().findViewById(R.id.batchFormTitleTV);
@@ -243,7 +324,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         TextView dateField = getActivity().findViewById(R.id.createDateDate);
         if (dateField != null) {
             dateField.setOnClickListener(v -> {
-                Log.i(TAG, "Date was clicked!");
+                Timber.i("Date was clicked!");
                 DialogFragment newFragment = new DatePickerFragment();
                 Bundle args = new Bundle();
                 args.putInt(YEAR, viewModel.batch.createDate.get(Calendar.YEAR));
@@ -258,7 +339,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         TextView timeField = getActivity().findViewById(R.id.createDateTime);
         if (timeField != null) {
             timeField.setOnClickListener(v -> {
-                Log.i(TAG, "Time was clicked!");
+                Timber.i("Time was clicked!");
                 DialogFragment newFragment = new TimePickerFragment();
                 Bundle args = new Bundle();
                 args.putInt(HOUR, viewModel.batch.createDate.get(Calendar.HOUR));
@@ -269,15 +350,69 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
             });
         }
 
+        Button addSugarButton = getActivity().findViewById(R.id.add_sugar_button);
+        if (addSugarButton != null) {
+            addSugarButton.setOnClickListener(v -> {
+                Timber.i("addSugarButton was clicked!");
+                DialogFragment newFragment = new AddIngredientDialog();
+                Bundle args = new Bundle();
+                args.putString(INGREDIENT_TYPE, SUGAR.toString());
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "sugarPicker");
+            });
+        }
+
+        Button addNutrientButton = getActivity().findViewById(R.id.add_nutrient_button);
+        if (addNutrientButton != null) {
+            addNutrientButton.setOnClickListener(v -> {
+                Timber.i("addNutrientButton was clicked!");
+                DialogFragment newFragment = new AddIngredientDialog();
+                Bundle args = new Bundle();
+                args.putString(INGREDIENT_TYPE, NUTRIENT.toString());
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "nutrientPicker");
+            });
+        }
+
+        Button addYeastButton = getActivity().findViewById(R.id.add_yeast_button);
+        if (addYeastButton != null) {
+            addYeastButton.setOnClickListener(v -> {
+                Timber.i("addYeastButton was clicked!");
+                DialogFragment newFragment = new AddIngredientDialog();
+                Bundle args = new Bundle();
+                args.putString(INGREDIENT_TYPE, YEAST.toString());
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "yeastPicker");
+            });
+        }
+
+        Button addStabilizerButton = getActivity().findViewById(R.id.add_stabilizer_button);
+        if (addStabilizerButton != null) {
+            addStabilizerButton.setOnClickListener(v -> {
+                Timber.i("addStabilizerButton was clicked!");
+                DialogFragment newFragment = new AddIngredientDialog();
+                Bundle args = new Bundle();
+                args.putString(INGREDIENT_TYPE, STABILIZER.toString());
+                newFragment.setArguments(args);
+                newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE);
+                newFragment.show(getActivity().getSupportFragmentManager(), "stabilizerPicker");
+            });
+        }
+
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(datePickerMessageReceiver,
                 new IntentFilter(DATE_SET_EVENT));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(timePickerMessageReceiver,
                 new IntentFilter(TIME_SET_EVENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(ingredientPickerMessageReceiver,
+                new IntentFilter(INGREDIENT_SET_EVENT));
 
         Button submitButton = getActivity().findViewById(R.id.button_submit);
         if (submitButton != null) {
             submitButton.setOnClickListener(v -> {
-                Log.i(TAG, "Submit button clicked!");
+                Timber.i("Submit button clicked!");
                 FORM_MODE = (viewModel.batch.id == null) ? MODES.CREATE : MODES.EDIT;
                 viewModel.batch.name = dataBinding.name.getText().toString().trim();
                 viewModel.batch.targetSgStarting = toFloat(dataBinding.targetSgStarting.getText().toString().trim());
@@ -294,13 +429,14 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 viewModel.batch.notes = dataBinding.notes.getText().toString().trim();
 
                 if (FORM_MODE == MODES.CREATE) {
-                    Log.d(TAG, "We are in CREATE mode.");
-                    Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
+                    Timber.d("We are in CREATE mode.");
+                    Timber.d("Current batch state:\n%s", viewModel.batch.toString());
                     viewModel.saveNewBatch().observe(this, savedBatchId -> {
                         if (savedBatchId != null) {
-                            Log.i(TAG, String.format("Successfully saved Batch, which now has ID=%s", savedBatchId));
+                            Timber.i("Successfully saved Batch, which now has ID=%s", savedBatchId);
                             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
                             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
+                            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(ingredientPickerMessageReceiver);
                             Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG);
                             snackbar.show();
                             Answers.getInstance().logCustom(new CustomEvent("Batch create success"));
@@ -312,11 +448,12 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                         }
                     });
                 } else {
-                    Log.d(TAG, String.format("We are in EDIT mode for batch #%s", viewModel.batch.id));
-                    Log.d(TAG, String.format("Current batch state:\n%s", viewModel.batch.toString()));
+                    Timber.d("We are in EDIT mode for batch #%s", viewModel.batch.id);
+                    Timber.d("Current batch state:\n%s", viewModel.batch.toString());
                     viewModel.updateBatch();
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(datePickerMessageReceiver);
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(timePickerMessageReceiver);
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(ingredientPickerMessageReceiver);
                     Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG);
                     snackbar.show();
                     Answers.getInstance().logCustom(new CustomEvent("Batch edit success"));
@@ -325,7 +462,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
             });
         } else {
-            Log.e(TAG, "Cannot find submit button in view");
+            Timber.e("Cannot find submit button in view");
         }
     }
 
@@ -342,7 +479,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
     private void updateSpinners(Batch batch) {
         if (batch == null) {
-            Log.e(TAG, "Could not update spinners because batch is null");
+            Timber.e("Could not update spinners because batch is null");
             return;
         }
         if (batch.outputVolume != null) {
@@ -355,7 +492,7 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
 
 //            volSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-//                    Log.v(TAG, String.format("Volume spinner item selected: pos=%s, id=%s, string=%s", pos, id, volSpin.getItemAtPosition(pos).toString()));
+//                    Timber.v("Volume spinner item selected: pos=%s, id=%s, string=%s", pos, id, volSpin.getItemAtPosition(pos).toString()));
 //
 //                    Object item = parent.getItemAtPosition(pos);
 //                }
@@ -374,14 +511,14 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
         if (timeField != null) {
             timeField.setText(calendarToLocaleTime(viewModel.batch.createDate));
         } else {
-            Log.e(TAG, "Could not find createDateTime in View");
+            Timber.e("Could not find createDateTime in View");
         }
 
         TextView dateField = getActivity().findViewById(R.id.createDateDate);
         if (dateField != null) {
             dateField.setText(calendarToLocaleDate(viewModel.batch.createDate));
         } else {
-            Log.e(TAG, "Could not find createDateDate in View");
+            Timber.e("Could not find createDateDate in View");
         }
     }
 

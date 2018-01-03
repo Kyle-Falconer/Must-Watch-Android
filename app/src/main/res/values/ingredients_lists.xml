@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2017 Full Mead Alchemist, LLC.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string-array name="yeast_list">
+        <item>@string/LALVIN_EC_1118</item>
+        <item>@string/LALVIN_D_47</item>
+        <item>@string/LALVIN_K1_V1116</item>
+        <item>@string/LALVIN_71B_1122</item>
+        <item>@string/SAFALE_US_05</item>
+    </string-array>
+
+    <string-array name="stabilizer_list">
+        <item>@string/CAMPDEN</item>
+    </string-array>
+
+    <string-array name="nutrient_list">
+        <item>@string/DAP</item>
+        <item>@string/FERMAID_O</item>
+        <item>@string/FERMAID_K</item>
+        <item>@string/GOFERM</item>
+        <item>@string/YEAST_HULLS</item>
+    </string-array>
+
+    <string-array name="sugars_list">
+        <item>@string/HONEY</item>
+        <item>@string/ACEROLA</item>
+        <item>@string/APPLES</item>
+        <item>@string/APRICOTS__FRESH</item>
+        <item>@string/APRICOTS__DRIED</item>
+        <item>@string/BANANAS</item>
+        <item>@string/BLACKBERRY</item>
+        <item>@string/BLUEBERRY</item>
+        <item>@string/BOYSENBERRY</item>
+        <item>@string/CANTALOUPE</item>
+        <item>@string/CARAMBOLA</item>
+        <item>@string/CARROTS</item>
+        <item>@string/CASHEWS</item>
+        <item>@string/CELERY</item>
+        <item>@string/CHERRY__DARK</item>
+        <item>@string/CHERRY__MONTMORENCY</item>
+        <item>@string/CORN_SYRUP</item>
+        <item>@string/CRABAPPLES</item>
+        <item>@string/CRANBERRY</item>
+        <item>@string/CURRANT__BLACK</item>
+        <item>@string/CURRANT__RED</item>
+        <item>@string/DATES</item>
+        <item>@string/DATES__DRIED</item>
+        <item>@string/DEWBERRY</item>
+        <item>@string/ELDERBERRY</item>
+        <item>@string/FIGS</item>
+        <item>@string/FIGS__DRIED</item>
+        <item>@string/GOOSEBERRY</item>
+        <item>@string/GRAPES_CONCORD</item>
+        <item>@string/GRAPES</item>
+        <item>@string/GRAPEFRUIT</item>
+        <item>@string/GUANABANA</item>
+        <item>@string/GUAVAS</item>
+        <item>@string/HONEY__BUCKWHEAT</item>
+        <item>@string/HONEY__MIXED_FLORAL</item>
+        <item>@string/HONEY__ORANGE_BLOSSOM</item>
+        <item>@string/HONEY__CLOVER</item>
+        <item>@string/MELON__HONEYDEW</item>
+        <item>@string/JACKFRUIT</item>
+        <item>@string/KIWIS</item>
+        <item>@string/LEMON_JUICE</item>
+        <item>@string/LIME_JUICE</item>
+        <item>@string/LITCHI</item>
+        <item>@string/LOGANBERRY</item>
+        <item>@string/MANGOS</item>
+        <item>@string/MAPLE_SYRUP</item>
+        <item>@string/MAPLE_SAP</item>
+        <item>@string/MULBERRY</item>
+        <item>@string/NECTARINES</item>
+        <item>@string/ORANGE_JUICE</item>
+        <item>@string/PAPAYA</item>
+        <item>@string/PASSIONFRUIT</item>
+        <item>@string/PEACHES</item>
+        <item>@string/PEARS</item>
+        <item>@string/PERSIMMON</item>
+        <item>@string/PINEAPPLES</item>
+        <item>@string/PLUMS</item>
+        <item>@string/POMEGRANATES</item>
+        <item>@string/PRICKLY_PEAR</item>
+        <item>@string/PRUNES_DRIED</item>
+        <item>@string/QUINCES</item>
+        <item>@string/RAISINS_DRIED</item>
+        <item>@string/RASPBERRY__BLACK</item>
+        <item>@string/RASPBERRY__RED</item>
+        <item>@string/RHUBARB</item>
+        <item>@string/STRAWBERRY</item>
+        <item>@string/SUCROSE</item>
+        <item>@string/SULTANAS</item>
+        <item>@string/TANGERINES</item>
+        <item>@string/TANGELO</item>
+        <item>@string/TOMATOES</item>
+        <item>@string/WATERMELONS</item>
+        <item>@string/WELCHS_GRAPE_JUICE</item>
+        <item>@string/YOUNGBERRY</item>
+    </string-array>
+</resources>

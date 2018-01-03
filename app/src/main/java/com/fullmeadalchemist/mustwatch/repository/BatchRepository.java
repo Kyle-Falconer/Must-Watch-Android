@@ -19,10 +19,10 @@ package com.fullmeadalchemist.mustwatch.repository;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.db.BatchDao;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
@@ -33,10 +33,10 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 @Singleton
 public class BatchRepository {
-    private static final String TAG = BatchRepository.class.getSimpleName();
 
     private final BatchDao batchDao;
 
@@ -53,21 +53,26 @@ public class BatchRepository {
 
     public LiveData<Long> addBatch(Batch batch) {
         MutableLiveData<Long> batchIdLiveData = new MutableLiveData<>();
-        Log.d(TAG, "Adding batch to db:\n" + batch.toString());
+        Timber.d("Adding batch to db:\n" + batch.toString());
         Observable.fromCallable(() -> batchDao.insert(batch))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(batchIdLiveData::setValue);
+                .subscribe(batchId -> {
+                    batchIdLiveData.setValue(batchId);
+                    batch.id = batchId;
+                    upsertBatchIngredients(batch);
+                });
         return batchIdLiveData;
     }
 
     public LiveData<List<Long>> addBatches(List<Batch> batches) {
         MutableLiveData<List<Long>> batchIdsLiveData = new MutableLiveData<>();
-        Log.d(TAG, String.format("Adding %d batches to db:\n%s", batches.size(), TextUtils.join("\n", batches)));
+        Timber.d("Adding %d batches to db:\n%s", batches.size(), TextUtils.join("\n", batches));
         Observable.fromCallable(() -> batchDao.insertAll(batches.toArray(new Batch[batches.size()])))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(batchIdsLiveData::setValue);
+
         return batchIdsLiveData;
     }
 
@@ -89,8 +94,35 @@ public class BatchRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(updatedLiveData::setValue, e -> {
-                    Log.e(TAG, String.format("Failed to update batch:\n%s", e.toString()));
+                    Timber.e("Failed to update batch:\n%s", e.toString());
                 });
+        upsertBatchIngredients(batch);
         return updatedLiveData;
+    }
+
+    public LiveData<List<BatchIngredient>> getBatchIngredients(long batchId) {
+        return batchDao.getIngredientsForBatch(batchId);
+    }
+
+    private void upsertBatchIngredients(Batch batch) {
+        if (batch == null || batch.ingredients == null) {
+            Timber.w("Batch Ingredients is null");
+            return;
+        }
+        if (batch.id == null) {
+            Timber.e("No batch ID for these batch ingredients!");
+            return;
+        }
+        for (BatchIngredient batchIngredient : batch.ingredients) {
+            batchIngredient.batchId = batch.id;
+        }
+        Observable.fromCallable(() -> batchDao.upsertBatchIngredients(batch.ingredients))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ret -> {
+                    Timber.d("Inserted %d BatchIngredients into the database", ret.length);
+                }, e -> {
+                    Timber.e("Failed to insert batch ingredients:\n%s", e.toString());
+                });
     }
 }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="batch"
             type="com.fullmeadalchemist.mustwatch.vo.Batch" />
@@ -55,8 +56,8 @@
                     android:layout_width="24dp"
                     android:layout_height="48dp"
                     android:adjustViewBounds="true"
-                    android:gravity="center"
                     android:contentDescription="date created"
+                    android:gravity="center"
                     android:tint="@color/colorFieldIcon"
                     app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
@@ -89,110 +90,63 @@
             <!--android:entries="@array/mass_units_list"-->
             <!--android:scrollbars="vertical" />-->
 
+            <TableLayout
+                android:id="@+id/ingredients_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </TableLayout>
+
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout_sugars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Sugars"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Sugars" />
-
-                <TextView
-                    android:id="@+id/textView_sugars_added"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="131dp">
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/add_sugar_button"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:contentDescription="add ingredient"
-                    android:text="add ingredient"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_sugars_added"
-                    tools:text="add ingredient" />
-
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout_nutrients"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_sugars">
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Nutrients"
-                    app:layout_constraintHorizontal_bias="0.466"
-                    app:layout_constraintLeft_toLeftOf="@+id/button_add_nutrient"
-                    app:layout_constraintRight_toRightOf="@+id/button_add_nutrient"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Nutrients" />
-
-                <TextView
-                    android:id="@+id/textView_nutrients_added"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="9dp"
-                    android:visibility="gone"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    android:contentDescription="Add Sugar"
+                    android:text="Add Sugar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button_add_nutrient"
+                    android:id="@+id/add_yeast_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="Add Yeast"
+                    android:text="Add Yeast"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button" />
+
+                <Button
+                    android:id="@+id/add_nutrient_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="Add Nutrient"
                     android:text="Add Nutrient"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_nutrients_added"
-                    tools:text="Add Nutrient" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/add_stabilizer_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="Add Stabilizer"
+                    android:text="Add Stabilizer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_nutrient_button" />
 
             </android.support.constraint.ConstraintLayout>
 

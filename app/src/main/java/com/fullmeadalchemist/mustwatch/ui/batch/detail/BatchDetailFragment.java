@@ -24,22 +24,27 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
@@ -49,7 +54,6 @@ import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 public class BatchDetailFragment extends LifecycleFragment implements Injectable {
 
-    private static final String TAG = BatchDetailFragment.class.getSimpleName();
     protected RecyclerView logsRecyclerView;
     protected LogRecyclerViewAdapter logsAdapter;
     @Inject
@@ -70,7 +74,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchDetailViewModel.class);
 
         logsAdapter = new LogRecyclerViewAdapter(null, logEntry -> {
-            Log.i(TAG, String.format("Log entry clicked:\n%s", logEntry.toString()));
+            Timber.i(String.format("Log entry clicked:\n%s", logEntry.toString()));
         });
 
         return dataBinding.getRoot();
@@ -86,47 +90,47 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         if (bundle != null) {
 
             long batchId = bundle.getLong(BATCH_ID, Long.MIN_VALUE);
-            Log.i(TAG, String.format("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId));
+            Timber.i("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId);
 
             if (batchId != Long.MIN_VALUE) {
-                viewModel.getBatch(batchId).observe(this, batch -> {
-                    if (batch != null) {
-                        Log.i(TAG, String.format("Loaded Batch with ID %d:\n%s", batch.id, batch));
-                        dataBinding.setBatch(batch);
-                        viewModel.batch = batch;
-                        dataBinding.createDateDate.setText(calendarToLocaleDate(batch.createDate));
-                        dataBinding.createDateTime.setText(calendarToLocaleTime(batch.createDate));
+                if (viewModel.batch != null) {
+                    Timber.v("Reusing viewmodel data");
+                    dataBinding.setBatch(viewModel.batch);
+                    updateBatchUiInfo();
+                    updateIngredientUiInfo();
+                } else {
 
-                        if (viewModel.batch.outputVolume != null) {
-                            double volumeAmount = (double) viewModel.batch.outputVolume.getValue();
-                            DecimalFormat f = new DecimalFormat("#.##");
-                            dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
-                            String unitString = getResources().getString(unitToStringResource(viewModel.batch.outputVolume.getUnit()));
-                            dataBinding.outputVolumeAmountUnit.setText(unitString);
+                    viewModel.getBatch(batchId).observe(this, batch -> {
+                        if (batch != null) {
+                            dataBinding.setBatch(batch);
+                            viewModel.batch = batch;
+
+                            updateBatchUiInfo();
+
+                            viewModel.getBatchIngredients(batchId).observe(this, batchIngredients -> {
+                                if (batchIngredients != null) {
+                                    Timber.v("Loaded %s Batch ingredients", batchIngredients.size());
+                                    viewModel.batch.ingredients = batchIngredients;
+                                    updateIngredientUiInfo();
+                                } else {
+                                    Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId);
+                                }
+                                Timber.i("Loaded Batch with ID %d:\n%s", batch.id, batch);
+                            });
+
+                        } else {
+                            Timber.w("Received a null Batch from the RecipeDetailViewModel.");
                         }
-
-                        if (viewModel.batch.targetABV != null) {
-                            float abv_pct = viewModel.batch.targetABV * 100;
-                            DecimalFormat f = new DecimalFormat("0.##");
-                            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
-                        }
-
-                        if (viewModel.batch.status != null) {
-                            dataBinding.status.setText(viewModel.batch.status.toString());
-                        }
-                    } else {
-                        Log.w(TAG, "Received a null Batch from the RecipeDetailViewModel.");
-                    }
-                });
-                viewModel.getLogsForBatch(batchId).observe(this, batches -> {
-                    // update UI
-                    logsAdapter.dataSet = batches;
-                    logsAdapter.notifyDataSetChanged();
-                });
-
+                    });
+                    viewModel.getLogsForBatch(batchId).observe(this, batches -> {
+                        // update UI
+                        logsAdapter.dataSet = batches;
+                        logsAdapter.notifyDataSetChanged();
+                    });
+                }
             }
         } else {
-            Log.i(TAG, "No Batch ID was received. Redirecting to the Batch Creation form.");
+            Timber.i("No Batch ID was received. Redirecting to the Batch Creation form.");
             navigationController.navigateToAddBatch();
         }
 
@@ -140,18 +144,59 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         logsRecyclerView.setAdapter(logsAdapter);
     }
 
+    private void updateBatchUiInfo() {
+        dataBinding.createDateDate.setText(calendarToLocaleDate(viewModel.batch.createDate));
+        dataBinding.createDateTime.setText(calendarToLocaleTime(viewModel.batch.createDate));
+
+        if (viewModel.batch.outputVolume != null) {
+            double volumeAmount = (double) viewModel.batch.outputVolume.getValue();
+            DecimalFormat f = new DecimalFormat("#.##");
+            dataBinding.outputVolumeAmount.setText(f.format(volumeAmount));
+            String unitString = getResources().getString(unitToStringResource(viewModel.batch.outputVolume.getUnit()));
+            dataBinding.outputVolumeAmountUnit.setText(unitString);
+        }
+
+        if (viewModel.batch.targetABV != null) {
+            float abv_pct = viewModel.batch.targetABV * 100;
+            DecimalFormat f = new DecimalFormat("0.##");
+            dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
+        }
+
+        if (viewModel.batch.status != null) {
+            dataBinding.status.setText(viewModel.batch.status.toString());
+        }
+    }
+
+    private void updateIngredientUiInfo() {
+        if (viewModel.batch.ingredients != null) {
+            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsTable", viewModel.batch.ingredients.size());
+            TableLayout ingredientsTable = getActivity().findViewById(R.id.ingredients_table);
+            ingredientsTable.removeAllViews();
+            for (BatchIngredient ingredient : viewModel.batch.ingredients) {
+                TableRow tr = new TableRow(getActivity());
+                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                TextView ingredientText = new TextView(getActivity());
+                ingredientText.setText(ingredient.toString());
+                tr.addView(ingredientText);
+                ingredientsTable.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            }
+        } else {
+            Timber.d("No Ingredients found for this Recipe.");
+        }
+    }
+
     private void initClickListeners() {
         Button submitButton = getActivity().findViewById(R.id.button_edit_batch);
         if (submitButton != null) {
             submitButton.setOnClickListener(v -> {
-                Log.i(TAG, "Edit Batch button clicked");
+                Timber.i("Edit Batch button clicked");
                 navigationController.navigateToEditBatch(viewModel.batch.id);
             });
         }
         Button addLogButton = getActivity().findViewById(R.id.button_add_log_entry);
         if (addLogButton != null) {
             addLogButton.setOnClickListener(v -> {
-                Log.i(TAG, "Add Log Entry button clicked");
+                Timber.i("Add Log Entry button clicked");
                 navigationController.navigateToAddLog(viewModel.batch.id);
             });
         }

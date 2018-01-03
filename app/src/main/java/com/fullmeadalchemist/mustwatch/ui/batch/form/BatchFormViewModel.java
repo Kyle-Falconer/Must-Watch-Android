@@ -19,11 +19,18 @@ package com.fullmeadalchemist.mustwatch.ui.batch.form;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.fullmeadalchemist.mustwatch.repository.BatchIngredientRepository;
 import com.fullmeadalchemist.mustwatch.repository.BatchRepository;
+import com.fullmeadalchemist.mustwatch.repository.IngredientRepository;
 import com.fullmeadalchemist.mustwatch.repository.RecipeRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
+import com.fullmeadalchemist.mustwatch.vo.Ingredient;
 import com.fullmeadalchemist.mustwatch.vo.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,13 +39,17 @@ public class BatchFormViewModel extends ViewModel {
 
     protected Batch batch;
     private BatchRepository batchRepository;
+    private BatchIngredientRepository batchIngredientRepository;
     private RecipeRepository recipeRepository;
+    private IngredientRepository ingredientRepository;
     private UserRepository userRepository;
 
     @Inject
-    public BatchFormViewModel(BatchRepository batchRepository, RecipeRepository recipeRepository, UserRepository userRepository) {
+    public BatchFormViewModel(BatchRepository batchRepository, BatchIngredientRepository batchIngredientRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, UserRepository userRepository) {
         this.batchRepository = batchRepository;
+        this.batchIngredientRepository = batchIngredientRepository;
         this.recipeRepository = recipeRepository;
+        this.ingredientRepository = ingredientRepository;
         this.userRepository = userRepository;
     }
 
@@ -47,7 +58,17 @@ public class BatchFormViewModel extends ViewModel {
     }
 
     public void addBatch(Batch batch) {
+        if (batch.ingredients == null) {
+            batch.ingredients = new ArrayList<>();
+        }
         batchRepository.addBatch(batch);
+    }
+
+    void addIngredient(BatchIngredient batchIngredient) {
+        if (batch.ingredients == null){
+            batch.ingredients = new ArrayList<>();
+        }
+        batch.ingredients.add(batchIngredient);
     }
 
     public LiveData<Long> getCurrentUserId() {
@@ -55,6 +76,9 @@ public class BatchFormViewModel extends ViewModel {
     }
 
     public void updateBatch() {
+        if (batch.ingredients == null){
+            batch.ingredients = new ArrayList<>();
+        }
         batchRepository.updateBatch(batch);
     }
 
@@ -64,5 +88,41 @@ public class BatchFormViewModel extends ViewModel {
 
     public LiveData<Recipe> getRecipe(long recipeId) {
         return recipeRepository.getRecipe(recipeId);
+    }
+
+    public LiveData<Ingredient> getIngredient(String id) {
+        return ingredientRepository.getIngredientById(id);
+    }
+
+    public LiveData<List<Ingredient>> getSugars() {
+        return ingredientRepository.getSugarEntries();
+    }
+
+    public LiveData<List<Ingredient>> getNutrients() {
+        return ingredientRepository.getNutrientEntries();
+    }
+
+    public LiveData<List<Ingredient>> getYeasts() {
+        return ingredientRepository.getYeastEntries();
+    }
+
+    public LiveData<List<Ingredient>> getStabilizers() {
+        return ingredientRepository.getStabilizerEntries();
+    }
+
+    public LiveData<List<BatchIngredient>> getBatchIngredients(long batchId) {
+        return batchRepository.getBatchIngredients(batchId);
+    }
+
+    public LiveData<List<Recipe>> getRecipes(Long userId) {
+        if (userId == null) {
+            return recipeRepository.getPublicRecipes();
+        } else {
+            return recipeRepository.getRecipes(userId);
+        }
+    }
+
+    public LiveData<List<BatchIngredient>> getRecipeIngredients(long recipeId) {
+        return recipeRepository.getRecipeIngredients(recipeId);
     }
 }

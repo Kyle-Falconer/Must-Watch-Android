@@ -20,6 +20,7 @@ package com.fullmeadalchemist.mustwatch.di;
 import com.fullmeadalchemist.mustwatch.core.HeadlessLoadingFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment;
 import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment;
+import com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog;
 import com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.LogListFragment;
 import com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment;
@@ -60,6 +61,9 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract RecipeDetailFragment contributeRecipeDetailFragment();
+
+    @ContributesAndroidInjector
+    abstract AddIngredientDialog contributeAddIngredientDialog();
 
     @ContributesAndroidInjector
     abstract AboutFragment contributeAboutFragment();

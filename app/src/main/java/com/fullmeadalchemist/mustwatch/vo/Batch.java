@@ -25,6 +25,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.fullmeadalchemist.mustwatch.db.Converters;
 import com.google.gson.annotations.Expose;
@@ -32,10 +33,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
 
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
 
 @Entity(tableName = "batch",
@@ -90,6 +93,11 @@ public class Batch {
     @ColumnInfo(name = "notes")
     public String notes;
 
+    @Ignore
+    @SerializedName("ingredients")
+    @Expose
+    public List<BatchIngredient> ingredients = null;
+
     @SuppressLint("DefaultLocale")
     public String toString() {
         DecimalFormat f = new DecimalFormat("0.##");
@@ -99,15 +107,17 @@ public class Batch {
                         "Create date: %s\n" +
                         "Status: %s\n" +
                         "Output volume: %s %s\n" +
-                        "ABV: %s\n",
+                        "ABV: %s\n" +
+                        "ingredients : %s",
                 id,
                 userId,
                 name,
                 calendarToLocaleDateTimeLong(createDate),
                 (status == null) ? "null" : status.toString(),
                 (outputVolume == null) ? "null" : f.format(outputVolume.getValue()),
-                (outputVolume == null) ? "null" : outputVolume.getUnit().getName(),
-                (targetABV == null) ? "null" : f.format(targetABV));
+                (outputVolume == null) ? "null" : unitToTextAbbr(outputVolume.getUnit()),
+                (targetABV == null) ? "null" : f.format(targetABV),
+                (ingredients == null) ? "null" : TextUtils.join(", ", ingredients));
     }
 
     public enum BatchStatusEnum {
