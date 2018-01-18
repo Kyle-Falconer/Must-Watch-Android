@@ -1,3 +1,5 @@
+![CircleCI](https://circleci.com/gh/Kyle-Falconer/Must-Watch-Android.svg?style=shield&circle-token=:circle-token)
+
 # Full Mead Alchemist (Android)
 a mead-making helper app for Android
 
