@@ -71,7 +71,8 @@
                     android:maxLines="1"
                     android:text="@{batch.createDate}"
                     android:textAlignment="textStart"
-                    tools:text="Mar 31, 2017" />
+                    tools:text="Mar 31, 2017"
+                    android:layout_marginLeft="24dp" />
 
                 <TextView
                     android:id="@+id/createDateTime"
@@ -83,19 +84,11 @@
                     android:textAlignment="textEnd"
                     tools:text="7:44 AM" />
             </LinearLayout>
-
-            <!--<ExpandableListView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:entries="@array/mass_units_list"-->
-            <!--android:scrollbars="vertical" />-->
-
-            <TableLayout
-                android:id="@+id/ingredients_table"
+            <LinearLayout
+                android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </TableLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -113,7 +106,8 @@
                     android:contentDescription="Add Sugar"
                     android:text="Add Sugar"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginLeft="8dp" />
 
                 <Button
                     android:id="@+id/add_yeast_button"
@@ -124,7 +118,8 @@
                     android:contentDescription="Add Yeast"
                     android:text="Add Yeast"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button"
+                    android:layout_marginLeft="8dp" />
 
                 <Button
                     android:id="@+id/add_nutrient_button"
@@ -135,7 +130,8 @@
                     android:contentDescription="Add Nutrient"
                     android:text="Add Nutrient"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginRight="8dp" />
 
                 <Button
                     android:id="@+id/add_stabilizer_button"
@@ -146,7 +142,8 @@
                     android:contentDescription="Add Stabilizer"
                     android:text="Add Stabilizer"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_nutrient_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_nutrient_button"
+                    android:layout_marginRight="8dp" />
 
             </android.support.constraint.ConstraintLayout>
 

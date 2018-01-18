@@ -156,5 +156,6 @@
                             STABILIZER
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
+    <string name="no_ingredient">-</string>
 
 </resources>

@@ -114,12 +114,12 @@ public class Recipe {
     @Expose
     @SerializedName("starting_sg")
     @ColumnInfo(name = "starting_sg")
-    public Float startingSG;
+    public Double startingSG;
 
     @Expose
     @SerializedName("final_sg")
     @ColumnInfo(name = "final_sg")
-    public Float finalSG;
+    public Double finalSG;
 
     @Ignore
     @SerializedName("ingredients")

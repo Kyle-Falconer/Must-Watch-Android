@@ -52,6 +52,32 @@ public class ValueParsers {
         }
     }
 
+    @NonNull
+    public static Double toDouble(String value, double defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.w("Failed to parse value \"%s\" to a Double", value);
+            return defaultValue;
+        }
+    }
+
+    @Nullable
+    public static Double toDouble(String value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.w("Failed to parse value \"%s\" to a Double", value);
+            return null;
+        }
+    }
+
     /**
      * https://stackoverflow.com/a/1590842/940217
      * @param l

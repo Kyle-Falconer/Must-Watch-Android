@@ -38,8 +38,12 @@ import java.util.List;
 import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
 
+import timber.log.Timber;
+
+import static com.fullmeadalchemist.mustwatch.core.BrewFormulae.sugarConcToSG;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
+import static systems.uom.common.CGS.GRAM;
 
 @Entity(tableName = "batch",
         indices = {@Index(value = "user_id")},
@@ -67,10 +71,10 @@ public class Batch {
     public String name;
 
     @ColumnInfo(name = "target_sg_starting")
-    public Float targetSgStarting;
+    public Double targetSgStarting;
 
     @ColumnInfo(name = "target_sg_final")
-    public Float targetSgFinal;
+    public Double targetSgFinal;
 
     @ColumnInfo(name = "target_abv")
     public Float targetABV;

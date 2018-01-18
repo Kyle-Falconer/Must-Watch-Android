@@ -44,10 +44,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
                 tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
 
-            <TableLayout
-                android:id="@+id/ingredients_table"
+            <LinearLayout
+                android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TableLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,12 +86,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="7:44 AM" />
             </LinearLayout>
-
-            <!--<ExpandableListView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:entries="@array/mass_units_list"-->
-            <!--android:scrollbars="vertical" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"

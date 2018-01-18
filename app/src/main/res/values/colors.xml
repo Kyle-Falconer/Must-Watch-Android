@@ -15,4 +15,5 @@
     <color name="fma_orange">#bf8400</color>
     <color name="fma_yellow">#ffb000</color>
     <color name="fma_brown">#402c00</color>
+    <color name="ingredient_spacer">#22000000</color>
 </resources>

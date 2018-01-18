@@ -80,8 +80,8 @@ public class DemoGenerators {
 
             b.createDate = GregorianCalendar.getInstance();
             b.status = getStatus();
-            b.targetSgStarting = roundThreeDecimalPlaces(randFloat(1.10f, 1.30f));
-            b.targetSgFinal = roundThreeDecimalPlaces(randFloat(0.95f, 1.05f));
+            b.targetSgStarting = roundThreeDecimalPlaces(randDouble(1.10d, 1.30d));
+            b.targetSgFinal = roundThreeDecimalPlaces(randDouble(0.95d, 1.05d));
             b.startingPh = roundTwoDecimalPlaces(randFloat(3.0f, 5.5f));
             b.startingTemp = roundOneDecimalPlace(randFloat(65f, 75f));
             b.outputVolume = getRandVolume();
@@ -155,6 +155,10 @@ public class DemoGenerators {
         return (float) (Math.round(n * 1000.0) / 1000.0);
     }
 
+    public static double roundThreeDecimalPlaces(double n) {
+        return (double) roundThreeDecimalPlaces((float) n);
+    }
+
 
     @SuppressLint("DefaultLocale")
     public static void addLogsToBatchItem(Long batchId, int numLogsToGenerate, Calendar batchCreateDate) {
@@ -194,6 +198,15 @@ public class DemoGenerators {
         } else {
             Random r = new Random();
             return r.nextFloat() * (high - low) + low;
+        }
+    }
+
+    public static double randDouble(double low, double high){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return ThreadLocalRandom.current().nextDouble() * (high - low) + low;
+        } else {
+            Random r = new Random();
+            return r.nextDouble() * (high - low) + low;
         }
     }
 }

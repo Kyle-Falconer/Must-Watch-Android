@@ -29,11 +29,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -44,6 +46,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
+import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView;
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment;
@@ -63,6 +66,7 @@ import timber.log.Timber;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
+import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toDouble;
 import static com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat;
 import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.AMOUNT;
 import static com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.INGREDIENT;
@@ -100,7 +104,7 @@ import static tec.units.ri.unit.Units.GRAM;
 import static tec.units.ri.unit.Units.KILOGRAM;
 
 
-public class BatchFormFragment extends LifecycleFragment implements Injectable {
+public class BatchFormFragment extends Fragment implements Injectable {
 
     private static final int DATE_REQUEST_CODE = 1;
     private static final int TIME_REQUEST_CODE = 2;
@@ -168,16 +172,13 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
     private void updateUiIngredientsTable() {
         if (viewModel.batch.ingredients != null) {
             // FIXME: this is not performant and looks ghetto.
-            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsTable", viewModel.batch.ingredients.size());
-            TableLayout ingredientsTable = activity.findViewById(R.id.ingredients_table);
-            ingredientsTable.removeAllViews();
+            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsList", viewModel.batch.ingredients.size());
+            LinearLayout ingredientsList = activity.findViewById(R.id.ingredients_list);
+            ingredientsList.removeAllViews();
             for (BatchIngredient ingredient : viewModel.batch.ingredients) {
-                TableRow tr = new TableRow(activity);
-                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                TextView ingredientText = new TextView(activity);
-                ingredientText.setText(ingredient.toString());
-                tr.addView(ingredientText);
-                ingredientsTable.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                BatchIngredientView ingredientView = new BatchIngredientView(activity);
+                ingredientView.setBatchIngredient(ingredient);
+                ingredientsList.addView(ingredientView);
             }
         } else {
             Timber.d("No Ingredients found for this Recipe.");
@@ -415,8 +416,8 @@ public class BatchFormFragment extends LifecycleFragment implements Injectable {
                 Timber.i("Submit button clicked!");
                 FORM_MODE = (viewModel.batch.id == null) ? MODES.CREATE : MODES.EDIT;
                 viewModel.batch.name = dataBinding.name.getText().toString().trim();
-                viewModel.batch.targetSgStarting = toFloat(dataBinding.targetSgStarting.getText().toString().trim());
-                viewModel.batch.targetSgFinal = toFloat(dataBinding.targetSgFinal.getText().toString().trim());
+                viewModel.batch.targetSgStarting = toDouble(dataBinding.targetSgStarting.getText().toString().trim());
+                viewModel.batch.targetSgFinal = toDouble(dataBinding.targetSgFinal.getText().toString().trim());
                 viewModel.batch.targetABV = toFloat(dataBinding.targetABV.getText().toString().trim());
                 viewModel.batch.startingPh = toFloat(dataBinding.startingPh.getText().toString().trim());
                 viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.getText().toString().trim());

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -40,8 +41,12 @@ public class BindingUtils {
 
     @BindingAdapter("android:text")
     public static void setFloat(TextView view, float value) {
-        if (Float.isNaN(value)) view.setText("");
-        else view.setText(String.valueOf(value));
+        if (Float.isNaN(value)){
+            view.setText("");
+        } else{
+            DecimalFormat f = new DecimalFormat("#.##");
+            view.setText(f.format(value));
+        }
     }
 
     @InverseBindingAdapter(attribute = "android:text")
@@ -52,6 +57,27 @@ public class BindingUtils {
             return Float.parseFloat(num);
         } catch (NumberFormatException e) {
             return 0.0F;
+        }
+    }
+
+    @BindingAdapter("android:text")
+    public static void setDouble(TextView view, double value) {
+        if (Double.isNaN(value)){
+            view.setText("");
+        } else{
+            DecimalFormat f = new DecimalFormat("#.##");
+            view.setText(f.format(value));
+        }
+    }
+
+    @InverseBindingAdapter(attribute = "android:text")
+    public static double getDouble(TextView view) {
+        String num = view.getText().toString();
+        if (num.isEmpty()) return 0.0d;
+        try {
+            return Double.parseDouble(num);
+        } catch (NumberFormatException e) {
+            return 0.0d;
         }
     }
 

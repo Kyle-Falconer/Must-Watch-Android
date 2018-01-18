@@ -16,17 +16,22 @@
 
 package com.fullmeadalchemist.mustwatch.core;
 
+import com.fullmeadalchemist.mustwatch.vo.Batch;
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
+
+import java.text.DecimalFormat;
+
+import javax.measure.Quantity;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.AbstractQuantity;
 import timber.log.Timber;
 
+import static systems.uom.common.CGS.GRAM;
 import static systems.uom.common.USCustomary.LITER;
 
 
 public class BrewFormulae {
-
-    private static final String TAG = BrewFormulae.class.getSimpleName();
 
     public static double SGToBrix(double SG) {
         return 135.997 * Math.pow(SG, 3) - 630.272 * Math.pow(SG, 2) + 1111.14 * SG - 616.868;
@@ -36,6 +41,27 @@ public class BrewFormulae {
         return 4 + 10 * SG * SGToBrix(SG);
     }
 
+    public static Double estimateBatchSG(Batch b) {
+        Timber.d("Calculating the SG for batch %s", b.name);
+        if (b.ingredients == null) {
+            Timber.d("No sugars in this batch.");
+            return null;
+        }
+        double sugars = 0d;
+        for (BatchIngredient ingredient : b.ingredients) {
+            if (ingredient.quantityMass != null) {
+                sugars += (double) ingredient.quantityMass.to(GRAM).getValue();
+            }
+        }
+
+        Timber.d("Counted sugars to be %s grams", String.valueOf(sugars));
+        Double sg = null;
+        if (Math.abs(sugars - 0d) > 0.0001) {
+            sg = sugarConcToSG(sugars, b.outputVolume);
+        }
+        Timber.d("Calculated SG to be %s", String.valueOf(sg));
+        return sg;
+    }
 
     /**
      * Guess the SG based on the g/L weight of sugars.
@@ -45,8 +71,8 @@ public class BrewFormulae {
      * @param outputVolume the output volume of the batch.
      * @return calculated specific gravity based on provided sugars and output volume.
      */
-    public static double sugarConcToSG(double totalSugars, AbstractQuantity<Volume> outputVolume) {
-        double sugars_in_grams_per_L = totalSugars / outputVolume.doubleValue(LITER);
+    public static double sugarConcToSG(double totalSugars, Quantity<Volume> outputVolume) {
+        double sugars_in_grams_per_L = totalSugars / (double) outputVolume.to(LITER).getValue();
         double sg_guess = 0.992;    // lowest point
 
         double loopLimit = 100000;

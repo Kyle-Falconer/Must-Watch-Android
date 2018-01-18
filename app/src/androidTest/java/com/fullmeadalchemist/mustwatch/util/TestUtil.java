@@ -12,6 +12,7 @@ import java.util.Set;
 
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.getRandVolume;
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.getStatus;
+import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randDouble;
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randFloat;
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randInt;
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.roundOneDecimalPlace;
@@ -49,8 +50,8 @@ public class TestUtil {
         b.name = "Dummy Batch #"+randInt(1, 1000);
         b.createDate = GregorianCalendar.getInstance();
         b.status = getStatus();
-        b.targetSgStarting = roundThreeDecimalPlaces(randFloat(1.10f, 1.30f));
-        b.targetSgFinal = roundThreeDecimalPlaces(randFloat(0.95f, 1.05f));
+        b.targetSgStarting = roundThreeDecimalPlaces(randDouble(1.10d, 1.30d));
+        b.targetSgFinal = roundThreeDecimalPlaces(randDouble(0.95d, 1.05d));
         b.startingPh = roundTwoDecimalPlaces(randFloat(3.0f, 5.5f));
         b.startingTemp = roundOneDecimalPlace(randFloat(65f, 75f));
         b.outputVolume = getRandVolume();

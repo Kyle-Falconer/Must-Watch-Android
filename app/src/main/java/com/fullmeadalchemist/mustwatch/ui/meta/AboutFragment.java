@@ -16,9 +16,9 @@
 
 package com.fullmeadalchemist.mustwatch.ui.meta;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +29,7 @@ import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
 
-public class AboutFragment extends LifecycleFragment implements Injectable {
+public class AboutFragment extends Fragment implements Injectable {
 
     @Inject
     NavigationController navigationController;

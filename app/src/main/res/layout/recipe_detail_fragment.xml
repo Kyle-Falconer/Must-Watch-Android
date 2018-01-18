@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="recipe"
             type="com.fullmeadalchemist.mustwatch.vo.Recipe" />
@@ -30,12 +31,11 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Joe's Quick Grape Mead" />
 
-
-            <TableLayout
-                android:id="@+id/ingredientsTable"
+            <LinearLayout
+                android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TableLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,7 +203,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/create_a_batch_using_this_recipe" />
-
 
 
         </LinearLayout>

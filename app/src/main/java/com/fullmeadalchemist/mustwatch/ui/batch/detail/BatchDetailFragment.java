@@ -28,13 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
+import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView;
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter;
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient;
@@ -46,6 +45,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static com.fullmeadalchemist.mustwatch.core.BrewFormulae.estimateBatchSG;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate;
 import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime;
@@ -104,7 +104,6 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                         if (batch != null) {
                             dataBinding.setBatch(batch);
                             viewModel.batch = batch;
-
                             updateBatchUiInfo();
 
                             viewModel.getBatchIngredients(batchId).observe(this, batchIngredients -> {
@@ -112,6 +111,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
                                     Timber.v("Loaded %s Batch ingredients", batchIngredients.size());
                                     viewModel.batch.ingredients = batchIngredients;
                                     updateIngredientUiInfo();
+                                    updateBatchUiInfo();
                                 } else {
                                     Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId);
                                 }
@@ -157,6 +157,7 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         }
 
         if (viewModel.batch.targetABV != null) {
+            Double sgStartingValue = estimateBatchSG(viewModel.batch);
             float abv_pct = viewModel.batch.targetABV * 100;
             DecimalFormat f = new DecimalFormat("0.##");
             dataBinding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct)));
@@ -165,20 +166,32 @@ public class BatchDetailFragment extends LifecycleFragment implements Injectable
         if (viewModel.batch.status != null) {
             dataBinding.status.setText(viewModel.batch.status.toString());
         }
+
+        if (viewModel.batch.targetSgStarting != null) {
+            Double sgStartingValue = estimateBatchSG(viewModel.batch);
+            if (sgStartingValue != null) {
+                DecimalFormat f = new DecimalFormat("#.###");
+                dataBinding.targetSgStarting.setText(f.format(sgStartingValue));
+            }
+        }
+
+        if (viewModel.batch.targetSgFinal != null) {
+            Double sgFinalValue = viewModel.batch.targetSgFinal;
+            DecimalFormat f = new DecimalFormat("#.###");
+            dataBinding.targetSgFinal.setText(f.format(sgFinalValue));
+        }
     }
 
     private void updateIngredientUiInfo() {
         if (viewModel.batch.ingredients != null) {
-            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsTable", viewModel.batch.ingredients.size());
-            TableLayout ingredientsTable = getActivity().findViewById(R.id.ingredients_table);
-            ingredientsTable.removeAllViews();
+            // FIXME: this is not performant and looks ghetto.
+            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsList", viewModel.batch.ingredients.size());
+            LinearLayout ingredientsList = getActivity().findViewById(R.id.ingredients_list);
+            ingredientsList.removeAllViews();
             for (BatchIngredient ingredient : viewModel.batch.ingredients) {
-                TableRow tr = new TableRow(getActivity());
-                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                TextView ingredientText = new TextView(getActivity());
-                ingredientText.setText(ingredient.toString());
-                tr.addView(ingredientText);
-                ingredientsTable.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                BatchIngredientView ingredientText = new BatchIngredientView(getActivity());
+                ingredientText.setBatchIngredient(ingredient);
+                ingredientsList.addView(ingredientText);
             }
         } else {
             Timber.d("No Ingredients found for this Recipe.");
