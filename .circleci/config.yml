@@ -25,6 +25,10 @@ jobs:
           name: chmod ci-scripts
           command: chmod -R +x .circleci/ci-scripts
 
+      - run:
+          name: chmod gradlew
+          command: chmod +x gradlew
+
       # Prepare the container for the build
       - run:
           name: Ensure Android SDK install is up-to-date
