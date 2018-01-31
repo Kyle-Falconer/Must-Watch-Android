@@ -3,12 +3,11 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/squanchy
+
+    working_directory: ~/fma
 
     docker:
       - image: circleci/android:api-27-alpha
-
-    working_directory: ~/fma
 
     environment:
       ANDROID_HOME: /opt/android/sdk
