@@ -14,9 +14,11 @@ apply plugin: 'io.fabric'
 apply plugin: 'com.novoda.build-properties'
 
 
+
+def secretsFile = project.file('secrets.properties')
 buildProperties {
     secrets {
-        file project.file('secrets.properties')
+        file secretsFile.exists() ? secretsFile : project.file('secrets.properties.example')
     }
 }
 

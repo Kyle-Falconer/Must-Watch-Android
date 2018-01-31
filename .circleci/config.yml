@@ -20,10 +20,6 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-      keyStore: testing_keystore.jks
-      keyStorePassword: debugpassword
-      keyAlias: key0
-      keyAliasPassword: debugpassword
 
     steps:
       - checkout
