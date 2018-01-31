@@ -9,8 +9,7 @@
 *.apk
 /app/prod/release/*
 .externalNativeBuild
-release.properties
+secrets.properties
 fma_upload_key.jks
-fabric.properties
 .idea/dictionaries/
 .idea/
