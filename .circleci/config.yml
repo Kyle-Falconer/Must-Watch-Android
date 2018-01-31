@@ -21,6 +21,10 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 
+      - run:
+          name: chmod ci-scripts
+          command: chmod -R +x .circleci/ci-scripts
+
       # Prepare the container for the build
       - run:
           name: Ensure Android SDK install is up-to-date
