@@ -16,10 +16,10 @@
 
 package com.fullmeadalchemist.mustwatch.core;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.LifecycleOwner;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.di.Injectable;
@@ -41,7 +41,7 @@ import timber.log.Timber;
 
 import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.generateDummyBatchesWithData;
 
-public class HeadlessLoadingFragment extends LifecycleFragment implements Injectable {
+public class HeadlessLoadingFragment extends Fragment implements Injectable {
 
     private boolean updated = false;
 

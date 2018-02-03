@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.batch.form;
 
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -37,8 +36,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -151,7 +148,7 @@ public class BatchFormFragment extends Fragment implements Injectable {
     private BroadcastReceiver ingredientPickerMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (activity == null){
+            if (activity == null) {
                 // FIXME: the app will crash if this is true.
                 Timber.e("Application Context is null");
             }

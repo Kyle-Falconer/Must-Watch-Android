@@ -16,20 +16,17 @@
 
 package com.fullmeadalchemist.mustwatch.ui.recipe.detail;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.fullmeadalchemist.mustwatch.R;
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding;
@@ -49,7 +46,7 @@ import static com.fullmeadalchemist.mustwatch.core.BrewFormulae.calcAbvPct;
 import static com.fullmeadalchemist.mustwatch.vo.Recipe.RECIPE_ID;
 
 
-public class RecipeDetailFragment extends LifecycleFragment implements Injectable {
+public class RecipeDetailFragment extends Fragment implements Injectable {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;

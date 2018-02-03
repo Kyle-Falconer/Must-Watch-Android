@@ -16,12 +16,12 @@
 
 package com.fullmeadalchemist.mustwatch.ui.user;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +34,7 @@ import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
 
-public class UserProfileFragment extends LifecycleFragment implements Injectable {
+public class UserProfileFragment extends Fragment implements Injectable {
     private static final String UID_KEY = "uid";
     private static final String TAG = UserProfileFragment.class.getSimpleName();
 

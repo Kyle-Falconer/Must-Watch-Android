@@ -16,11 +16,11 @@
 
 package com.fullmeadalchemist.mustwatch.ui.recipe;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +33,7 @@ import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
 import javax.inject.Inject;
 
-public class RecipeListFragment extends LifecycleFragment implements Injectable {
+public class RecipeListFragment extends Fragment implements Injectable {
 
     private static final String TAG = RecipeListFragment.class.getSimpleName();
     protected RecyclerView mRecyclerView;

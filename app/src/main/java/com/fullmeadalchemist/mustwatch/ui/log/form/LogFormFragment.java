@@ -16,7 +16,6 @@
 
 package com.fullmeadalchemist.mustwatch.ui.log.form;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
@@ -26,6 +25,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +57,7 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleT
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
-public class LogFormFragment extends LifecycleFragment implements Injectable {
+public class LogFormFragment extends Fragment implements Injectable {
 
     private static final String TAG = LogFormFragment.class.getSimpleName();
     private static final int DATE_REQUEST_CODE = 1;

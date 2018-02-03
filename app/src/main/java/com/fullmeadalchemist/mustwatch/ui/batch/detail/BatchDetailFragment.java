@@ -16,12 +16,12 @@
 
 package com.fullmeadalchemist.mustwatch.ui.batch.detail;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,7 +52,7 @@ import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleT
 import static com.fullmeadalchemist.mustwatch.vo.Batch.BATCH_ID;
 
 
-public class BatchDetailFragment extends LifecycleFragment implements Injectable {
+public class BatchDetailFragment extends Fragment implements Injectable {
 
     protected RecyclerView logsRecyclerView;
     protected LogRecyclerViewAdapter logsAdapter;

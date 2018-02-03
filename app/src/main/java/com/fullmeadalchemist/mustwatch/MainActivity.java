@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     HeadlessLoadingFragment headlessLoadingFragment;
     String HEADLESS_FRAGMENT_TAG = "HEADLESS_LOADING_FRAGMENT";
 
+    @NonNull
     @Override
     public LifecycleRegistry getLifecycle() {
         return lifecycleRegistry;
