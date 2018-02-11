@@ -44,15 +44,15 @@ public class BatchDbTests extends DbTest {
 
         final User user = TestUtil.createUser();
         db.userDao().insert(user);
-        final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is(user.name));
+        final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
+        assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.id);
+        final Batch batch = TestUtil.createBatch(loaded_user.getId());
         db.batchDao().insert(batch);
 
-        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.id));
+        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
         assertThat(loaded_batch.size(), is(1));
-        assertThat(loaded_batch.get(0).createDate.getTime(), is(batch.createDate.getTime()));
+        assertThat(loaded_batch.get(0).getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
     }
 
     @Test
@@ -60,26 +60,26 @@ public class BatchDbTests extends DbTest {
         int n = 10;
         final User user = TestUtil.createUser();
         db.userDao().insert(user);
-        final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is(user.name));
+        final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
+        assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.id);
+        final Batch batch = TestUtil.createBatch(loaded_user.getId());
         db.batchDao().insert(batch);
 
         // loadLogEntriesForBatch
-        final List<Batch> loaded_batches = getValue(db.batchDao().loadBatchesForUser(loaded_user.id));
+        final List<Batch> loaded_batches = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
         assertThat(loaded_batches.size(), is(1));
         final Batch loaded_batch = loaded_batches.get(0);
-        assertThat(loaded_batch.createDate.getTime(), is(batch.createDate.getTime()));
+        assertThat(loaded_batch.getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
 
         for (int i = 0; i < n; i++) {
             LogEntry entry = new LogEntry();
-            entry.batchId = loaded_batch.id;
-            entry.note = String.valueOf(i);
+            entry.setBatchId(loaded_batch.getId());
+            entry.setNote(String.valueOf(i));
             db.logEntryDao().insert(entry);
         }
 
-        final List<LogEntry> entries_loaded = getValue(db.logEntryDao().loadAllByBatchIds(loaded_batch.id));
+        final List<LogEntry> entries_loaded = getValue(db.logEntryDao().loadAllByBatchIds(loaded_batch.getId()));
         assertThat(entries_loaded.size(), is(n));
     }
 
@@ -88,39 +88,39 @@ public class BatchDbTests extends DbTest {
 
         final User user = TestUtil.createUser();
         db.userDao().insert(user);
-        final User loaded_user = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded_user.name, is(user.name));
+        final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
+        assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.id);
+        final Batch batch = TestUtil.createBatch(loaded_user.getId());
         db.batchDao().insert(batch);
 
-        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.id));
+        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
         assertThat(loaded_batch.size(), is(1));
 
         Batch added_batch = loaded_batch.get(0);
-        assertThat(added_batch.createDate.getTime(), is(batch.createDate.getTime()));
+        assertThat(added_batch.getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
 
         Ingredient cloverHoneyIngredient = getValue(db.ingredientDao().getById("HONEY__CLOVER"));
         BatchIngredient ingredient1 = new BatchIngredient();
-        ingredient1.batchId = added_batch.id;
-        ingredient1.ingredientId = cloverHoneyIngredient.id;
-        ingredient1.quantityMass = Quantities.getQuantity(2, POUND);
+        ingredient1.setBatchId(added_batch.getId());
+        ingredient1.setIngredientId(cloverHoneyIngredient.getId());
+        ingredient1.setQuantityMass(Quantities.getQuantity(2, POUND));
         db.batchIngredientDao().insert(ingredient1);
 
         Ingredient grapeJuiceIngredient = getValue(db.ingredientDao().getById("WELCHS_GRAPE_JUICE"));
         BatchIngredient ingredient2 = new BatchIngredient();
-        ingredient2.batchId = added_batch.id;
-        ingredient2.ingredientId = grapeJuiceIngredient.id;
-        ingredient2.quantityVol = Quantities.getQuantity(64, FLUID_OUNCE);
+        ingredient2.setBatchId(added_batch.getId());
+        ingredient2.setIngredientId(grapeJuiceIngredient.getId());
+        ingredient2.setQuantityVol(Quantities.getQuantity(64, FLUID_OUNCE));
         db.batchIngredientDao().insert(ingredient2);
 
-        List<BatchIngredient> addedBatchIngredients = getValue(db.batchIngredientDao().getIngredientsForBatch(added_batch.id));
+        List<BatchIngredient> addedBatchIngredients = getValue(db.batchIngredientDao().getIngredientsForBatch(added_batch.getId()));
         assertThat(addedBatchIngredients.size(), is(2));
-        assertThat(addedBatchIngredients.get(0).batchId, is(added_batch.id));
-        assertThat(addedBatchIngredients.get(0).ingredientId, is(ingredient1.ingredientId));
+        assertThat(addedBatchIngredients.get(0).getBatchId(), is(added_batch.getId()));
+        assertThat(addedBatchIngredients.get(0).getIngredientId(), is(ingredient1.getIngredientId()));
 
-        assertThat(addedBatchIngredients.get(1).batchId, is(added_batch.id));
-        assertThat(addedBatchIngredients.get(1).ingredientId, is(ingredient2.ingredientId));
+        assertThat(addedBatchIngredients.get(1).getBatchId(), is(added_batch.getId()));
+        assertThat(addedBatchIngredients.get(1).getIngredientId(), is(ingredient2.getIngredientId()));
     }
 
 }

@@ -58,7 +58,7 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
 
     @SuppressLint("StaticFieldLeak")
     @MainThread
-    public void replace(List<T> update) {
+    public void replace(final List<T> update) {
         dataVersion++;
         if (items == null) {
             if (update == null) {

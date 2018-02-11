@@ -33,7 +33,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-import static com.fullmeadalchemist.mustwatch.db.AppDatabase.DATABASE_NAME;
+
 
 @Module(includes = ViewModelModule.class)
 class AppModule {
@@ -41,7 +41,8 @@ class AppModule {
     @Singleton
     @Provides
     AppDatabase provideDb(Application app) {
-        return Room.databaseBuilder(app, AppDatabase.class, DATABASE_NAME).build();
+        // fixme: change to reference AppDatabase.DATABASE_NAME
+        return Room.databaseBuilder(app, AppDatabase.class, "mustwatch-db").build();
     }
 
     @Singleton

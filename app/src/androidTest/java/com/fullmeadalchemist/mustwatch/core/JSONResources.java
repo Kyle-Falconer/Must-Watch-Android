@@ -58,13 +58,13 @@ public class JSONResources {
         assertTrue(ingredients.length > 0);
 
         for (Ingredient ingredient : ingredients) {
-            if ("SUGAR".equals(ingredient.type)) {
-                assertTrue(ingredient.totalPct > 0);
-                if (ingredient.density != null) {
-                    assertTrue(ingredient.density > 0);
+            if ("SUGAR".equals(ingredient.getType())) {
+                assertTrue(ingredient.getTotalPct() > 0);
+                if (ingredient.getDensity() != null) {
+                    assertTrue(ingredient.getDensity() > 0);
                 }
             }
-            assertStringResourceNotNull(ingredient.id);
+            assertStringResourceNotNull(ingredient.getId());
         }
     }
 
@@ -76,8 +76,8 @@ public class JSONResources {
         assertTrue(recipes.length > 0);
 
         for (Recipe recipe : recipes) {
-            assertThat(recipe.ingredients, is(not(nullValue())));
-            assertTrue(recipe.ingredients.size() > 0);
+            assertThat(recipe.getIngredients(), is(not(nullValue())));
+            assertTrue(recipe.getIngredients().size() > 0);
         }
     }
 

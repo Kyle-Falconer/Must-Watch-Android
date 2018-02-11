@@ -59,13 +59,13 @@ public class BatchIngredientView extends LinearLayout {
         if (this.batchIngredient == null) {
             return;
         }
-        int ingredientResID = getResources().getIdentifier(this.batchIngredient.ingredientId,
+        int ingredientResID = getResources().getIdentifier(this.batchIngredient.getIngredientId(),
                 "string", getContext().getPackageName());
         ingredientLabel.setText(getContext().getString(ingredientResID));
-        if (this.batchIngredient.quantityVol != null) {
-            qtyAmount.setText(this.batchIngredient.quantityVol.toString());
-        } else if (this.batchIngredient.quantityMass != null) {
-            qtyAmount.setText(this.batchIngredient.quantityMass.toString());
+        if (this.batchIngredient.getQuantityVol() != null) {
+            qtyAmount.setText(this.batchIngredient.getQuantityVol().toString());
+        } else if (this.batchIngredient.getQuantityMass() != null) {
+            qtyAmount.setText(this.batchIngredient.getQuantityMass().toString());
         } else {
             qtyAmount.setText(getContext().getText(R.string.no_ingredient));
         }

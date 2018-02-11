@@ -16,8 +16,6 @@
 
 package com.fullmeadalchemist.mustwatch;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,7 +27,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -40,12 +37,12 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
+import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LifecycleRegistryOwner,
+public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         HasSupportFragmentInjector {
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
+
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     @Inject
@@ -53,12 +50,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 
     HeadlessLoadingFragment headlessLoadingFragment;
     String HEADLESS_FRAGMENT_TAG = "HEADLESS_LOADING_FRAGMENT";
-
-    @NonNull
-    @Override
-    public LifecycleRegistry getLifecycle() {
-        return lifecycleRegistry;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         if (id == R.id.action_settings) {
 //            Intent intent = new Intent(this, SettingsActivity.class);
 //            startActivity(intent);
-            Log.e(TAG, "Settings view not yet implemented");
+            Timber.e("Settings view not yet implemented");
             return true;
         }
 
@@ -155,11 +146,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_batches:
-                Log.i(TAG, "nav_batches selected from Drawer");
+                Timber.i("nav_batches selected from Drawer");
                 navigationController.navigateToBatches();
                 break;
             case R.id.nav_recipes:
-                Log.i(TAG, "nav_recipes selected from Drawer");
+                Timber.i("nav_recipes selected from Drawer");
                 navigationController.navigateToRecipes();
                 break;
 //            case R.id.nav_groups:
@@ -173,11 +164,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
 //                navigationController.navigateToBatches();
 //                break;
             case R.id.nav_about:
-                Log.i(TAG, "nav_about selected from Drawer");
+                Timber.i("nav_about selected from Drawer");
                 navigationController.navigateToAbout();
                 break;
             default:
-                Log.w(TAG, String.format("unknown selected from Drawer: %s", item.getTitle()));
+                Timber.w("unknown selected from Drawer: %s", item.getTitle());
                 break;
         }
 

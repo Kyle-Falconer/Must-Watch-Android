@@ -58,17 +58,17 @@ public class BatchFormViewModel extends ViewModel {
     }
 
     public void addBatch(Batch batch) {
-        if (batch.ingredients == null) {
-            batch.ingredients = new ArrayList<>();
+        if (batch.getIngredients() == null) {
+            batch.setIngredients(new ArrayList<BatchIngredient>());
         }
         batchRepository.addBatch(batch);
     }
 
     void addIngredient(BatchIngredient batchIngredient) {
-        if (batch.ingredients == null){
-            batch.ingredients = new ArrayList<>();
+        if (batch.getIngredients() == null){
+            batch.setIngredients(new ArrayList<BatchIngredient>());
         }
-        batch.ingredients.add(batchIngredient);
+        batch.getIngredients().add(batchIngredient);
     }
 
     public LiveData<Long> getCurrentUserId() {
@@ -76,8 +76,8 @@ public class BatchFormViewModel extends ViewModel {
     }
 
     public void updateBatch() {
-        if (batch.ingredients == null){
-            batch.ingredients = new ArrayList<>();
+        if (batch.getIngredients() == null){
+            batch.setIngredients(new ArrayList<BatchIngredient>());
         }
         batchRepository.updateBatch(batch);
     }

@@ -73,12 +73,12 @@ public class JSONResourceReader {
                 line = reader.readLine();
             }
         } catch (Exception e) {
-            Log.e(TAG, "Unhandled exception while using JSONResourceReader", e);
+            Timber.e(e,"Unhandled exception while using JSONResourceReader\n");
         } finally {
             try {
                 resourceReader.close();
             } catch (Exception e) {
-                Log.e(TAG, "Unhandled exception while using JSONResourceReader", e);
+                Timber.e(e, "Unhandled exception while using JSONResourceReader");
             }
         }
 

@@ -34,7 +34,7 @@ public class LogFormViewModel extends ViewModel {
     public LogFormViewModel(LogEntryRepository logEntryRepository) {
         this.logEntryRepository = logEntryRepository;
         this.logEntry = new LogEntry();
-        this.logEntry.entryDate = Calendar.getInstance();
+        this.logEntry.setEntryDate(Calendar.getInstance());
     }
 
     public void saveNewLogEntry() {

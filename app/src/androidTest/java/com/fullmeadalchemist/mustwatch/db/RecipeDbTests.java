@@ -67,6 +67,6 @@ public class RecipeDbTests extends DbTest {
 
         final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(uid));
         assertThat(loaded_batch.size(), is(1));
-        assertThat(loaded_batch.get(0).createDate.getTime(), is(batch.createDate.getTime()));
+        assertThat(loaded_batch.get(0).getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
     }
 }

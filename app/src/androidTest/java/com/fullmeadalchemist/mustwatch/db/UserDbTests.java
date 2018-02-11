@@ -26,16 +26,16 @@ public class UserDbTests extends DbTest {
         final User user = TestUtil.createUser();
         db.userDao().insert(user);
 
-        final User loaded = getValue(db.userDao().findByEmail(user.email));
-        assertThat(loaded.name, is(user.name));
-        assertThat(loaded.email, is(user.email));
+        final User loaded = getValue(db.userDao().findByEmail(user.getEmail()));
+        assertThat(loaded.getName(), is(user.getName()));
+        assertThat(loaded.getEmail(), is(user.getEmail()));
 
         final User replacement = TestUtil.createUser();
         db.userDao().insert(replacement);
 
-        final User loadedReplacement = getValue(db.userDao().findByEmail(replacement.email));
-        assertThat(loadedReplacement.name, is(replacement.name));
-        assertThat(loadedReplacement.email, is(replacement.email));
+        final User loadedReplacement = getValue(db.userDao().findByEmail(replacement.getEmail()));
+        assertThat(loadedReplacement.getName(), is(replacement.getName()));
+        assertThat(loadedReplacement.getEmail(), is(replacement.getEmail()));
     }
 
     @Test
@@ -43,8 +43,8 @@ public class UserDbTests extends DbTest {
         final Group group1 = TestUtil.createGroup("Group Foo");
         db.groupDao().insert(group1);
 
-        final Group group1_loaded = getValue(db.groupDao().findByName(group1.name));
-        assertThat(group1_loaded.name, is("Group Foo"));
+        final Group group1_loaded = getValue(db.groupDao().findByName(group1.getName()));
+        assertThat(group1_loaded.getName(), is("Group Foo"));
     }
 
     @Test
@@ -53,22 +53,22 @@ public class UserDbTests extends DbTest {
         final Group group1 = TestUtil.createGroup("Group Foo");
         db.groupDao().insert(group1);
 
-        final Group group1_loaded = getValue(db.groupDao().findByName(group1.name));
-        assertThat(group1_loaded.name, is("Group Foo"));
+        final Group group1_loaded = getValue(db.groupDao().findByName(group1.getName()));
+        assertThat(group1_loaded.getName(), is("Group Foo"));
 
         List<User> usersToAdd = TestUtil.createUsers(n);
         db.userDao().insertAll(usersToAdd);
 
         for (User member : usersToAdd) {
-            User member_loaded = getValue(db.userDao().findByEmail(member.email));
-            assertThat(member_loaded.name, is(member.name));
+            User member_loaded = getValue(db.userDao().findByEmail(member.getEmail()));
+            assertThat(member_loaded.getName(), is(member.getName()));
             GroupMembership membership = new GroupMembership();
-            membership.userId = member_loaded.id;
-            membership.groupId = group1_loaded.id;
-            membership.accessRead = true;
+            membership.setUserId(member_loaded.getId());
+            membership.setGroupId(group1_loaded.getId());
+            membership.setAccessRead(true);
             db.groupDao().insert(membership);
         }
-        List<User> members_loaded = getValue(db.groupDao().loadAllMembersInGroup(group1_loaded.id));
+        List<User> members_loaded = getValue(db.groupDao().loadAllMembersInGroup(group1_loaded.getId()));
         assertThat(members_loaded.size(), is(n));
     }
 
@@ -79,23 +79,23 @@ public class UserDbTests extends DbTest {
         final Group group1 = TestUtil.createGroup("Group Foo");
         db.groupDao().insert(group1);
 
-        final Group group1_loaded = getValue(db.groupDao().findByName(group1.name));
-        assertThat(group1_loaded.name, is("Group Foo"));
+        final Group group1_loaded = getValue(db.groupDao().findByName(group1.getName()));
+        assertThat(group1_loaded.getName(), is("Group Foo"));
 
         List<User> usersToAdd = TestUtil.createUsers(n);
         db.userDao().insertAll(usersToAdd);
 
         for (User member : usersToAdd) {
-            User member_loaded = getValue(db.userDao().findByEmail(member.email));
-            assertThat(member_loaded.name, is(member.name));
+            User member_loaded = getValue(db.userDao().findByEmail(member.getEmail()));
+            assertThat(member_loaded.getName(), is(member.getName()));
             GroupMembership membership = new GroupMembership();
-            membership.userId = member_loaded.id;
-            membership.groupId = group1_loaded.id;
-            membership.accessRead = true;
+            membership.setUserId(member_loaded.getId());
+            membership.setGroupId(group1_loaded.getId());
+            membership.setAccessRead(true);
             db.groupDao().insert(membership);
         }
 
-        List<User> members_loaded = getValue(db.groupDao().loadAllMembersInGroup(group1_loaded.id));
+        List<User> members_loaded = getValue(db.groupDao().loadAllMembersInGroup(group1_loaded.getId()));
         assertThat(members_loaded.size(), is(n));
     }
 }

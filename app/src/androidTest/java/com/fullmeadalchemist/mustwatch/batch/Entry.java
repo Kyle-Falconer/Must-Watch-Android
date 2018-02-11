@@ -85,7 +85,7 @@ public class Entry {
 
     public void changeText_volume(String volumeResourceString) {
         String volumeScalarToBetyped;
-        volumeScalarToBetyped = Integer.toString(randInt(1, 20));
+        volumeScalarToBetyped = Integer.toString(INSTANCE.randInt(1, 20));
 
         // Navigate to the Add Batch screen
         onView((withId(R.id.batches_fab))).perform().perform(click());
