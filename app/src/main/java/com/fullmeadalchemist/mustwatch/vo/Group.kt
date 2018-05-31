@@ -26,16 +26,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-@Entity(tableName = "groups", indices = arrayOf(Index(value = *arrayOf("name"), unique = true)))
-class Group(@field:Expose
-            @field:SerializedName("name")
-            @field:ColumnInfo(name = "name")
-            var name: String) {
+@Entity(tableName = "groups", indices = arrayOf(Index(value = ["name"], unique = true)))
+data class Group(@field:Expose @field:SerializedName("name") @field:ColumnInfo(name = "name") var name: String) {
 
     @Expose
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Long = Long.MIN_VALUE
+    var id: Long = 0
 }

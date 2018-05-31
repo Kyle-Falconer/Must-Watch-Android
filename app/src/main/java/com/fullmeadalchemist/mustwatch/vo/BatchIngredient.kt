@@ -16,76 +16,33 @@
 
 package com.fullmeadalchemist.mustwatch.vo
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.support.annotation.NonNull
-
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import javax.measure.Quantity
 import javax.measure.quantity.Mass
 import javax.measure.quantity.Volume
 
 @Entity(tableName = "batch_ingredient",
         indices = arrayOf(
-                Index(value = "ingredient_id"),
-                Index(value = "batch_id"),
-                Index(value = "recipe_id")),
+                Index(value = ["ingredient_id"]),
+                Index(value = ["batch_id"]),
+                Index(value = ["recipe_id"])),
         foreignKeys = arrayOf(
                 ForeignKey(entity = Batch::class, parentColumns = arrayOf("id"), childColumns = arrayOf("batch_id"), onDelete = ForeignKey.CASCADE),
                 ForeignKey(entity = Recipe::class, parentColumns = arrayOf("id"), childColumns = arrayOf("recipe_id"), onDelete = ForeignKey.CASCADE),
                 ForeignKey(entity = Ingredient::class, parentColumns = arrayOf("id"), childColumns = arrayOf("ingredient_id"), onDelete = ForeignKey.CASCADE)))
-class BatchIngredient {
+data class BatchIngredient(@Expose @SerializedName("ingredient_id") @ColumnInfo(name = "ingredient_id") var ingredientId: String? = null,
+                           @Expose @SerializedName("batch_id") @ColumnInfo(name = "batch_id") var batchId: Long? = null,
+                           @Expose @SerializedName("recipe_id") @ColumnInfo(name = "recipe_id") var recipeId: Long? = null,
+                           @Expose @SerializedName("quantity_vol") @ColumnInfo(name = "quantity_vol") var quantityVol: Quantity<Volume>? = null,
+                           @Expose @SerializedName("quantity_mass") @ColumnInfo(name = "quantity_mass") var quantityMass: Quantity<Mass>? = null) {
 
     @Expose
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Long = Long.MIN_VALUE
-
-    @Expose
-    @SerializedName("ingredient_id")
-    @ColumnInfo(name = "ingredient_id")
-    var ingredientId: String? = null
-
-    @Expose
-    @SerializedName("batch_id")
-    @ColumnInfo(name = "batch_id")
-    var batchId: Long? = null
-
-    @Expose
-    @SerializedName("recipe_id")
-    @ColumnInfo(name = "recipe_id")
-    var recipeId: Long? = null
-
-    // FIXME: combine quantityVol and quantityMass into one
-    // use the javax.measure lib to check if the types are compatible to parse to/from
-    @Expose
-    @SerializedName("quantity_vol")
-    @ColumnInfo(name = "quantity_vol")
-    var quantityVol: Quantity<Volume>? = null
-
-    @Expose
-    @SerializedName("quantity_mass")
-    @ColumnInfo(name = "quantity_mass")
-    var quantityMass: Quantity<Mass>? = null
-
-    override fun toString(): String {
-        val quantity: String
-        if (quantityVol != null) {
-            quantity = quantityVol!!.toString()
-        } else if (quantityMass != null) {
-            quantity = quantityMass!!.toString()
-        } else {
-            quantity = "null"
-        }
-        return String.format("{ %s, %s }",
-                ingredientId,
-                quantity)
-    }
+    var id: Long = 0
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,43 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch
+package com.fullmeadalchemist.mustwatch.core
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
-
+import com.fullmeadalchemist.mustwatch.MustWatchApp
+import timber.log.Timber
 import javax.inject.Inject
 
-import timber.log.Timber
+class MustWatchPreferences {
 
-class MustWatchPreferences @Inject
-constructor(private val app: Application) {
+    @Inject
+    lateinit var application: Application
 
-    // FIXME: pull this from persistent storage.
-    val currentUserID: Long?
-        get() {
-            val pSharedPref = app.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
-            if (pSharedPref != null) {
-                val stored_id = pSharedPref.getLong(CURRENT_USER_ID, java.lang.Long.MIN_VALUE)
-                if (stored_id != java.lang.Long.MIN_VALUE) {
-                    Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id)
-                    return stored_id
-                } else {
-                    Timber.d("Found no User ID in shared preferences.")
-                    return null
-                }
+    private var currentUserID: Long? = null
+
+    fun getCurrentUserId(): Long? {
+        currentUserID = null
+        val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
+        if (pSharedPref != null) {
+            val stored_id = pSharedPref.getLong(CURRENT_USER_ID, java.lang.Long.MIN_VALUE)
+            if (stored_id != java.lang.Long.MIN_VALUE) {
+                Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id)
+                currentUserID = stored_id
+            } else {
+                Timber.d("Found no User ID in shared preferences.")
             }
-            Timber.e("Could not get shared preferences")
-            return null
         }
+        Timber.e("Could not get shared preferences")
+        return currentUserID
+    }
 
     fun setCurrentUserId(id: Long?) {
         if (id == null) {
             Timber.w("Attempted to set current user to null")
             return
         }
-        val pSharedPref = app.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
+        val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
         if (pSharedPref != null) {
             val editor = pSharedPref.edit()
             //editor.remove(CURRENT_USER_ID).commit();
@@ -62,4 +62,5 @@ constructor(private val app: Application) {
     companion object {
         private val CURRENT_USER_ID = "CURRENT_USER_ID"
     }
+
 }

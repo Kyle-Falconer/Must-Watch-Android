@@ -10,20 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.getRandVolume;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.getStatus;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randDouble;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randFloat;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.randInt;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.roundOneDecimalPlace;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.roundThreeDecimalPlaces;
-import static com.fullmeadalchemist.mustwatch.demo.DemoGenerators.roundTwoDecimalPlaces;
 
 
 public class TestUtil {
 
     public static User createUser() {
-        String name = "test_user" + INSTANCE.randInt(1, 100);
+        String name = "test_user" + randInt(1, 100);
         String email = name + "@example.com";
         return new User(name, email);
     }
@@ -32,9 +24,9 @@ public class TestUtil {
         Set<Integer> usedIds = new HashSet<>();
         List<User> usersToAdd = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            int userN = INSTANCE.randInt(1, 10*n);
+            int userN = randInt(1, 10*n);
             while (usedIds.contains(userN)){
-                userN = INSTANCE.randInt(1, 10*n);
+                userN = randInt(1, 10*n);
             }
             usedIds.add(userN);
             String name = "test_user" + userN;
@@ -47,15 +39,15 @@ public class TestUtil {
 
     public static Batch createBatch(long userId) {
         Batch b = new Batch();
-        b.setName("Dummy Batch #" + INSTANCE.randInt(1, 1000));
+        b.setName("Dummy Batch #" + randInt(1, 1000));
         b.setCreateDate(GregorianCalendar.getInstance());
-        b.setStatus(INSTANCE.getStatus());
-        b.setTargetSgStarting(INSTANCE.roundThreeDecimalPlaces(INSTANCE.randDouble(1.10d, 1.30d)));
-        b.setTargetSgFinal(INSTANCE.roundThreeDecimalPlaces(INSTANCE.randDouble(0.95d, 1.05d)));
-        b.setStartingPh(INSTANCE.roundTwoDecimalPlaces(INSTANCE.randFloat(3.0f, 5.5f)));
-        b.setStartingTemp(INSTANCE.roundOneDecimalPlace(INSTANCE.randFloat(65f, 75f)));
-        b.setOutputVolume(INSTANCE.getRandVolume());
-        b.setTargetABV(INSTANCE.roundTwoDecimalPlaces(INSTANCE.randFloat(0.08f, 0.17f)));
+        b.setStatus(getStatus());
+        b.setTargetSgStarting(roundThreeDecimalPlaces(randDouble(1.10d, 1.30d)));
+        b.setTargetSgFinal(roundThreeDecimalPlaces(randDouble(0.95d, 1.05d)));
+        b.setStartingPh(roundTwoDecimalPlaces(randFloat(3.0f, 5.5f)));
+        b.setStartingTemp(roundOneDecimalPlace(randFloat(65f, 75f)));
+        b.setOutputVolume(getRandVolume());
+        b.setTargetABV(roundTwoDecimalPlaces(randFloat(0.08f, 0.17f)));
         b.setUserId(userId);
         b.setNotes(String.format("Dummy Batch \"%s\"", b.getName()));
         return b;

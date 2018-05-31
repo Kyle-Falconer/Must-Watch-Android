@@ -19,7 +19,7 @@ package com.fullmeadalchemist.mustwatch.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.fullmeadalchemist.mustwatch.MustWatchPreferences
+import com.fullmeadalchemist.mustwatch.core.MustWatchPreferences
 import com.fullmeadalchemist.mustwatch.db.UserDao
 import com.fullmeadalchemist.mustwatch.vo.User
 import io.reactivex.Observable
@@ -33,14 +33,19 @@ import javax.inject.Singleton
  * Repository that handles User objects.
  */
 @Singleton
-class UserRepository @Inject
-constructor(var prefs: MustWatchPreferences, val userDao: UserDao) {
+class UserRepository {
+
+    @Inject
+    lateinit var prefs: MustWatchPreferences
+    @Inject
+    lateinit var userDao: UserDao
+
     private var user: User? = null
 
     val currentUserId: LiveData<Long>
         get() {
             val userIdLiveData = MutableLiveData<Long>()
-            val stored_id = prefs.currentUserID
+            val stored_id = prefs.getCurrentUserId()
             if (stored_id != null) {
                 Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id)
                 userIdLiveData.postValue(stored_id)

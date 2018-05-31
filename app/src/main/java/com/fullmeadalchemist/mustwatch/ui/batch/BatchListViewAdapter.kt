@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -34,7 +34,7 @@ class BatchListViewAdapter
  *
  * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
  */
-( private val batchClickCallback: BatchClickCallback?, dataSet: List<Batch> = arrayListOf()) : RecyclerView.Adapter<BatchListViewAdapter.ViewHolder>() {
+(private val batchClickCallback: BatchClickCallback?, dataSet: List<Batch> = arrayListOf()) : RecyclerView.Adapter<BatchListViewAdapter.ViewHolder>() {
     internal var dataSet: List<Batch>? = null
     private val defaultLocale = Locale.getDefault()
 

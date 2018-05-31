@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch;
+package com.fullmeadalchemist.mustwatch.di
 
-import android.content.Context;
+import android.content.Context
+import com.fullmeadalchemist.mustwatch.MustWatchApp
+import com.fullmeadalchemist.mustwatch.core.MustWatchPreferences
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-import dagger.Module;
-import dagger.Provides;
-
-/**
- * This is a Dagger module. We use this to pass in the Context dependency.
- */
 @Module
-public final class ApplicationModule {
-
-    private final Context mContext;
-
-    ApplicationModule(Context context) {
-        mContext = context;
-    }
+class AppModule {
 
     @Provides
-    Context provideContext() {
-        return mContext;
+    fun provideContext(application: MustWatchApp): Context {
+        return application.applicationContext
+    }
+
+    @Singleton
+    @Provides
+    fun provideMustWatchPreferences(): MustWatchPreferences {
+        return MustWatchPreferences()
     }
 }

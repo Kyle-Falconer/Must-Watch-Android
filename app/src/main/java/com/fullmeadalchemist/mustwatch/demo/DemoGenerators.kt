@@ -29,8 +29,6 @@ import javax.measure.quantity.Volume
 
 object DemoGenerators {
 
-    private val TAG = DemoGenerators::class.java.simpleName
-
     private val RECIPE_LABELS = arrayOf(
             "Beginner Traditional",
             "Beginner Metheglin",

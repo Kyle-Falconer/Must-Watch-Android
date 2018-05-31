@@ -17,9 +17,7 @@
 package com.fullmeadalchemist.mustwatch.ui.recipe.detail
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -32,23 +30,16 @@ import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.calcAbvPct
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding
 import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.Recipe.Companion.RECIPE_ID
-import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
-import javax.inject.Inject
 
 
 class RecipeDetailFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var navigationController: NavigationController
     lateinit var dataBinding: RecipeDetailFragmentBinding
     lateinit var viewModel: RecipeDetailViewModel
     private val defaultLocale = Locale.getDefault()
@@ -58,14 +49,10 @@ class RecipeDetailFragment : Fragment() {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.recipe_detail_fragment,
                 container, false)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel::class.java)
         return dataBinding.root
     }
 
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -111,7 +98,7 @@ class RecipeDetailFragment : Fragment() {
             }
         } else {
             Timber.i("No Recipe ID was received. Redirecting to the Batch Creation form.")
-            navigationController.navigateToAddBatch()
+            // navigationController.navigateToAddBatch()
         }
     }
 
@@ -143,7 +130,7 @@ class RecipeDetailFragment : Fragment() {
         val submitButton = activity!!.findViewById<Button>(R.id.button_create_batch_from_recipe)
         submitButton?.setOnClickListener { v ->
             Timber.i("Create From Recipe button clicked")
-            navigationController.navigateToCreateFromBatch(viewModel.recipe?.id)
+            // navigationController.navigateToCreateFromBatch(viewModel.recipe?.id)
         }
     }
 }

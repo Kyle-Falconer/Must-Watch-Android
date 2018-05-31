@@ -16,9 +16,7 @@
 
 package com.fullmeadalchemist.mustwatch.ui.batch.form
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -39,6 +37,8 @@ import android.widget.TextView
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.fullmeadalchemist.mustwatch.R
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.core.UnitMapper.*
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toDouble
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
@@ -52,13 +52,10 @@ import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.*
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.YEAR
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.HOUR
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.MINUTE
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.TIME_SET_EVENT
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum
 import com.fullmeadalchemist.mustwatch.vo.Batch.BatchStatusEnum.PLANNING
@@ -84,29 +81,22 @@ import tec.units.ri.unit.Units.KILOGRAM
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
-import javax.inject.Inject
 
 
 class BatchFormFragment : Fragment() {
 
-    private var activity: Activity? = null
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var navigationController: NavigationController
     lateinit var dataBinding: BatchFormFragmentBinding
     internal var abbreviationMap: MutableMap<String, String> = HashMap()
     private var FORM_MODE: MODES? = null
     lateinit var viewModel: BatchFormViewModel
+
     private val timePickerMessageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Timber.d("Received TIME_SET_EVENT")
             val hourOfDay = intent.getIntExtra(HOUR, 0)
             val minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0)
-            viewModel.batch.createDate?.set(Calendar.HOUR, hourOfDay)
-            viewModel.batch.createDate?.set(Calendar.MINUTE, minute)
+            viewModel.batch.value?.createDate?.set(Calendar.HOUR, hourOfDay)
+            viewModel.batch.value?.createDate?.set(Calendar.MINUTE, minute)
             Timber.d("Time was set by user with TimePickerFragment to %s:%s", hourOfDay, minute)
             updateUiDateTime()
         }
@@ -117,9 +107,9 @@ class BatchFormFragment : Fragment() {
             val year = intent.getIntExtra(DatePickerFragment.YEAR, 0)
             val month = intent.getIntExtra(DatePickerFragment.MONTH, 0)
             val dayOfMonth = intent.getIntExtra(DatePickerFragment.DAY_OF_MONTH, 0)
-            viewModel.batch.createDate?.set(Calendar.YEAR, year)
-            viewModel.batch.createDate?.set(Calendar.MONTH, month)
-            viewModel.batch.createDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            viewModel.batch.value?.createDate?.set(Calendar.YEAR, year)
+            viewModel.batch.value?.createDate?.set(Calendar.MONTH, month)
+            viewModel.batch.value?.createDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             Timber.d("Date was set by user with DatePickerFragment to %s/%s/%s", dayOfMonth, month, year)
             updateUiDateTime()
         }
@@ -146,29 +136,27 @@ class BatchFormFragment : Fragment() {
     }
 
     private fun updateUiIngredientsTable() {
-        viewModel.batch.ingredients?.let {
-            // FIXME: this is not performant and looks ghetto.
-            Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsList", it.size)
-            val ingredientsList = activity!!.findViewById<LinearLayout>(R.id.ingredients_list)
-            ingredientsList.removeAllViews()
-            for (ingredient in it) {
-                val ingredientView = BatchIngredientView(activity)
-                ingredientView.setBatchIngredient(ingredient)
-                ingredientsList.addView(ingredientView)
+        view?.let { v ->
+            viewModel.batch.value?.ingredients?.let { ingredients ->
+                // FIXME: this is not performant and looks ghetto.
+                Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsList", ingredients.size)
+                val ingredientsList = v.findViewById<LinearLayout>(R.id.ingredients_list)
+                ingredientsList.removeAllViews()
+                for (ingredient in ingredients) {
+                    val ingredientView = BatchIngredientView(activity)
+                    ingredientView.setBatchIngredient(ingredient)
+                    ingredientsList.addView(ingredientView)
+                }
             }
         }
     }
 
 
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.batch_form_fragment,
                 container, false) as BatchFormFragmentBinding
+        dataBinding.setLifecycleOwner(this)
 
         // FIXME: Mess. This should be moved somewhere else so other classes can use it
         abbreviationMap[resources.getString(R.string.DEGREES_C)] = unitToTextAbbr(CELSIUS)
@@ -185,21 +173,18 @@ class BatchFormFragment : Fragment() {
         abbreviationMap[resources.getString(R.string.OUNCE)] = unitToTextAbbr(OUNCE)
         abbreviationMap[resources.getString(R.string.POUND)] = unitToTextAbbr(POUND)
 
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory!!).get(BatchFormViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(BatchFormViewModel::class.java)
 
         val bundle = this.arguments
         if (bundle != null) {
-
-
             val batchId = bundle.getLong(BATCH_ID, java.lang.Long.MIN_VALUE)
             val recipeId = bundle.getLong(RECIPE_ID, java.lang.Long.MIN_VALUE)
             if (batchId != java.lang.Long.MIN_VALUE) {
                 Timber.i("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId)
                 viewModel.getBatch(batchId).observe(this, Observer<Batch> { batch ->
                     if (batch != null) {
-                        viewModel.batch = batch
-                        dataBinding.batch = batch
+                        viewModel.batch.value = batch
+                        //dataBinding. .batch = batch
                         if (batch.status != null) {
                             dataBinding.status.setText(batch.status.toString())
                         } else {
@@ -209,14 +194,14 @@ class BatchFormFragment : Fragment() {
                         viewModel.getBatchIngredients(batchId).observe(this, Observer<List<BatchIngredient>> { batchIngredients ->
                             if (batchIngredients != null) {
                                 Timber.v("Loaded %s Batch ingredients", batchIngredients.size)
-                                viewModel.batch.ingredients = batchIngredients
+                                viewModel.batch.value?.ingredients = batchIngredients
                                 updateUiIngredientsTable()
                             } else {
                                 Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId)
                             }
                             Timber.i("Loaded Batch with ID %d:\n%s", batch.id, batch)
                         })
-                        updateSpinners(viewModel.batch)
+                        updateSpinners(viewModel.batch.value)
                     } else {
                         Timber.e("Got a null Batch!")
                     }
@@ -224,36 +209,35 @@ class BatchFormFragment : Fragment() {
             } else if (recipeId != java.lang.Long.MIN_VALUE) {
                 viewModel.getRecipe(recipeId).observe(this, Observer<Recipe> { recipe ->
                     if (recipe != null) {
-                        viewModel.batch = Batch()
-                        viewModel.batch.name = recipe.name
-                        viewModel.batch.outputVolume = recipe.outputVol
-                        viewModel.batch.targetSgStarting = recipe.startingSG
-                        viewModel.batch.targetSgFinal = recipe.finalSG
-                        viewModel.batch.status = PLANNING
-                        viewModel.batch.createDate = Calendar.getInstance()
+                        viewModel.batch.value = Batch()
+                        viewModel.batch.value?.name = recipe.name
+                        viewModel.batch.value?.outputVolume = recipe.outputVol
+                        viewModel.batch.value?.targetSgStarting = recipe.startingSG
+                        viewModel.batch.value?.targetSgFinal = recipe.finalSG
+                        viewModel.batch.value?.status = PLANNING
+                        viewModel.batch.value?.createDate = Calendar.getInstance()
                         viewModel.currentUserId.observe(this, Observer<Long> { userId ->
                             if (userId != null) {
                                 Timber.d("Setting batch user ID to %s", userId)
-                                viewModel.batch.userId = userId
+                                viewModel.batch.value?.userId = userId
                             } else {
                                 Timber.e("Could not set the Batch User ID, since it's null?!")
                             }
                         })
-                        dataBinding.batch = viewModel.batch
 
-                        dataBinding.status.setText(viewModel.batch.status.toString())
+                        dataBinding.status.setText(viewModel.batch.value?.status.toString())
                         updateUiDateTime()
                         viewModel.getRecipeIngredients(recipeId).observe(this, Observer<List<BatchIngredient>> { recipeIngredients ->
                             if (recipeIngredients != null) {
                                 Timber.v("Loaded %s Recipe ingredients", recipeIngredients.size)
-                                viewModel.batch.ingredients = recipeIngredients
+                                viewModel.batch.value?.ingredients = recipeIngredients
                                 updateUiIngredientsTable()
                             } else {
                                 Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId)
                             }
                             Timber.i("Loaded Recipe with ID %d:\n%s", recipe.id, recipe)
                         })
-                        updateSpinners(viewModel.batch)
+                        updateSpinners(viewModel.batch.value)
                     } else {
                         Timber.e("Got a null Recipe!")
                     }
@@ -261,31 +245,37 @@ class BatchFormFragment : Fragment() {
             }
         } else {
             Timber.i("No Batch ID was received. Acting as a Batch Creation form.")
-            viewModel.batch = Batch()
-            viewModel.batch.createDate = Calendar.getInstance()
+            viewModel.batch.value = Batch()
+            viewModel.batch.value?.createDate = Calendar.getInstance()
             viewModel.currentUserId.observe(this, Observer<Long> { userId ->
                 if (userId != null) {
                     Timber.d("Setting batch user ID to %s", userId)
-                    viewModel.batch.userId = userId
+                    viewModel.batch.value?.userId = userId
                 } else {
                     Timber.e("Could not set the Batch User ID, since it's null?!")
                 }
             })
-            dataBinding.batch = viewModel.batch
+//            dataBinding.batch = viewModel.batch
         }
         return dataBinding.root
+    }
+
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (viewModel.batch != null) {
+        if (viewModel.batch.value != null) {
             // We're in "edit" mode, so set the title accordingly
             FORM_MODE = MODES.EDIT
-            val formTitle = getActivity()!!.findViewById<TextView>(R.id.batchFormTitleTV)
+            val formTitle = activity!!.findViewById<TextView>(R.id.batchFormTitleTV)
             if (formTitle != null) {
                 var title = resources.getString(R.string.edit_batch_title)
-                title = String.format(title, viewModel.batch.id)
+                title = String.format(title, viewModel.batch.value?.id)
                 formTitle.text = title
             }
         } else {
@@ -293,135 +283,139 @@ class BatchFormFragment : Fragment() {
         }
         updateUiDateTime()
 
-        val dateField = getActivity()!!.findViewById<TextView>(R.id.createDateDate)
-        dateField?.setOnClickListener { v ->
+        val dateField = activity!!.findViewById<TextView>(R.id.createDateDate)
+        dateField?.setOnClickListener { _ ->
             Timber.i("Date was clicked!")
             val newFragment = DatePickerFragment()
             val args = Bundle()
-            viewModel.batch.createDate?.let {
+            viewModel.batch.value?.createDate?.let {
                 args.putInt(YEAR, it.get(Calendar.YEAR))
                 args.putInt(MONTH, it.get(Calendar.MONTH))
                 args.putInt(DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH))
             }
             newFragment.arguments = args
             newFragment.setTargetFragment(this, DATE_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "datePicker")
+            newFragment.show(activity!!.supportFragmentManager, "datePicker")
         }
 
-        val timeField = getActivity()!!.findViewById<TextView>(R.id.createDateTime)
-        timeField?.setOnClickListener { v ->
+        val timeField = activity!!.findViewById<TextView>(R.id.createDateTime)
+        timeField?.setOnClickListener { _ ->
             Timber.i("Time was clicked!")
             val newFragment = TimePickerFragment()
             val args = Bundle()
-            viewModel.batch.createDate?.let {
+            viewModel.batch.value?.createDate?.let {
                 args.putInt(HOUR, it.get(Calendar.HOUR))
                 args.putInt(MINUTE, it.get(Calendar.MINUTE))
             }
             newFragment.arguments = args
             newFragment.setTargetFragment(this, TIME_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "timePicker")
+            newFragment.show(activity!!.supportFragmentManager, "timePicker")
         }
 
-        val addSugarButton = getActivity()!!.findViewById<Button>(R.id.add_sugar_button)
-        addSugarButton?.setOnClickListener { v ->
+        val addSugarButton = activity!!.findViewById<Button>(R.id.add_sugar_button)
+        addSugarButton?.setOnClickListener { _ ->
             Timber.i("addSugarButton was clicked!")
             val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, SUGAR.toString())
             newFragment.arguments = args
             newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "sugarPicker")
+            newFragment.show(activity!!.supportFragmentManager, "sugarPicker")
         }
 
-        val addNutrientButton = getActivity()!!.findViewById<Button>(R.id.add_nutrient_button)
-        addNutrientButton?.setOnClickListener { v ->
+        val addNutrientButton = activity!!.findViewById<Button>(R.id.add_nutrient_button)
+        addNutrientButton?.setOnClickListener { _ ->
             Timber.i("addNutrientButton was clicked!")
             val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, NUTRIENT.toString())
             newFragment.arguments = args
             newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "nutrientPicker")
+            newFragment.show(activity!!.supportFragmentManager, "nutrientPicker")
         }
 
-        val addYeastButton = getActivity()!!.findViewById<Button>(R.id.add_yeast_button)
-        addYeastButton?.setOnClickListener { v ->
+        val addYeastButton = activity!!.findViewById<Button>(R.id.add_yeast_button)
+        addYeastButton?.setOnClickListener { _ ->
             Timber.i("addYeastButton was clicked!")
             val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, YEAST.toString())
             newFragment.arguments = args
             newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "yeastPicker")
+            newFragment.show(activity!!.supportFragmentManager, "yeastPicker")
         }
 
-        val addStabilizerButton = getActivity()!!.findViewById<Button>(R.id.add_stabilizer_button)
-        addStabilizerButton?.setOnClickListener { v ->
+        val addStabilizerButton = activity!!.findViewById<Button>(R.id.add_stabilizer_button)
+        addStabilizerButton?.setOnClickListener { _ ->
             Timber.i("addStabilizerButton was clicked!")
             val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, STABILIZER.toString())
             newFragment.arguments = args
             newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(getActivity()!!.supportFragmentManager, "stabilizerPicker")
+            newFragment.show(activity!!.supportFragmentManager, "stabilizerPicker")
         }
 
-        LocalBroadcastManager.getInstance(getActivity()!!).registerReceiver(datePickerMessageReceiver,
+        LocalBroadcastManager.getInstance(activity!!).registerReceiver(datePickerMessageReceiver,
                 IntentFilter(DATE_SET_EVENT))
-        LocalBroadcastManager.getInstance(getActivity()!!).registerReceiver(timePickerMessageReceiver,
+        LocalBroadcastManager.getInstance(activity!!).registerReceiver(timePickerMessageReceiver,
                 IntentFilter(TIME_SET_EVENT))
-        LocalBroadcastManager.getInstance(getActivity()!!).registerReceiver(ingredientPickerMessageReceiver,
+        LocalBroadcastManager.getInstance(activity!!).registerReceiver(ingredientPickerMessageReceiver,
                 IntentFilter(INGREDIENT_SET_EVENT))
 
-        val submitButton = getActivity()!!.findViewById<Button>(R.id.button_submit)
+        val submitButton = activity!!.findViewById<Button>(R.id.button_submit)
         if (submitButton != null) {
-            submitButton.setOnClickListener { v ->
+            submitButton.setOnClickListener { _ ->
                 Timber.i("Submit button clicked!")
-                FORM_MODE = if (viewModel.batch.id == null) MODES.CREATE else MODES.EDIT
-                viewModel.batch.name = dataBinding.name.text.toString().trim { it <= ' ' }
-                viewModel.batch.targetSgStarting = toDouble(dataBinding.targetSgStarting.text.toString().trim { it <= ' ' })
-                viewModel.batch.targetSgFinal = toDouble(dataBinding.targetSgFinal.text.toString().trim { it <= ' ' })
-                viewModel.batch.targetABV = toFloat(dataBinding.targetABV.text.toString().trim { it <= ' ' })
-                viewModel.batch.startingPh = toFloat(dataBinding.startingPh.text.toString().trim { it <= ' ' })
-                viewModel.batch.startingTemp = toFloat(dataBinding.startingTemp.text.toString().trim { it <= ' ' })
+                FORM_MODE = if (viewModel.batch.value?.id == null) MODES.CREATE else MODES.EDIT
 
-                viewModel.batch.outputVolume = toVolume(
-                        dataBinding.outputVolumeAmount.text.toString(),
-                        abbreviationMap[dataBinding.outputVolumeAmountUnit.selectedItem.toString()])
+                viewModel.batch.value?.let { batch ->
+                    batch.name = dataBinding.name.text.toString().trim { it <= ' ' }
+                    batch.targetSgStarting = toDouble(dataBinding.targetSgStarting.text.toString().trim { it <= ' ' })
+                    batch.targetSgFinal = toDouble(dataBinding.targetSgFinal.text.toString().trim { it <= ' ' })
+                    batch.targetABV = toFloat(dataBinding.targetABV.text.toString().trim { it <= ' ' })
+                    batch.startingPh = toFloat(dataBinding.startingPh.text.toString().trim { it <= ' ' })
+                    batch.startingTemp = toFloat(dataBinding.startingTemp.text.toString().trim { it <= ' ' })
 
-                viewModel.batch.status = BatchStatusEnum.fromString(dataBinding.status.text.toString().trim { it <= ' ' })
-                viewModel.batch.notes = dataBinding.notes.text.toString().trim { it <= ' ' }
+                    batch.outputVolume = toVolume(
+                            dataBinding.outputVolumeAmount.text.toString(),
+                            abbreviationMap[dataBinding.outputVolumeAmountUnit.selectedItem.toString()])
 
-                if (FORM_MODE == MODES.CREATE) {
-                    Timber.d("We are in CREATE mode.")
-                    Timber.d("Current batch state:\n%s", viewModel.batch.toString())
-                    viewModel.saveNewBatch().observe(this, Observer<Long> { savedBatchId ->
-                        if (savedBatchId != null) {
-                            Timber.i("Successfully saved Batch, which now has ID=%s", savedBatchId)
-                            LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(datePickerMessageReceiver)
-                            LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(timePickerMessageReceiver)
-                            LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(ingredientPickerMessageReceiver)
-                            val snackbar = Snackbar.make(getActivity()!!.findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG)
-                            snackbar.show()
-                            Answers.getInstance().logCustom(CustomEvent("Batch create success"))
-                            navigationController!!.navigateFromAddBatch(savedBatchId)
-                        } else {
-                            Answers.getInstance().logCustom(CustomEvent("Batch create failed"))
-                            val snackbar = Snackbar.make(getActivity()!!.findViewById(R.id.container), "Failed to save batch!", Snackbar.LENGTH_LONG)
-                            snackbar.show()
-                        }
-                    })
-                } else {
-                    Timber.d("We are in EDIT mode for batch #%s", viewModel.batch.id)
-                    Timber.d("Current batch state:\n%s", viewModel.batch.toString())
-                    viewModel.updateBatch()
-                    LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(datePickerMessageReceiver)
-                    LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(timePickerMessageReceiver)
-                    LocalBroadcastManager.getInstance(getActivity()!!).unregisterReceiver(ingredientPickerMessageReceiver)
-                    val snackbar = Snackbar.make(getActivity()!!.findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG)
-                    snackbar.show()
-                    Answers.getInstance().logCustom(CustomEvent("Batch edit success"))
-                    navigationController!!.navigateFromEditBatch(viewModel.batch.id)
+                    batch.status = BatchStatusEnum.fromString(dataBinding.status.text.toString().trim { it <= ' ' })
+                    batch.notes = dataBinding.notes.text.toString().trim { it <= ' ' }
+
+                    if (FORM_MODE == MODES.CREATE) {
+                        Timber.d("We are in CREATE mode.")
+                        Timber.d("Current batch state:\n%s", viewModel.batch.value?.toString())
+                        viewModel.saveNewBatch(batch).observe(this, Observer<Long> { savedBatchId ->
+                            if (savedBatchId != null) {
+                                Timber.i("Successfully saved Batch, which now has ID=%s", savedBatchId)
+                                LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(datePickerMessageReceiver)
+                                LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(timePickerMessageReceiver)
+                                LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(ingredientPickerMessageReceiver)
+                                Snackbar.make(activity!!.findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG).show()
+                                Answers.getInstance().logCustom(CustomEvent("Batch create success"))
+                                Timber.e("Navigation to batch detail of batch #${savedBatchId} not yet supported")
+                                //navigationController.navigateFromAddBatch(savedBatchId)
+                            } else {
+                                Answers.getInstance().logCustom(CustomEvent("Batch create failed"))
+                                Snackbar.make(activity!!.findViewById(R.id.container), "Failed to save batch!", Snackbar.LENGTH_LONG).show()
+                            }
+                        })
+                    } else {
+                        Timber.d("We are in EDIT mode for batch #%s", batch.id)
+                        Timber.d("Current batch state:\n%s", batch.toString())
+                        viewModel.updateBatch()
+                        LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(datePickerMessageReceiver)
+                        LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(timePickerMessageReceiver)
+                        LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(ingredientPickerMessageReceiver)
+                        Snackbar.make(activity!!.findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG).show()
+                        Answers.getInstance().logCustom(CustomEvent("Batch edit success"))
+
+                        Timber.e("Navigation to batch detail of batch #${batch.id} not yet supported")
+//                    navigationController.navigateFromEditBatch(viewModel.batch.value?.id)
+                    }
+
                 }
 
             }
@@ -468,19 +462,19 @@ class BatchFormFragment : Fragment() {
     }
 
     private fun updateUiDateTime() {
-        if (viewModel.batch == null) {
+        if (viewModel.batch.value == null) {
             return
         }
-        val timeField = getActivity()!!.findViewById<TextView>(R.id.createDateTime)
+        val timeField = activity!!.findViewById<TextView>(R.id.createDateTime)
         if (timeField != null) {
-            timeField.text = calendarToLocaleTime(viewModel.batch.createDate)
+            timeField.text = calendarToLocaleTime(viewModel.batch.value?.createDate)
         } else {
             Timber.e("Could not find createDateTime in View")
         }
 
-        val dateField = getActivity()!!.findViewById<TextView>(R.id.createDateDate)
+        val dateField = activity!!.findViewById<TextView>(R.id.createDateDate)
         if (dateField != null) {
-            dateField.text = calendarToLocaleDate(viewModel.batch.createDate)
+            dateField.text = calendarToLocaleDate(viewModel.batch.value?.createDate)
         } else {
             Timber.e("Could not find createDateDate in View")
         }

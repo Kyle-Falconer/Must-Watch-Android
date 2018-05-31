@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.util;
+package com.fullmeadalchemist.mustwatch.core;
 
 import java.text.DateFormat;
 import java.util.Calendar;

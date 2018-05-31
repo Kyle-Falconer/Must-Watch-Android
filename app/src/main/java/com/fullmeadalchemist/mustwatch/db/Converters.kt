@@ -18,8 +18,7 @@ package com.fullmeadalchemist.mustwatch.db
 
 import android.arch.persistence.room.TypeConverter
 import android.text.TextUtils
-import com.fullmeadalchemist.mustwatch.core.UnitMapper.qtyToTextAbbr
-import com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToUnit
+import com.fullmeadalchemist.mustwatch.core.UnitMapper.*
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
 import tec.units.ri.quantity.Quantities
@@ -68,12 +67,12 @@ class Converters {
 
 
     @TypeConverter
-    fun fromVolumeText(volText: String): Quantity<Volume>? {
+    fun fromVolumeText(volText: String?): Quantity<Volume>? {
         if (TextUtils.isEmpty(volText)) {
             return null
         }
 
-        val valueTexts = TextUtils.split(volText.trim { it <= ' ' }, SEPARATOR)
+        val valueTexts = TextUtils.split(volText!!.trim { it <= ' ' }, SEPARATOR)
         if (valueTexts.size != 2) {
             Timber.e("Could not parse Amount<Volume> from \"%s\"", volText)
             return null
@@ -85,7 +84,7 @@ class Converters {
 
         val unit: Unit<Volume>
         try {
-            unit = textAbbrToUnit(unitText) as Unit<Volume>
+            unit = textAbbrToVolUnit(unitText)
         } catch (e: ClassCastException) {
             Timber.e("Failed to cast unit text %s to Unit<Volume>", unitText)
             return null
@@ -106,12 +105,12 @@ class Converters {
 
 
     @TypeConverter
-    fun fromMassText(massText: String): Quantity<Mass>? {
+    fun fromMassText(massText: String?): Quantity<Mass>? {
         if (TextUtils.isEmpty(massText)) {
             return null
         }
 
-        val valueTexts = TextUtils.split(massText.trim { it <= ' ' }, SEPARATOR)
+        val valueTexts = TextUtils.split(massText!!.trim { it <= ' ' }, SEPARATOR)
         if (valueTexts.size != 2) {
             Timber.e("Could not parse Amount<Mass> from \"%s\"", massText)
             return null
@@ -123,7 +122,7 @@ class Converters {
 
         val unit: Unit<Mass>
         try {
-            unit = textAbbrToUnit(unitText) as Unit<Mass>
+            unit = textAbbrToMassUnit(unitText)
         } catch (e: ClassCastException) {
             Timber.e("Failed to cast unit text %s to Unit<Mass>", unitText)
             return null

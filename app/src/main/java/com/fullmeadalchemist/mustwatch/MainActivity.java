@@ -20,33 +20,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fullmeadalchemist.mustwatch.core.HeadlessLoadingFragment;
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController;
 
-import javax.inject.Inject;
-
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        HasSupportFragmentInjector {
-
-    @Inject
-    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
-    @Inject
-    NavigationController navigationController;
+        NavigationView.OnNavigationItemSelectedListener {
 
     HeadlessLoadingFragment headlessLoadingFragment;
     String HEADLESS_FRAGMENT_TAG = "HEADLESS_LOADING_FRAGMENT";
@@ -56,18 +42,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        toggle.syncState();
 
         FragmentManager fm = getSupportFragmentManager();
         headlessLoadingFragment = (HeadlessLoadingFragment) fm.findFragmentByTag(HEADLESS_FRAGMENT_TAG);
@@ -76,9 +50,7 @@ public class MainActivity extends AppCompatActivity implements
             fm.beginTransaction().add(headlessLoadingFragment, HEADLESS_FRAGMENT_TAG).commit();
         }
 
-        if (savedInstanceState == null) {
-            navigationController.navigateToBatches();
-        }
+
     }
 
     @Override
@@ -88,11 +60,6 @@ public class MainActivity extends AppCompatActivity implements
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().remove(headlessLoadingFragment).commitAllowingStateLoss();
         }
-    }
-
-    @Override
-    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
-        return dispatchingAndroidInjector;
     }
 
 
@@ -147,11 +114,11 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.nav_batches:
                 Timber.i("nav_batches selected from Drawer");
-                navigationController.navigateToBatches();
+
                 break;
             case R.id.nav_recipes:
                 Timber.i("nav_recipes selected from Drawer");
-                navigationController.navigateToRecipes();
+
                 break;
 //            case R.id.nav_groups:
 //                Log.i(TAG, "nav_groups selected from Drawer");
@@ -165,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements
 //                break;
             case R.id.nav_about:
                 Timber.i("nav_about selected from Drawer");
-                navigationController.navigateToAbout();
+
                 break;
             default:
                 Timber.w("unknown selected from Drawer: %s", item.getTitle());

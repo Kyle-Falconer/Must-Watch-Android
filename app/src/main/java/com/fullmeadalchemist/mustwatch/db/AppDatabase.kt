@@ -24,15 +24,16 @@ import android.content.Context
 import com.fullmeadalchemist.mustwatch.vo.*
 
 @Database(version = 1,
-        entities = arrayOf(
-                User::class,
-                Batch::class,
-                BatchIngredient::class,
-                LogEntry::class,
-                Group::class,
-                GroupMembership::class,
-                Ingredient::class,
-                Recipe::class))
+        entities = [
+            User::class,
+            Batch::class,
+            BatchIngredient::class,
+            LogEntry::class,
+            Group::class,
+            GroupMembership::class,
+            Ingredient::class,
+            Recipe::class
+        ])
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -52,26 +53,21 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        val DATABASE_NAME = "mustwatch-db"
-        /**
-         * The only instance
-         */
-        private var dbInstance: AppDatabase? = null
+        const val DATABASE_NAME = "mustwatch-db"
 
-        /**
-         * Gets the singleton instance of SampleDatabase.
-         *
-         * @param context The context.
-         * @return The singleton instance of SampleDatabase.
-         */
-        @Synchronized
-        fun getInstance(context: Context): AppDatabase? {
-            if (dbInstance == null) {
-                dbInstance = Room
-                        .databaseBuilder(context.applicationContext, AppDatabase::class.java, "ex")
+        // Singleton instance of the AppDatabase
+        // see https://stackoverflow.com/a/45943282/940217
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+
+        fun getInstance(context: Context): AppDatabase =
+                INSTANCE ?: synchronized(this) {
+                    INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+                }
+
+        private fun buildDatabase(context: Context) =
+                Room.databaseBuilder(context.applicationContext,
+                        AppDatabase::class.java, AppDatabase.DATABASE_NAME)
                         .build()
-            }
-            return dbInstance
-        }
     }
 }

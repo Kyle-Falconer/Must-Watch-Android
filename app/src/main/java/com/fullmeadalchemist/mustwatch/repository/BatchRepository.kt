@@ -28,11 +28,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class BatchRepository @Inject
-constructor(val batchDao: BatchDao) {
+class BatchRepository {
+
+    @Inject
+    lateinit var batchDao: BatchDao
 
     // FIXME: get only Batches from current user
     //return batchDao.loadBatchesForUser();
@@ -72,7 +72,7 @@ constructor(val batchDao: BatchDao) {
     }
 
     fun getBatches(user: User): LiveData<List<Batch>> {
-        return batchDao.getAll(user.id as Long)
+        return batchDao.getAll(user.id)
     }
 
     /**

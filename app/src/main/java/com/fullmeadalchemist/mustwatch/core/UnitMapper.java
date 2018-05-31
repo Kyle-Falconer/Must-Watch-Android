@@ -17,13 +17,13 @@
 package com.fullmeadalchemist.mustwatch.core;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.fullmeadalchemist.mustwatch.R;
 
 import javax.measure.Quantity;
 import javax.measure.Unit;
 import javax.measure.quantity.Mass;
+import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
@@ -46,8 +46,6 @@ import static tec.units.ri.unit.Units.KILOGRAM;
 
 public class UnitMapper {
 
-    private static final String TAG = UnitMapper.class.getSimpleName();
-
     // FIXME: These methods are repetitive
 
     /**
@@ -58,15 +56,9 @@ public class UnitMapper {
      * @param abbr the standard or abbreviated name of the unit
      * @return the Unit that maps to the abbreviation, such as 'L' -> LITER
      */
-    public static Unit<?> textAbbrToUnit(String abbr) {
-        Unit<?> unit;
+    public static Unit<Volume> textAbbrToVolUnit(String abbr) {
+        Unit<Volume> unit;
         switch (abbr) {
-            case "C":
-                unit = CELSIUS;
-                break;
-            case "F":
-                unit = FAHRENHEIT;
-                break;
             case "L":
                 unit = LITER;
                 break;
@@ -90,6 +82,16 @@ public class UnitMapper {
             case "tsp":
                 unit = TEASPOON;
                 break;
+            default:
+                unit = null;
+                break;
+        }
+        return unit;
+    }
+
+    public static Unit<Mass> textAbbrToMassUnit(String abbr) {
+        Unit<Mass> unit;
+        switch (abbr) {
             case "g":
                 unit = GRAM;
                 break;
@@ -101,6 +103,22 @@ public class UnitMapper {
                 break;
             case "lb":
                 unit = POUND;
+                break;
+            default:
+                unit = null;
+                break;
+        }
+        return unit;
+    }
+
+    public static Unit<Temperature> textAbbrToTempUnit(String abbr) {
+        Unit<Temperature> unit;
+        switch (abbr) {
+            case "C":
+                unit = CELSIUS;
+                break;
+            case "F":
+                unit = FAHRENHEIT;
                 break;
             default:
                 unit = null;
@@ -141,10 +159,10 @@ public class UnitMapper {
         if (unitString == null) {
             String unitName = unit.getName();
             String unitSymbol = unit.getSymbol();
-            Log.e(TAG, String.format("Unit provided did not have a toString set. Unit name: %s\n Unit symbol: %s", unitName, unitSymbol));
+            Timber.e("Unit provided did not have a toString set. Unit name: %s\n Unit symbol: %s", unitName, unitSymbol);
             return null;
         }
-        Log.d(TAG, String.format("Parsing Unit: %s", unit.toString()));
+        Timber.d("Parsing Unit: %s", unit.toString());
 
         switch (unitString) {
             case "°C":
@@ -188,7 +206,7 @@ public class UnitMapper {
                 break;
         }
 
-        Log.d(TAG, String.format("Returning unit symbol: %s", unitString));
+        Timber.d("Returning unit symbol: %s", unitString);
         return unitString;
     }
 
@@ -205,7 +223,7 @@ public class UnitMapper {
         }
         Unit<Mass> unit;
         try {
-            unit = (Unit<Mass>) textAbbrToUnit(unitText);
+            unit = textAbbrToMassUnit(unitText);
         } catch (ClassCastException e) {
             Timber.e("Failed to cast unit text %s to Unit<Mass>", unitText);
             return null;
@@ -230,7 +248,7 @@ public class UnitMapper {
         }
         Unit<Volume> unit;
         try {
-            unit = (Unit<Volume>) textAbbrToUnit(unitText);
+            unit = textAbbrToVolUnit(unitText);
         } catch (ClassCastException e) {
             Timber.e("Failed to cast unit text %s to Unit<Volume>", unitText);
             return null;

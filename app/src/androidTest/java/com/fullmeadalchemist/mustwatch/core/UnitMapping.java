@@ -33,7 +33,9 @@ import javax.measure.quantity.Volume;
 import tec.units.ri.quantity.Quantities;
 
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.qtyToTextAbbr;
-import static com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToUnit;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToMassUnit;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToTempUnit;
+import static com.fullmeadalchemist.mustwatch.core.UnitMapper.textAbbrToVolUnit;
 import static com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -150,55 +152,55 @@ public class UnitMapping {
 
     @Test
     public void stringsToUnits() {
-        Unit<?> tempCUnit = textAbbrToUnit("C");
+        Unit<?> tempCUnit = textAbbrToTempUnit("C");
         assertThat(tempCUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(tempCUnit), is("C"));
 
-        Unit<?> tempFUnit = textAbbrToUnit("F");
+        Unit<?> tempFUnit = textAbbrToTempUnit("F");
         assertThat(tempFUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(tempFUnit), is("F"));
 
-        Unit<?> literUnit = textAbbrToUnit("L");
+        Unit<?> literUnit = textAbbrToVolUnit("L");
         assertThat(literUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(literUnit), is("L"));
 
-        Unit<?> usgalUnit = textAbbrToUnit("gal_us");
+        Unit<?> usgalUnit = textAbbrToVolUnit("gal_us");
         assertThat(usgalUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(usgalUnit), is("gal_us"));
 
-        Unit<?> usgalDryAbbr = textAbbrToUnit("gal_dry_us");
+        Unit<?> usgalDryAbbr = textAbbrToVolUnit("gal_dry_us");
         assertThat(usgalDryAbbr, is(not(nullValue())));
         assertThat(unitToTextAbbr(usgalDryAbbr), is("gal_dry_us"));
 
-        Unit<?> usflozUnit = textAbbrToUnit("oz_fl_us");
+        Unit<?> usflozUnit = textAbbrToVolUnit("oz_fl_us");
         assertThat(usflozUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(usflozUnit), is("oz_fl_us"));
 
-        Unit<?> ukgalUnit = textAbbrToUnit("gal_uk");
+        Unit<?> ukgalUnit = textAbbrToVolUnit("gal_uk");
         assertThat(ukgalUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ukgalUnit), is("gal_uk"));
 
-        Unit<?> ukflozUnit = textAbbrToUnit("oz_fl_uk");
+        Unit<?> ukflozUnit = textAbbrToVolUnit("oz_fl_uk");
         assertThat(ukflozUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ukflozUnit), is("oz_fl_uk"));
 
-        Unit<?> tspUnit = textAbbrToUnit("tsp");
+        Unit<?> tspUnit = textAbbrToVolUnit("tsp");
         assertThat(tspUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(tspUnit), is("tsp"));
 
-        Unit<?> gramUnit = textAbbrToUnit("g");
+        Unit<?> gramUnit = textAbbrToMassUnit("g");
         assertThat(gramUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(gramUnit), is("g"));
 
-        Unit<?> kgUnit = textAbbrToUnit("kg");
+        Unit<?> kgUnit = textAbbrToMassUnit("kg");
         assertThat(kgUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(kgUnit), is("kg"));
 
-        Unit<?> ozUnit = textAbbrToUnit("oz");
+        Unit<?> ozUnit = textAbbrToMassUnit("oz");
         assertThat(ozUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ozUnit), is("oz"));
 
-        Unit<?> lbUnit = textAbbrToUnit("lb");
+        Unit<?> lbUnit = textAbbrToMassUnit("lb");
         assertThat(lbUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(lbUnit), is("lb"));
     }

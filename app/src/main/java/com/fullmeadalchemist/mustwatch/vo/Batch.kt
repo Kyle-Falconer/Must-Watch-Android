@@ -16,109 +16,43 @@
 
 package com.fullmeadalchemist.mustwatch.vo
 
-import android.annotation.SuppressLint
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.TypeConverters
+import android.arch.persistence.room.*
+import android.databinding.BaseObservable
 import android.support.annotation.NonNull
-import android.text.TextUtils
-
 import com.fullmeadalchemist.mustwatch.db.Converters
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
-import java.text.DecimalFormat
-import java.util.Calendar
-
+import java.util.*
 import javax.measure.Quantity
 import javax.measure.quantity.Volume
 
-import timber.log.Timber
-
-import com.fullmeadalchemist.mustwatch.core.BrewFormulae.sugarConcToSG
-import com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToTextAbbr
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong
-import systems.uom.common.CGS.GRAM
-
 @Entity(tableName = "batch",
-        indices = arrayOf(
-                Index(value = "user_id")),
-        foreignKeys = arrayOf(ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("user_id"), onDelete = ForeignKey.CASCADE)))
+        indices = [Index(value = ["user_id"])],
+        foreignKeys = [
+            ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("user_id"), onDelete = ForeignKey.CASCADE)
+        ])
 @TypeConverters(Converters::class)
-class Batch {
+data class Batch(@ColumnInfo(name = "user_id") var userId: Long? = null,
+                 @ColumnInfo(name = "name") var name: String? = null,
+                 @ColumnInfo(name = "target_sg_starting") var targetSgStarting: Double? = null,
+                 @ColumnInfo(name = "target_sg_final") var targetSgFinal: Double? = null,
+                 @ColumnInfo(name = "target_abv") var targetABV: Float? = null,
+                 @ColumnInfo(name = "starting_ph") var startingPh: Float? = null,
+                 @ColumnInfo(name = "starting_temp_c") var startingTemp: Float? = null,
+                 @ColumnInfo(name = "output_volume") var outputVolume: Quantity<Volume>? = null,
+                 @ColumnInfo(name = "status") var status: BatchStatusEnum? = null,
+                 @ColumnInfo(name = "create_date") var createDate: Calendar? = null,
+                 @ColumnInfo(name = "notes") var notes: String? = null,
+                 @Ignore @SerializedName("ingredients") @Expose var ingredients: List<BatchIngredient>? = null) : BaseObservable() {
 
     @Expose
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Long = Long.MIN_VALUE
+    var id: Long = 0
 
-    @ColumnInfo(name = "user_id")
-    var userId: Long? = null
-
-    @ColumnInfo(name = "name")
-    var name: String? = null
-
-    @ColumnInfo(name = "target_sg_starting")
-    var targetSgStarting: Double? = null
-
-    @ColumnInfo(name = "target_sg_final")
-    var targetSgFinal: Double? = null
-
-    @ColumnInfo(name = "target_abv")
-    var targetABV: Float? = null
-
-    @ColumnInfo(name = "starting_ph")
-    var startingPh: Float? = null
-
-    @ColumnInfo(name = "starting_temp_c")
-    var startingTemp: Float? = null
-
-    @ColumnInfo(name = "output_volume")
-    var outputVolume: Quantity<Volume>? = null
-
-    @ColumnInfo(name = "status")
-    var status: BatchStatusEnum? = null
-
-    @ColumnInfo(name = "create_date")
-    var createDate: Calendar? = null
-
-    @ColumnInfo(name = "notes")
-    var notes: String? = null
-
-    @Ignore
-    @SerializedName("ingredients")
-    @Expose
-    var ingredients: List<BatchIngredient>? = null
-
-    @SuppressLint("DefaultLocale")
-    override fun toString(): String {
-        val f = DecimalFormat("0.##")
-        return String.format("Batch #%s\n" +
-                "User id: %d\n" +
-                "Name: %s\n" +
-                "Create date: %s\n" +
-                "Status: %s\n" +
-                "Output volume: %s %s\n" +
-                "ABV: %s\n" +
-                "ingredients : %s",
-                id,
-                userId,
-                name,
-                calendarToLocaleDateTimeLong(createDate),
-                if (status == null) "null" else status!!.toString(),
-                if (outputVolume == null) "null" else f.format(outputVolume!!.value),
-                if (outputVolume == null) "null" else unitToTextAbbr(outputVolume!!.unit),
-                if (targetABV == null) "null" else f.format(targetABV),
-                if (ingredients == null) "null" else TextUtils.join(", ", ingredients))
-    }
-
-    enum class BatchStatusEnum private constructor(private val status: String) {
+    enum class BatchStatusEnum constructor(private val status: String) {
 
         PLANNING("planning"),
         FERMENTING("fermenting"),

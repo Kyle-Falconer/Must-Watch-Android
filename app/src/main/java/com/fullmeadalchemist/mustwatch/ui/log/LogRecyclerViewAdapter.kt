@@ -22,8 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
 import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
 import timber.log.Timber
 import java.util.*

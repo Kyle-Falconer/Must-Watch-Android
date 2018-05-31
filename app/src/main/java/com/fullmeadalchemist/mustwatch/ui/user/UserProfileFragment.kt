@@ -17,9 +17,7 @@
 package com.fullmeadalchemist.mustwatch.ui.user
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -28,25 +26,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.databinding.UserDetailFragmentBinding
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.User
-import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
-import javax.inject.Inject
 
 class UserProfileFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var navigationController: NavigationController
     lateinit var dataBinding: UserDetailFragmentBinding
     private var viewModel: UserProfileViewModel? = null
 
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,14 +44,14 @@ class UserProfileFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserProfileViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(UserProfileViewModel::class.java)
 
         viewModel?.currentUserId?.observe(this, Observer<Long?> { userId ->
             if (userId != null) {
                 viewModel!!.getUser(userId).observe(this, Observer<User> { user ->
                     Timber.d("Got user from db: %s", user)
                     if (user != null) {
-                        if (user.isAnon) {
+                        if (user.id == 0L) {
                             user.name = "Anonymous"
                         }
                         dataBinding.user = user

@@ -19,7 +19,6 @@ package com.fullmeadalchemist.mustwatch.core;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import timber.log.Timber;
 
@@ -80,6 +79,7 @@ public class ValueParsers {
 
     /**
      * https://stackoverflow.com/a/1590842/940217
+     *
      * @param l
      * @return
      */

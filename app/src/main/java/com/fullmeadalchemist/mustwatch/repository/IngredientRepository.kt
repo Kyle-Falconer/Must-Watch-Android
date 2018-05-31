@@ -17,21 +17,20 @@
 package com.fullmeadalchemist.mustwatch.repository
 
 import android.arch.lifecycle.LiveData
-
 import com.fullmeadalchemist.mustwatch.db.IngredientDao
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
-
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class IngredientRepository @Inject
-constructor(val ingredientDao: IngredientDao) {
+class IngredientRepository {
+
+    @Inject
+    lateinit var ingredientDao: IngredientDao
 
     val sugarEntries: LiveData<List<Ingredient>>
         get() = ingredientDao.allSugars

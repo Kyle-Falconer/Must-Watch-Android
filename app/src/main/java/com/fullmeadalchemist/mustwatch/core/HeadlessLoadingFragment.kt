@@ -20,9 +20,9 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.demo.DemoGenerators.generateDummyBatchesWithData
-import com.fullmeadalchemist.mustwatch.di.Injectable
 import com.fullmeadalchemist.mustwatch.repository.BatchRepository
 import com.fullmeadalchemist.mustwatch.repository.IngredientRepository
 import com.fullmeadalchemist.mustwatch.repository.RecipeRepository
@@ -33,26 +33,23 @@ import com.fullmeadalchemist.mustwatch.vo.Recipe
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import javax.inject.Inject
 
-class HeadlessLoadingFragment : Fragment(), Injectable {
+class HeadlessLoadingFragment : Fragment() {
 
     private var updated = false
 
-    @Inject
-    lateinit var batchRepository: BatchRepository
-    @Inject
-    lateinit var userRepository: UserRepository
-    @Inject
-    lateinit var ingredientRepository: IngredientRepository
-    @Inject
-    lateinit var recipeRepository: RecipeRepository
+    var batchRepository: BatchRepository? = null
+    var userRepository: UserRepository? = null
+    var ingredientRepository: IngredientRepository? = null
+    var recipeRepository: RecipeRepository? = null
 
     lateinit var lifecycleContext: LifecycleOwner
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         retainInstance = true
+
+
         lifecycleContext = this
     }
 
@@ -67,6 +64,14 @@ class HeadlessLoadingFragment : Fragment(), Injectable {
     }
 
     private fun populateDb() {
+        if (batchRepository == null ||
+                userRepository == null ||
+                ingredientRepository == null ||
+                recipeRepository == null) {
+            Log.e("HEADLESS", "null repos")
+            return
+        }
+
         if (updated) {
             return
         }
@@ -75,30 +80,29 @@ class HeadlessLoadingFragment : Fragment(), Injectable {
         Timber.i("Populating database...")
 
 
-        Observable.create<Any> { emitter ->
-
-            ingredientRepository!!.all.observe(lifecycleContext!!, Observer<List<Ingredient>> { ingredients ->
+        Observable.create<Any> { _ ->
+            ingredientRepository?.all?.observe(lifecycleContext, Observer<List<Ingredient>> { ingredients ->
                 Timber.w("was notified that the ingredients have changed")
 
                 // Ingredients loader
-                // FIXME: move to IngredientRepository
+                // FIXME: move to ingredientRepository?
                 // FIXME: check for differences as well and update existing
                 if (ingredients != null && ingredients.size == 0) {
                     val reader = JSONResourceReader(resources, R.raw.ingredients)
                     val jsonObj = reader.constructUsingGson(Array<Ingredient>::class.java)
                     if (jsonObj.size > 0) {
                         Timber.i("Populating the database with Ingredient data")
-                        ingredientRepository!!.addIngredients(jsonObj)
+                        ingredientRepository?.addIngredients(jsonObj)
                     } else {
                         Timber.e("Loaded no ingredients from the JSON resources!")
                     }
 
                 } else if (ingredients != null && ingredients.size > 0) {
-                    recipeRepository!!.publicRecipes.observe(lifecycleContext!!, Observer<List<Recipe>> { recipes ->
+                    recipeRepository?.publicRecipes?.observe(lifecycleContext, Observer<List<Recipe>> { recipes ->
                         Timber.w("was notified that the recipes have changed")
 
                         // Recipes loader
-                        // FIXME: move to RecipeRepository
+                        // FIXME: move to recipeRepository?
                         // FIXME: check for differences as well and update existing
                         if (recipes != null && recipes.size == 0) {
                             val reader = JSONResourceReader(resources, R.raw.recipes)
@@ -109,7 +113,7 @@ class HeadlessLoadingFragment : Fragment(), Injectable {
                                 }
 
                                 Timber.d("Populating the database with Recipe data")
-                                recipeRepository!!.addRecipes(recipeJsonObj)
+                                recipeRepository?.addRecipes(recipeJsonObj)
                             } else {
                                 Timber.e("Loaded no recipes from the JSON resources!")
                             }
@@ -124,10 +128,10 @@ class HeadlessLoadingFragment : Fragment(), Injectable {
             })
 
             // Dummy data loader
-            userRepository!!.currentUserId.observe(lifecycleContext!!, Observer<Long> { userId ->
+            userRepository?.currentUserId?.observe(lifecycleContext, Observer<Long> { userId ->
                 Timber.w("was notified that the current user has changed")
                 if (userId != null) {
-                    batchRepository!!.batches.observe(lifecycleContext!!, Observer<List<Batch>> { batches ->
+                    batchRepository!!.batches.observe(lifecycleContext, Observer<List<Batch>> { batches ->
                         if (batches != null && batches.size == 0) {
                             Timber.d("Got user with no batches; generating batches...")
                             val dummyBatches = generateDummyBatchesWithData(userId, 20)

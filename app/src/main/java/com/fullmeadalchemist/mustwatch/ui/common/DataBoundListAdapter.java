@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+
 /**
  * A generic RecyclerView adapter that uses Data Binding & DiffUtil.
  *

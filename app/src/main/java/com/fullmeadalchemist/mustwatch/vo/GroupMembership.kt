@@ -16,30 +16,24 @@
 
 package com.fullmeadalchemist.mustwatch.vo
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-@Entity(tableName = "group_membership", primaryKeys = arrayOf("group_id", "user_id"), indices = arrayOf(Index(value = "user_id")), foreignKeys = arrayOf(ForeignKey(entity = Group::class, parentColumns = arrayOf("id"), childColumns = arrayOf("group_id")), ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("user_id"))))
-class GroupMembership {
-
-    @Expose
-    @NonNull
-    @SerializedName("group_id")
-    @ColumnInfo(name = "group_id")
-    var id: Long = Long.MIN_VALUE
-
-    @Expose
-    @NonNull
-    @SerializedName("user_id")
-    @ColumnInfo(name = "user_id")
-    var userId: Long = Long.MIN_VALUE
-
-    @ColumnInfo(name = "access_read")
-    var accessRead: Boolean = false
-
-    @ColumnInfo(name = "access_admin")
-    var accessAdmin: Boolean = false
+@Entity(tableName = "group_membership",
+        primaryKeys = ["group_id", "user_id"],
+        indices = arrayOf(Index(value = ["user_id"])),
+        foreignKeys = [
+            ForeignKey(entity = Group::class, parentColumns = ["id"], childColumns = ["group_id"]),
+            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"])
+        ])
+data class GroupMembership(@Expose @NonNull @SerializedName("group_id") @ColumnInfo(name = "group_id") var id: Long = 0,
+                           @Expose @NonNull @SerializedName("user_id") @ColumnInfo(name = "user_id") var userId: Long = 0,
+                           @ColumnInfo(name = "access_read") var accessRead: Boolean = false,
+                           @ColumnInfo(name = "access_admin") var accessAdmin: Boolean = false) {
 }

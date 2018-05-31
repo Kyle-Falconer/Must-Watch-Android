@@ -17,10 +17,9 @@
 package com.fullmeadalchemist.mustwatch.ui.log
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.os.Bundle
+import android.support.annotation.NonNull
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,38 +27,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
-import dagger.android.support.AndroidSupportInjection
-
-import javax.inject.Inject
-
 import timber.log.Timber
 
 class LogListFragment : Fragment() {
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: LogRecyclerViewAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var navigationController: NavigationController
-
     private var viewModel: LogViewModel? = null
     private var fab: FloatingActionButton? = null
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-    }
-
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -71,7 +49,7 @@ class LogListFragment : Fragment() {
         //        });
 
         val batchId: Long? = null
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LogViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(LogViewModel::class.java)
         viewModel!!.getLogEntries(batchId).observe(this, Observer<List<LogEntry>> { logEntries ->
             // update UI
             if (logEntries != null) {
@@ -87,7 +65,7 @@ class LogListFragment : Fragment() {
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(@NonNull view: RecyclerView, dx: Int, dy: Int) {
                 //FloatingActionButton floater = recyclerView.findViewById(R.id.batches_fab);
                 if (fab == null) {
                     Timber.e("The FloatingActionButton is null!")
@@ -106,7 +84,7 @@ class LogListFragment : Fragment() {
         if (fab != null) {
             fab!!.setOnClickListener { v ->
                 Timber.d("Floating Action Button was clicked!")
-                navigationController.navigateToAddBatch()
+//                navigationController.navigateToAddBatch()
             }
         } else {
             Timber.e("FloatingActionButton at R.id.logs_fab is null!")

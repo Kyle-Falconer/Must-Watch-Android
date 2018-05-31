@@ -20,8 +20,6 @@ package com.fullmeadalchemist.mustwatch.ui.batch.form
 import android.app.Dialog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -34,6 +32,7 @@ import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.safeLongToInt
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
+import com.fullmeadalchemist.mustwatch.repository.IngredientRepository
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
 import timber.log.Timber
 import java.util.*
@@ -42,16 +41,12 @@ import javax.inject.Inject
 class AddIngredientDialog : DialogFragment() {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var ingredientRepo: IngredientRepository
 
     internal var spinnerItems: List<Ingredient>? = null
 
-    private var viewModel: BatchFormViewModel? = null
-
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(activity).inflate(R.layout.ingredient_dialog, null)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchFormViewModel::class.java)
 
         val typeString = arguments!!.getString(INGREDIENT_TYPE)
         var type: Ingredient.IngredientType?
@@ -66,19 +61,19 @@ class AddIngredientDialog : DialogFragment() {
         when (type) {
             Ingredient.IngredientType.YEAST -> {
                 unitsSpinnerResource = R.array.mass_units_list
-                ingredientsSpinnerObjects = viewModel!!.yeasts
+                ingredientsSpinnerObjects = ingredientRepo.yeastEntries
             }
             Ingredient.IngredientType.NUTRIENT -> {
                 unitsSpinnerResource = R.array.mass_units_list
-                ingredientsSpinnerObjects = viewModel!!.nutrients
+                ingredientsSpinnerObjects = ingredientRepo.nutrientEntries
             }
             Ingredient.IngredientType.STABILIZER -> {
                 unitsSpinnerResource = R.array.mass_units_list
-                ingredientsSpinnerObjects = viewModel!!.stabilizers
+                ingredientsSpinnerObjects = ingredientRepo.stabilizerEntries
             }
             Ingredient.IngredientType.SUGAR -> {
                 unitsSpinnerResource = R.array.sugar_units_list
-                ingredientsSpinnerObjects = viewModel!!.sugars
+                ingredientsSpinnerObjects = ingredientRepo.sugarEntries
             }
         }
 

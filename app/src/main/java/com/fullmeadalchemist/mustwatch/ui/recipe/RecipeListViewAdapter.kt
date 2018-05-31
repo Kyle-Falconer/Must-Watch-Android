@@ -24,22 +24,12 @@ import android.widget.TextView
 
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.vo.Recipe
-
-import java.util.ArrayList
-import java.util.Locale
-
 import timber.log.Timber
+import java.util.*
 
-class RecipeListViewAdapter(dataSet: List<Recipe>?, private val recipeClickCallback: RecipeClickCallback?) : RecyclerView.Adapter<RecipeListViewAdapter.ViewHolder>() {
-    internal var dataSet: List<Recipe>? = null
+class RecipeListViewAdapter(var dataSet: List<Recipe>? = arrayListOf(), private val recipeClickCallback: RecipeClickCallback?) : RecyclerView.Adapter<RecipeListViewAdapter.ViewHolder>() {
+
     private val defaultLocale = Locale.getDefault()
-
-    init {
-        var dataSet = dataSet
-        if (dataSet == null)
-            dataSet = ArrayList()
-        this.dataSet = dataSet
-    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.recipe_card_view, viewGroup, false)

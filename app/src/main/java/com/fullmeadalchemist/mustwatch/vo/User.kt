@@ -18,36 +18,22 @@ package com.fullmeadalchemist.mustwatch.vo
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
-
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-@Entity(indices = arrayOf(Index(value = "email", unique = true)))
-class User(@field:ColumnInfo(name = "name")
-           var name: String?, @field:ColumnInfo(name = "email")
-           var email: String?) {
+@Entity(indices = arrayOf(Index(value = ["email"], unique = true)))
+data class User(@field:ColumnInfo(name = "name") var name: String?,
+                @field:ColumnInfo(name = "email") var email: String?) {
 
     @Expose
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Long = Long.MIN_VALUE
+    var id: Long = 0
 
-    val isAnon: Boolean
-        @Ignore
-        get() = id != Long.MIN_VALUE && name == null && email == null
-
-    override fun toString(): String {
-        return if (isAnon) {
-            String.format("id: %s, Anonymous", id)
-        } else {
-            String.format("id: %s \nname: %s \nemail: %s \n", id, name, email)
-        }
-    }
 }

@@ -16,138 +16,44 @@
 
 package com.fullmeadalchemist.mustwatch.vo
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.support.annotation.NonNull
-
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import javax.measure.Quantity
 import javax.measure.quantity.Volume
 
-@Entity(tableName = "recipe", indices = arrayOf(Index(value = "creator_user_id"), Index(value = "owner_user_id"), Index(value = "owner_group_id")), foreignKeys = arrayOf(ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("creator_user_id")), ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("owner_user_id")), ForeignKey(entity = Group::class, parentColumns = arrayOf("id"), childColumns = arrayOf("owner_group_id"))))
-class Recipe {
+@Entity(tableName = "recipe",
+        indices = [Index(value = ["creator_user_id"]), Index(value = ["owner_user_id"]), Index(value = ["owner_group_id"])],
+        foreignKeys = [
+            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["creator_user_id"]),
+            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["owner_user_id"]),
+            ForeignKey(entity = Group::class, parentColumns = ["id"], childColumns = ["owner_group_id"])
+        ])
+data class Recipe(@Expose @ColumnInfo(name = "name") var name: String? = null,
+                  @Expose @SerializedName("creator_user_id") @ColumnInfo(name = "creator_user_id") var creatorUserId: Long? = null,
+                  @Expose @SerializedName("owner_user_id") @ColumnInfo(name = "owner_user_id") var ownerUserId: Long? = null,
+                  @Expose @SerializedName("owner_group_id") @ColumnInfo(name = "owner_group_id") var ownerGroupId: Long? = null,
+                  @Expose @SerializedName("public_readable") @ColumnInfo(name = "public_readable") var publicReadable: Boolean = false,
+                  @Expose @SerializedName("output_volume") @ColumnInfo(name = "output_volume") var outputVol: Quantity<Volume>? = null,
+                  @Expose @SerializedName("carbonation") @ColumnInfo(name = "carbonation") var carbonation: Float? = null,
+                  @Expose @SerializedName("min_days_to_ferment") @ColumnInfo(name = "min_days_to_ferment") var minDaysToFerment: Int? = null,
+                  @Expose @SerializedName("max_days_to_ferment") @ColumnInfo(name = "max_days_to_ferment") var maxDaysToFerment: Int? = null,
+                  @Expose @SerializedName("min_days_to_age") @ColumnInfo(name = "min_days_to_age") var minDaysToAge: Int? = null,
+                  @Expose @SerializedName("starting_sg") @ColumnInfo(name = "starting_sg") var startingSG: Double? = null,
+                  @Expose @SerializedName("final_sg") @ColumnInfo(name = "final_sg") var finalSG: Double? = null,
+                  @Ignore @SerializedName("ingredients") @Expose var ingredients: List<BatchIngredient>? = null,
+                  @Expose @SerializedName("notes") @ColumnInfo(name = "notes") var notes: String? = null,
+                  @Expose @SerializedName("url_found") @ColumnInfo(name = "url_found") var urlFound: String? = null) {
 
     @Expose
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Long = Long.MIN_VALUE
-
-    @Expose
-    @SerializedName("name")
-    @ColumnInfo(name = "name")
-    var name: String? = null
-
-    @Expose
-    @SerializedName("creator_user_id")
-    @ColumnInfo(name = "creator_user_id")
-    var creatorUserId: Long? = null
-
-    @Expose
-    @SerializedName("owner_user_id")
-    @ColumnInfo(name = "owner_user_id")
-    var ownerUserId: Long? = null
-
-    @Expose
-    @SerializedName("owner_group_id")
-    @ColumnInfo(name = "owner_group_id")
-    var ownerGroupId: Long? = null
-
-    @Expose
-    @SerializedName("public_readable")
-    @ColumnInfo(name = "public_readable")
-    var publicReadable: Boolean = false
-
-    @Expose
-    @SerializedName("output_volume")
-    @ColumnInfo(name = "output_volume")
-    var outputVol: Quantity<Volume>? = null
-
-    @Expose
-    @SerializedName("carbonation")
-    @ColumnInfo(name = "carbonation")
-    var carbonation: Float? = null
-
-    @Expose
-    @SerializedName("min_days_to_ferment")
-    @ColumnInfo(name = "min_days_to_ferment")
-    var minDaysToFerment: Int? = null
-
-    @Expose
-    @SerializedName("max_days_to_ferment")
-    @ColumnInfo(name = "max_days_to_ferment")
-    var maxDaysToFerment: Int? = null
-
-    @Expose
-    @SerializedName("min_days_to_age")
-    @ColumnInfo(name = "min_days_to_age")
-    var minDaysToAge: Int? = null
-
-    @Expose
-    @SerializedName("starting_sg")
-    @ColumnInfo(name = "starting_sg")
-    var startingSG: Double? = null
-
-    @Expose
-    @SerializedName("final_sg")
-    @ColumnInfo(name = "final_sg")
-    var finalSG: Double? = null
-
-    @Ignore
-    @SerializedName("ingredients")
-    @Expose
-    var ingredients: List<BatchIngredient>? = null
-
-    @Expose
-    @SerializedName("notes")
-    @ColumnInfo(name = "notes")
-    var notes: String? = null
-
-    @Expose
-    @SerializedName("url_found")
-    @ColumnInfo(name = "url_found")
-    var urlFound: String? = null
-
-    override fun toString(): String {
-        return String.format(
-                "creator_user_id : %s,\n" +
-                        "owner_user_id : %s,\n" +
-                        "owner_group_id : %s,\n" +
-                        "public_readable : %s,\n" +
-                        "output_volume : %s,\n" +
-                        "carbonation : %s,\n" +
-                        "min_days_to_ferment : %s,\n" +
-                        "max_days_to_ferment : %s,\n" +
-                        "starting_sg : %s,\n" +
-                        "final_sg : %s,\n" +
-                        "notes : %s,\n" +
-                        "url_found : %s,\n" +
-                        "ingredients : %s",
-                creatorUserId,
-                ownerUserId,
-                ownerGroupId,
-                publicReadable,
-                if (outputVol == null) "null" else outputVol!!.toString(),
-                carbonation,
-                minDaysToFerment,
-                maxDaysToFerment,
-                startingSG,
-                finalSG,
-                notes,
-                urlFound,
-                ingredients
-        )
-    }
+    var id: Long = 0
 
     companion object {
-
         @Ignore
         val RECIPE_ID = "RECIPE_ID"
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.di;
+package com.fullmeadalchemist.mustwatch.di
 
-import android.app.Application;
+import com.fullmeadalchemist.mustwatch.MustWatchApp
+import dagger.Component
+import javax.inject.Singleton
+import dagger.android.support.AndroidSupportInjectionModule
+import dagger.BindsInstance
 
-import com.fullmeadalchemist.mustwatch.MustWatchApp;
-
-import javax.inject.Singleton;
-
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.android.AndroidInjectionModule;
 
 @Singleton
-@Component(modules = {
-        AndroidInjectionModule.class,
-        AppModule.class,
-        MainActivityModule.class
-})
-public interface AppComponent {
-    void inject(MustWatchApp mustWatchApp);
+@Component(modules = [
+    AndroidSupportInjectionModule::class,
+    BuildersModule::class,
+    AppModule::class])
+interface ApplicationComponent {
 
     @Component.Builder
     interface Builder {
         @BindsInstance
-        Builder application(Application application);
+        fun application(application: MustWatchApp): Builder
 
-        AppComponent build();
+        @BindsInstance
+        fun appModule(appModule: AppModule) : Builder
+
+        fun build(): ApplicationComponent
     }
+
+    fun inject(app: MustWatchApp)
 }

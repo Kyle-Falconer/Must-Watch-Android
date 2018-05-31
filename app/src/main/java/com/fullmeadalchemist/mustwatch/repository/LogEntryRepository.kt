@@ -28,13 +28,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LogEntryRepository @Inject
-constructor(val logEntryDao: LogEntryDao) {
-    protected var logEntry: LogEntry
+class LogEntryRepository {
 
-    init {
-        this.logEntry = LogEntry()
-    }
+    @Inject
+    lateinit var logEntryDao: LogEntryDao
 
     fun addLogEntry(logEntry: LogEntry) {
         Timber.d("Adding LogEntry to db: %s", logEntry.toString())

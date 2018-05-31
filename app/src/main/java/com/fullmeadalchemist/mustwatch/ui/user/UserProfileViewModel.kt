@@ -39,8 +39,8 @@ constructor(private val userRepo: UserRepository) : ViewModel() {
         return userRepo.getUser(id!!)
     }
 
-    companion object{
-        fun create(activity: FragmentActivity): UserProfileViewModel{
+    companion object {
+        fun create(activity: FragmentActivity): UserProfileViewModel {
             return ViewModelProviders.of(activity).get(UserProfileViewModel::class.java)
         }
     }

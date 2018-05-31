@@ -33,7 +33,7 @@ import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
 
-import static com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDateTimeLong;
+import static com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDateTimeLong;
 
 
 public class BindingUtils {
@@ -41,9 +41,9 @@ public class BindingUtils {
 
     @BindingAdapter("android:text")
     public static void setFloat(TextView view, float value) {
-        if (Float.isNaN(value)){
+        if (Float.isNaN(value)) {
             view.setText("");
-        } else{
+        } else {
             DecimalFormat f = new DecimalFormat("#.##");
             view.setText(f.format(value));
         }
@@ -62,9 +62,9 @@ public class BindingUtils {
 
     @BindingAdapter("android:text")
     public static void setDouble(TextView view, double value) {
-        if (Double.isNaN(value)){
+        if (Double.isNaN(value)) {
             view.setText("");
-        } else{
+        } else {
             DecimalFormat f = new DecimalFormat("#.##");
             view.setText(f.format(value));
         }

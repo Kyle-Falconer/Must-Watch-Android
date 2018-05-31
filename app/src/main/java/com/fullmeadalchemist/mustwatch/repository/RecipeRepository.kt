@@ -30,9 +30,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RecipeRepository @Inject
-constructor(val recipeDao: RecipeDao, val batchIngredientDao: BatchIngredientDao) {
-
+class RecipeRepository {
+    @Inject
+    lateinit var recipeDao: RecipeDao
+    @Inject
+    lateinit var batchIngredientDao: BatchIngredientDao
     // TODO: load this from the JSON file and/or server, sync with db, return LiveData
     // application.getApplicationContext()
     //        MutableLiveData<Long> recipeIdLiveData = new MutableLiveData<>();

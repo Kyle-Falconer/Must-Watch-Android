@@ -17,9 +17,7 @@
 package com.fullmeadalchemist.mustwatch.ui.batch.detail
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -29,15 +27,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.estimateBatchSG
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
+import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding
 import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleDate
-import com.fullmeadalchemist.mustwatch.util.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
@@ -45,11 +43,6 @@ import com.fullmeadalchemist.mustwatch.vo.LogEntry
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
-import javax.inject.Inject
-import dagger.android.AndroidInjection
-import android.app.Activity
-import android.content.Context
-import dagger.android.support.AndroidSupportInjection
 
 
 class BatchDetailFragment : Fragment() {
@@ -57,21 +50,17 @@ class BatchDetailFragment : Fragment() {
     protected lateinit var logsRecyclerView: RecyclerView
     protected lateinit var logsAdapter: LogRecyclerViewAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var navigationController: NavigationController
-
     private lateinit var viewModel: BatchDetailViewModel
     private lateinit var binding: BatchDetailFragmentBinding
     private val defaultLocale = Locale.getDefault()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.batch_detail_fragment, container, false)
-                as BatchDetailFragmentBinding
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchDetailViewModel::class.java)
+        binding = BatchDetailFragmentBinding.inflate(inflater, container, false)
+        binding.setLifecycleOwner(this)
+//        binding = DataBindingUtil.inflate(inflater, R.layout.batch_detail_fragment, container, false)
+//                as BatchDetailFragmentBinding
+        viewModel = ViewModelProviders.of(this).get(BatchDetailViewModel::class.java)
 
         logsAdapter = LogRecyclerViewAdapter(object : LogRecyclerViewAdapter.LogEntryClickCallback {
             override fun onClick(entry: LogEntry) {
@@ -79,11 +68,6 @@ class BatchDetailFragment : Fragment() {
             }
         })
         return binding.root
-    }
-
-    override fun onAttach(context: Context?) {
-         AndroidSupportInjection.inject(this)
-        super.onAttach(context)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -116,7 +100,7 @@ class BatchDetailFragment : Fragment() {
                             viewModel.getBatchIngredients(batchId).observe(this, Observer<List<BatchIngredient>> { batchIngredients ->
                                 if (batchIngredients != null) {
                                     Timber.v("Loaded %s Batch ingredients", batchIngredients.size)
-                                    viewModel.batch.ingredients = batchIngredients
+                                    viewModel.batch?.ingredients = batchIngredients
                                     updateIngredientUiInfo()
                                     updateBatchUiInfo()
                                 } else {
@@ -138,7 +122,8 @@ class BatchDetailFragment : Fragment() {
             }
         } else {
             Timber.i("No Batch ID was received. Redirecting to the Batch Creation form.")
-            navigationController.navigateToAddBatch()
+            //navigationController.navigateToAddBatch()
+            findNavController().navigate(R.id.batchFormFragment)
         }
 
         logsRecyclerView = activity!!.findViewById(R.id.logs_list)
@@ -152,44 +137,46 @@ class BatchDetailFragment : Fragment() {
     }
 
     private fun updateBatchUiInfo() {
-        binding.createDateDate.text = calendarToLocaleDate(viewModel.batch.createDate)
-        binding.createDateTime.text = calendarToLocaleTime(viewModel.batch.createDate)
+        viewModel.batch?.let {
+            binding.createDateDate.text = calendarToLocaleDate(it.createDate)
+            binding.createDateTime.text = calendarToLocaleTime(it.createDate)
 
-        if (viewModel.batch.outputVolume != null) {
-            val volumeAmount = viewModel.batch.outputVolume!!.value as Double
-            val f = DecimalFormat("#.##")
-            binding.outputVolumeAmount.text = f.format(volumeAmount)
-            val unitString = resources.getString(unitToStringResource(viewModel.batch.outputVolume!!.unit))
-            binding.outputVolumeAmountUnit.text = unitString
-        }
-
-        viewModel.batch.targetABV?.let {
-            val abv_pct = it * 100
-            val f = DecimalFormat("0.##")
-            binding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct.toDouble())))
-        }
-
-        viewModel.batch.status?.let {
-            binding.status.text = it.toString()
-        }
-
-        if (viewModel.batch.targetSgStarting != null) {
-            val sgStartingValue = estimateBatchSG(viewModel.batch)
-            if (sgStartingValue != null) {
-                val f = DecimalFormat("#.###")
-                binding.targetSgStarting.text = f.format(sgStartingValue)
+            if (it.outputVolume != null) {
+                val volumeAmount = it.outputVolume!!.value as Double
+                val f = DecimalFormat("#.##")
+                binding.outputVolumeAmount.text = f.format(volumeAmount)
+                val unitString = resources.getString(unitToStringResource(it.outputVolume!!.unit))
+                binding.outputVolumeAmountUnit.text = unitString
             }
-        }
 
-        if (viewModel.batch.targetSgFinal != null) {
-            val sgFinalValue = viewModel.batch.targetSgFinal
-            val f = DecimalFormat("#.###")
-            binding.targetSgFinal.text = f.format(sgFinalValue)
+            it.targetABV?.let {
+                val abv_pct = it * 100
+                val f = DecimalFormat("0.##")
+                binding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct.toDouble())))
+            }
+
+            it.status?.let {
+                binding.status.text = it.toString()
+            }
+
+            if (it.targetSgStarting != null) {
+                val sgStartingValue = estimateBatchSG(it)
+                if (sgStartingValue != null) {
+                    val f = DecimalFormat("#.###")
+                    binding.targetSgStarting.text = f.format(sgStartingValue)
+                }
+            }
+
+            if (it.targetSgFinal != null) {
+                val sgFinalValue = it.targetSgFinal
+                val f = DecimalFormat("#.###")
+                binding.targetSgFinal.text = f.format(sgFinalValue)
+            }
         }
     }
 
     private fun updateIngredientUiInfo() {
-        viewModel.batch.ingredients?.let {
+        viewModel.batch?.ingredients?.let {
             // FIXME: this is not performant and looks ghetto.
             Timber.d("Found %s BatchIngredients for this Batch; adding them to the ingredientsList", it.size)
             val ingredientsList = activity!!.findViewById<LinearLayout>(R.id.ingredients_list)
@@ -205,13 +192,30 @@ class BatchDetailFragment : Fragment() {
     private fun initClickListeners() {
         val submitButton = activity!!.findViewById<Button>(R.id.button_edit_batch)
         submitButton?.setOnClickListener { _ ->
-            Timber.i("Edit Batch button clicked")
-            navigationController.navigateToEditBatch(viewModel.batch.id!!)
+            var batchIdToEdit = 0L
+            viewModel.batch?.let {
+                batchIdToEdit = it.id
+            }
+            Timber.i("Edit Batch button clicked for id %d", batchIdToEdit)
+
+            val bundle = Bundle()
+            bundle.putLong("batch_id", batchIdToEdit)
+            findNavController().navigate(R.id.batchFormFragment, bundle)
+//            navigationController.navigateToEditBatch(batchIdToEdit)
         }
         val addLogButton = activity!!.findViewById<Button>(R.id.button_add_log_entry)
         addLogButton?.setOnClickListener { _ ->
-            Timber.i("Add Log Entry button clicked")
-            navigationController.navigateToAddLog(viewModel.batch.id!!)
+            var batchIdToEdit = 0L
+            viewModel.batch?.let {
+                batchIdToEdit = it.id
+            }
+            Timber.i("Add Log Entry button clicked for id %d", batchIdToEdit)
+
+            //val nagArgs = BatchDetailFragmentDirections.action_batchDetailFragment_to_batchFormFragment()
+            val bundle = Bundle()
+            bundle.putLong("batch_id", batchIdToEdit)
+            findNavController().navigate(R.id.logFormFragment, bundle)
+//            navigationController.navigateToAddLog(batchIdToEdit)
         }
     }
 }

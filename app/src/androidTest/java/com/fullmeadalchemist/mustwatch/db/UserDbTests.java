@@ -10,8 +10,8 @@ import com.fullmeadalchemist.mustwatch.vo.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 import static com.fullmeadalchemist.mustwatch.util.LiveDataTestUtil.getValue;
 import static org.hamcrest.MatcherAssert.assertThat;

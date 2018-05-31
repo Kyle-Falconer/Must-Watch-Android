@@ -17,10 +17,10 @@
 package com.fullmeadalchemist.mustwatch.ui.batch
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.NonNull
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,32 +28,29 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.Batch
-import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
-import javax.inject.Inject
+import dagger.android.support.AndroidSupportInjection
+
+
 
 class BatchListFragment : Fragment() {
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: BatchListViewAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var navigationController: NavigationController
-
     private var viewModel: BatchViewModel? = null
     private var fab: FloatingActionButton? = null
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(BatchViewModel::class.java)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
@@ -65,12 +62,12 @@ class BatchListFragment : Fragment() {
 
         mAdapter = BatchListViewAdapter(object : BatchListViewAdapter.BatchClickCallback {
             override fun onClick(repo: Batch) {
-                navigationController.navigateToBatchDetail(repo.id)
+                findNavController().navigate(R.id.batchDetailFragment)
+                // navigationController.navigateToBatchDetail(repo.id)
             }
         })
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(BatchViewModel::class.java)
-        viewModel!!.batches.observe(this, Observer<List<Batch>> { batches ->
+        viewModel?.batches?.observe(this, Observer<List<Batch>> { batches ->
             // update UI
             mAdapter.dataSet = batches
             mAdapter.notifyDataSetChanged()
@@ -82,7 +79,7 @@ class BatchListFragment : Fragment() {
         // http://stackoverflow.com/a/35981886/940217
         // https://code.google.com/p/android/issues/detail?id=230298
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
                 //FloatingActionButton floater = recyclerView.findViewById(R.id.batches_fab);
                 if (fab == null) {
                     Timber.e("The FloatingActionButton is null!")
@@ -103,7 +100,8 @@ class BatchListFragment : Fragment() {
             fab!!.setOnClickListener { v ->
                 Timber.d("Floating Action Button was clicked!")
                 Answers.getInstance().logCustom(CustomEvent("FAB Clicked"))
-                navigationController.navigateToAddBatch()
+
+                findNavController().navigate(R.id.batchFormFragment)
             }
         } else {
             Timber.e("FloatingActionButton at R.id.batches_fab is null!")
@@ -121,7 +119,6 @@ class BatchListFragment : Fragment() {
     }
 
     companion object {
-
         private val TAG = BatchListFragment::class.java.simpleName
     }
 }

@@ -17,19 +17,12 @@
 package com.fullmeadalchemist.mustwatch.core
 
 import com.fullmeadalchemist.mustwatch.vo.Batch
-import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
-
-import java.text.DecimalFormat
-
-import javax.measure.Quantity
-import javax.measure.quantity.Volume
-
-import tec.units.ri.AbstractQuantity
-import timber.log.Timber
-
 import systems.uom.common.CGS.GRAM
 import systems.uom.common.USCustomary.LITER
-
+import tec.units.ri.AbstractQuantity
+import timber.log.Timber
+import javax.measure.Quantity
+import javax.measure.quantity.Volume
 
 object BrewFormulae {
 
@@ -52,7 +45,7 @@ object BrewFormulae {
             for (ingredient in it) {
                 if (ingredient.quantityMass != null) {
                     val gramsMass = ingredient.quantityMass to GRAM
-                    sugars +=        gramsMass.first?.value as Double
+                    sugars += gramsMass.first?.value as Double
                 }
             }
         }

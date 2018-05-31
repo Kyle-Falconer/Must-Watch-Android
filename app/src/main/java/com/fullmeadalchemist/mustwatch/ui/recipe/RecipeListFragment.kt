@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.recipe
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -28,27 +27,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import dagger.android.support.AndroidSupportInjection
-import javax.inject.Inject
+import timber.log.Timber
 
 class RecipeListFragment : Fragment() {
     protected var mRecyclerView: RecyclerView? = null
     lateinit var mAdapter: RecipeListViewAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var navigationController: NavigationController
-
     private var viewModel: RecipeViewModel? = null
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
@@ -60,11 +49,12 @@ class RecipeListFragment : Fragment() {
 
         mAdapter = RecipeListViewAdapter(null, object : RecipeListViewAdapter.RecipeClickCallback {
             override fun onClick(recipe: Recipe) {
-                navigationController.navigateToRecipeDetail(recipe.id)
+                Timber.e("Navigation to Recipe #${recipe.id} not yet implemented")
+//                navigationController.navigateToRecipeDetail(recipe.id)
             }
         })
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(RecipeViewModel::class.java)
         viewModel!!.currentUserId.observe(this, Observer<Long> { userId ->
             viewModel!!.getRecipes(userId).observe(this, Observer<List<Recipe>> { recipes ->
                 // update UI

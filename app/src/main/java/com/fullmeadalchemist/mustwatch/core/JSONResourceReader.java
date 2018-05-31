@@ -19,7 +19,6 @@ package com.fullmeadalchemist.mustwatch.core;
 
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -73,7 +72,7 @@ public class JSONResourceReader {
                 line = reader.readLine();
             }
         } catch (Exception e) {
-            Timber.e(e,"Unhandled exception while using JSONResourceReader\n");
+            Timber.e(e, "Unhandled exception while using JSONResourceReader\n");
         } finally {
             try {
                 resourceReader.close();

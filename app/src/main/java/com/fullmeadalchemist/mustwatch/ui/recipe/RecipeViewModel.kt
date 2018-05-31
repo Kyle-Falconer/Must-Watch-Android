@@ -25,8 +25,10 @@ import com.fullmeadalchemist.mustwatch.vo.Recipe
 
 import javax.inject.Inject
 
-class RecipeViewModel @Inject
-constructor(private val recipeRepository: RecipeRepository, private val userRepository: UserRepository) : ViewModel() {
+class RecipeViewModel : ViewModel() {
+    @Inject lateinit var recipeRepository: RecipeRepository
+    @Inject lateinit var userRepository: UserRepository
+
     private val recipes: LiveData<List<Recipe>>? = null
 
     val currentUserId: LiveData<Long>

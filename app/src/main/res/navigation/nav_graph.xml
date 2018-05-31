@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018 Full Mead Alchemist, LLC.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/batchListFragment">
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.user.UserProfileFragment"
+        android:label="UserProfileFragment" />
+    <fragment
+        android:id="@+id/batchFormFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment"
+        android:label="BatchFormFragment"
+        tools:layout="@layout/batch_form_fragment">
+        <action
+            android:id="@+id/action_batchFormFragment_to_timePickerFragment"
+            app:destination="@id/timePickerFragment" />
+        <action
+            android:id="@+id/action_batchFormFragment_to_addIngredientDialog"
+            app:destination="@id/addIngredientDialog" />
+        <action
+            android:id="@+id/action_batchFormFragment_to_datePickerFragment"
+            app:destination="@id/datePickerFragment" />
+        <argument
+            android:name="batch_id"
+            app:type="reference" />
+    </fragment>
+    <fragment
+        android:id="@+id/logListFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.log.LogListFragment"
+        android:label="LogListFragment" />
+    <fragment
+        android:id="@+id/recipeListFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.recipe.RecipeListFragment"
+        android:label="RecipeListFragment"
+        tools:layout="@layout/recipe_list" >
+        <action
+            android:id="@+id/action_recipeListFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addIngredientDialog"
+        android:name="com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog"
+        android:label="AddIngredientDialog"
+        tools:layout="@layout/ingredient_dialog" />
+    <fragment
+        android:id="@+id/timePickerFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment"
+        android:label="TimePickerFragment" />
+    <fragment
+        android:id="@+id/datePickerFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment"
+        android:label="DatePickerFragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.meta.AboutFragment"
+        android:label="about_fragment"
+        tools:layout="@layout/about_fragment" />
+    <fragment
+        android:id="@+id/batchListFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment"
+        android:label="BatchListFragment"
+        tools:layout="@layout/batch_list" >
+        <action
+            android:id="@+id/action_batchListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_batchListFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+        <action
+            android:id="@+id/action_batchListFragment_to_recipeListFragment"
+            app:destination="@id/recipeListFragment" />
+        <action
+            android:id="@+id/action_batchListFragment_to_batchDetailFragment"
+            app:destination="@id/batchDetailFragment" />
+        <action
+            android:id="@+id/action_batchListFragment_to_batchFormFragment"
+            app:destination="@id/batchFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.recipe.detail.RecipeDetailFragment"
+        android:label="RecipeDetailFragment"
+        tools:layout="@layout/recipe_detail_fragment" >
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_batchFormFragment"
+            app:destination="@id/batchFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/batchDetailFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment"
+        android:label="BatchDetailFragment">
+        <action
+            android:id="@+id/action_batchDetailFragment_to_batchFormFragment"
+            app:destination="@id/batchFormFragment" />
+        <argument
+            android:name="batch_id"
+            app:type="integer" />
+        <action
+            android:id="@+id/action_batchDetailFragment_to_logFormFragment"
+            app:destination="@id/logFormFragment" />
+        <action
+            android:id="@+id/action_batchDetailFragment_to_logListFragment"
+            app:destination="@id/logListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/logFormFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment"
+        android:label="LogFormFragment" >
+        <argument
+            android:name="batch_id"
+            app:type="reference" />
+    </fragment>
+</navigation>
