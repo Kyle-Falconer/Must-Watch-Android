@@ -51,11 +51,11 @@ public class RecipeDbTests extends DbTest {
         uid = db.userDao().insert(user);
 
         JSONResourceReader ingredientsReader = new JSONResourceReader(res, R.raw.ingredients);
-        Ingredient[] ingredients = ingredientsReader.constructUsingGson(Ingredient[].class);
+        Ingredient[] ingredients = ingredientsReader.constructFromJson(Ingredient[].class);
         db.ingredientDao().insertAll(ingredients);
 
         JSONResourceReader recipesReader = new JSONResourceReader(res, R.raw.recipes);
-        Recipe[] recipes = recipesReader.constructUsingGson(Recipe[].class);
+        Recipe[] recipes = recipesReader.constructFromJson(Recipe[].class);
         db.recipeDao().insertAll(recipes);
     }
 

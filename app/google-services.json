@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1031470226745",
+    "firebase_url": "https://full-mead-alchemist.firebaseio.com",
+    "project_id": "full-mead-alchemist",
+    "storage_bucket": "full-mead-alchemist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031470226745:android:fdf1e6b969fccfa9",
+        "android_client_info": {
+          "package_name": "com.kylefalconercodes.mustwatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031470226745-vg5lcbu1qpr2ou0ipn92rf546i9ppmsp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kylefalconercodes.mustwatch",
+            "certificate_hash": "54cef215ac07f53a38034597d8ae956a135955e3"
+          }
+        },
+        {
+          "client_id": "1031470226745-lmscsruh7b2h59p2i30ivte9bo0leh0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZUA9NJpI111FQ0YbnK7hLMwCAphEUwhg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031470226745-lmscsruh7b2h59p2i30ivte9bo0leh0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

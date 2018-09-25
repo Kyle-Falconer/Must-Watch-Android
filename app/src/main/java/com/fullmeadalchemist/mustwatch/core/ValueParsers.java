@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import timber.log.Timber;
 
 public class ValueParsers {
-    private static final String TAG = ValueParsers.class.getSimpleName();
 
     @NonNull
     public static Float toFloat(String value, float defaultValue) {
@@ -80,8 +79,8 @@ public class ValueParsers {
     /**
      * https://stackoverflow.com/a/1590842/940217
      *
-     * @param l
-     * @return
+     * @param l the long to cast to an integer.
+     * @return the integer value of l if it is possible, otherwise throw an IllegalArgumentException.
      */
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {

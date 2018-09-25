@@ -17,20 +17,44 @@
 package com.fullmeadalchemist.mustwatch
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.support.v7.app.ActionBar
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
-import javax.inject.Inject
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import kotlinx.android.synthetic.main.main_activity.*
+import timber.log.Timber
 
 
 class StartActivity : AppCompatActivity() {
 
+    private lateinit var toggle: ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        setSupportActionBar(toolbar)
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+        }
+
+        toggle = ActionBarDrawerToggle(this, drawer_layout, R.string.open, R.string.close)
+        drawer_layout.addDrawerListener(toggle)
+        toggle.isDrawerIndicatorEnabled = true
+        toggle.setHomeAsUpIndicator(0)
+        toggle.syncState()
+
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        NavigationUI.setupWithNavController(toolbar, navController, drawer_layout)
+        NavigationUI.setupWithNavController(nav_view, navController)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        Timber.d("Navigating up")
+        return NavigationUI.navigateUp(drawer_layout, nav_host_fragment.findNavController()) || super.onSupportNavigateUp()
+    }
 }

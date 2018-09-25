@@ -53,7 +53,7 @@ public class JSONResources {
     @Test
     public void loadIngredients() {
         JSONResourceReader reader = new JSONResourceReader(res, R.raw.ingredients);
-        Ingredient[] ingredients = reader.constructUsingGson(Ingredient[].class);
+        Ingredient[] ingredients = reader.constructFromJson(Ingredient[].class);
         assertThat(ingredients, is(not(nullValue())));
         assertTrue(ingredients.length > 0);
 
@@ -71,7 +71,7 @@ public class JSONResources {
     @Test
     public void loadRecipes() {
         JSONResourceReader reader = new JSONResourceReader(res, R.raw.recipes);
-        Recipe[] recipes = reader.constructUsingGson(Recipe[].class);
+        Recipe[] recipes = reader.constructFromJson(Recipe[].class);
         assertThat(recipes, is(not(nullValue())));
         assertTrue(recipes.length > 0);
 

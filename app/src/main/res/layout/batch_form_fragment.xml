@@ -5,6 +5,7 @@
     tools:context=".ui.batch.form.BatchFormFragment">
 
     <data>
+
         <variable
             name="viewmodel"
             type="com.fullmeadalchemist.mustwatch.ui.batch.BatchViewModel" />
@@ -18,10 +19,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="vertical">
 
             <TextView
@@ -41,8 +42,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Batch name"
                     android:inputType="text"
-                    android:maxLines="1"/>
-                    <!--android:text="@{viewmodel.batch.name}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{viewmodel.batch.name}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -70,8 +71,9 @@
                     android:gravity="start|center"
                     android:maxLines="1"
                     android:textAlignment="textStart"
-                    tools:text="Mar 31, 2017"/>
-                    android:text="@{viewmodel.batch.createDate}"/>
+                    tools:text="Mar 31, 2017"
+                    android:layout_marginLeft="24dp" />
+                android:text="@{viewmodel.batch.createDate}"/>
 
                 <TextView
                     android:id="@+id/createDateTime"
@@ -83,11 +85,12 @@
                     android:textAlignment="textEnd"
                     tools:text="7:44 AM" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -101,6 +104,7 @@
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="Add Sugar"
                     android:text="Add Sugar"
@@ -116,14 +120,15 @@
                     android:contentDescription="Add Yeast"
                     android:text="Add Yeast"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button"/>
+                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button" />
 
                 <Button
                     android:id="@+id/add_nutrient_button"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:contentDescription="Add Nutrient"
                     android:text="Add Nutrient"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -133,8 +138,9 @@
                     android:id="@+id/add_stabilizer_button"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:contentDescription="Add Stabilizer"
                     android:text="Add Stabilizer"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -195,8 +201,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Target ABV%"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"/>
-                    <!--android:text="@{safeUnbox(viewmodel.batch.targetABV)}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{safeUnbox(viewmodel.batch.targetABV)}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -210,8 +216,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Target starting Specific Gravity (example: 1.115)"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"/>
-                    <!--android:text="@{safeUnbox(viewmodel.batch.targetSgStarting)}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{safeUnbox(viewmodel.batch.targetSgStarting)}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -225,8 +231,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Target final Specific Gravity (example: 1.05)"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"/>
-                    <!--android:text="@{safeUnbox(viewmodel.batch.targetSgFinal)}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{safeUnbox(viewmodel.batch.targetSgFinal)}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -240,8 +246,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Starting pH level (example: 3.7)"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"/>
-                    <!--android:text="@{safeUnbox(viewmodel.batch.startingPh)}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{safeUnbox(viewmodel.batch.startingPh)}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -255,8 +261,8 @@
                     android:layout_height="wrap_content"
                     android:hint="starting temperature"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"/>
-                    <!--android:text="@{safeUnbox(viewmodel.batch.startingTemp)}" />-->
+                    android:maxLines="1" />
+                <!--android:text="@{safeUnbox(viewmodel.batch.startingTemp)}" />-->
 
             </android.support.design.widget.TextInputLayout>
 
@@ -265,11 +271,11 @@
                 android:id="@+id/constraintLayout_notes_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="18dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent">
@@ -278,11 +284,11 @@
                     android:id="@+id/textView_notes_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="Notes"
                     app:layout_constraintLeft_toLeftOf="@+id/notes"
                     app:layout_constraintRight_toRightOf="@+id/notes"
@@ -293,19 +299,19 @@
                     android:id="@+id/notes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:ems="10"
                     android:inputType="textMultiLine"
                     android:lines="4"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_notes_label"
-                    tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here."/>
-                    <!--android:text="@{viewmodel.batch.notes}"/>-->
+                    tools:text="Notes about the batch go here. Notes about the batch go here. Notes about the batch go here." />
+                <!--android:text="@{viewmodel.batch.notes}"/>-->
 
             </android.support.constraint.ConstraintLayout>
 
@@ -314,11 +320,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:text="@string/save_batch" />
 
 

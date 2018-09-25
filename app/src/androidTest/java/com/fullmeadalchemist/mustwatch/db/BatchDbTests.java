@@ -35,7 +35,7 @@ public class BatchDbTests extends DbTest {
         Resources res = InstrumentationRegistry.getTargetContext().getResources();
         String packageName = InstrumentationRegistry.getTargetContext().getPackageName();
         JSONResourceReader reader = new JSONResourceReader(res, R.raw.ingredients);
-        Ingredient[] ingredients = reader.constructUsingGson(Ingredient[].class);
+        Ingredient[] ingredients = reader.constructFromJson(Ingredient[].class);
         db.ingredientDao().insertAll(ingredients);
     }
 

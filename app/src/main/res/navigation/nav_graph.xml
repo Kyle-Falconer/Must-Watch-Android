@@ -38,8 +38,7 @@
             android:id="@+id/action_batchFormFragment_to_datePickerFragment"
             app:destination="@id/datePickerFragment" />
         <argument
-            android:name="batch_id"
-            app:type="reference" />
+            android:name="batch_id"/>
     </fragment>
     <fragment
         android:id="@+id/logListFragment"
@@ -110,8 +109,7 @@
             android:id="@+id/action_batchDetailFragment_to_batchFormFragment"
             app:destination="@id/batchFormFragment" />
         <argument
-            android:name="batch_id"
-            app:type="integer" />
+            android:name="batch_id"/>
         <action
             android:id="@+id/action_batchDetailFragment_to_logFormFragment"
             app:destination="@id/logFormFragment" />
@@ -124,7 +122,6 @@
         android:name="com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment"
         android:label="LogFormFragment" >
         <argument
-            android:name="batch_id"
-            app:type="reference" />
+            android:name="batch_id" />
     </fragment>
 </navigation>

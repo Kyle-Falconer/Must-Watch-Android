@@ -34,6 +34,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.navigation.findNavController
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.fullmeadalchemist.mustwatch.R
@@ -313,47 +314,35 @@ class BatchFormFragment : Fragment() {
         }
 
         val addSugarButton = activity!!.findViewById<Button>(R.id.add_sugar_button)
-        addSugarButton?.setOnClickListener { _ ->
+        addSugarButton?.setOnClickListener { v ->
             Timber.i("addSugarButton was clicked!")
-            val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, SUGAR.toString())
-            newFragment.arguments = args
-            newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(activity!!.supportFragmentManager, "sugarPicker")
+            v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
         val addNutrientButton = activity!!.findViewById<Button>(R.id.add_nutrient_button)
-        addNutrientButton?.setOnClickListener { _ ->
+        addNutrientButton?.setOnClickListener { v ->
             Timber.i("addNutrientButton was clicked!")
-            val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, NUTRIENT.toString())
-            newFragment.arguments = args
-            newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(activity!!.supportFragmentManager, "nutrientPicker")
+            v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
         val addYeastButton = activity!!.findViewById<Button>(R.id.add_yeast_button)
-        addYeastButton?.setOnClickListener { _ ->
+        addYeastButton?.setOnClickListener { v ->
             Timber.i("addYeastButton was clicked!")
-            val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, YEAST.toString())
-            newFragment.arguments = args
-            newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(activity!!.supportFragmentManager, "yeastPicker")
+            v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
         val addStabilizerButton = activity!!.findViewById<Button>(R.id.add_stabilizer_button)
-        addStabilizerButton?.setOnClickListener { _ ->
+        addStabilizerButton?.setOnClickListener { v ->
             Timber.i("addStabilizerButton was clicked!")
-            val newFragment = AddIngredientDialog()
             val args = Bundle()
             args.putString(INGREDIENT_TYPE, STABILIZER.toString())
-            newFragment.arguments = args
-            newFragment.setTargetFragment(this, INGREDIENT_REQUEST_CODE)
-            newFragment.show(activity!!.supportFragmentManager, "stabilizerPicker")
+            v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
         LocalBroadcastManager.getInstance(activity!!).registerReceiver(datePickerMessageReceiver,

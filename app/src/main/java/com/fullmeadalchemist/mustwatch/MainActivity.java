@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements
             headlessLoadingFragment = new HeadlessLoadingFragment();
             fm.beginTransaction().add(headlessLoadingFragment, HEADLESS_FRAGMENT_TAG).commit();
         }
-
-
     }
 
     @Override
@@ -61,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements
             fm.beginTransaction().remove(headlessLoadingFragment).commitAllowingStateLoss();
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -112,11 +109,11 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.nav_batches:
+            case R.id.batchListFragment:
                 Timber.i("nav_batches selected from Drawer");
 
                 break;
-            case R.id.nav_recipes:
+            case R.id.recipeListFragment:
                 Timber.i("nav_recipes selected from Drawer");
 
                 break;
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements
 //                Log.w(TAG, "Settings view not yet implemented");
 //                navigationController.navigateToBatches();
 //                break;
-            case R.id.nav_about:
+            case R.id.aboutFragment:
                 Timber.i("nav_about selected from Drawer");
 
                 break;

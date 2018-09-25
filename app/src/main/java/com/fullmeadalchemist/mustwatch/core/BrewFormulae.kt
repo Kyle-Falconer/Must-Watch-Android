@@ -26,12 +26,12 @@ import javax.measure.quantity.Volume
 
 object BrewFormulae {
 
-    fun SGToBrix(SG: Double): Double {
+    private fun specificGravityToBrix(SG: Double): Double {
         return 135.997 * Math.pow(SG, 3.0) - 630.272 * Math.pow(SG, 2.0) + 1111.14 * SG - 616.868
     }
 
-    fun SGToSugarConc(SG: Double): Double {
-        return 4 + 10.0 * SG * SGToBrix(SG)
+    private fun specificGravityToSugarConc(SG: Double): Double {
+        return 4 + 10.0 * SG * specificGravityToBrix(SG)
     }
 
     fun estimateBatchSG(b: Batch): Double? {
@@ -68,21 +68,21 @@ object BrewFormulae {
      * @return calculated specific gravity based on provided sugars and output volume.
      */
     fun sugarConcToSG(totalSugars: Double, outputVolume: Quantity<Volume>): Double {
-        val sugars_in_grams_per_L = totalSugars / outputVolume.to(LITER).value as Double
-        var sg_guess = 0.992    // lowest point
+        val sugarsInGramsPerLiter = totalSugars / outputVolume.to(LITER).value as Double
+        var specificGravityGuess = 0.992    // lowest point
 
         val loopLimit = 100000.0
         var gpl: Double
         var diff: Double
         var i = 0
         while (i < loopLimit) {
-            gpl = SGToSugarConc(sg_guess)
-            if (Math.round(gpl) == Math.round(sugars_in_grams_per_L)) {
-                return sg_guess
+            gpl = specificGravityToSugarConc(specificGravityGuess)
+            if (Math.round(gpl) == Math.round(sugarsInGramsPerLiter)) {
+                return specificGravityGuess
             }
             // scale by number of integer digits + 2, ie gpl of 312.45 means scale of 5 decimal points => 0.00001
             diff = Math.pow(10.0, (-1 * (2 + (Math.round(gpl).toString() + "").length)).toDouble())
-            sg_guess = sg_guess * (1 + diff)
+            specificGravityGuess *= (1 + diff)
             i++
         }
         return 0.0
@@ -104,11 +104,14 @@ object BrewFormulae {
         - %ABW (Alc by weight) = 0.8 * % ABV (Alc by Volume)
         - %ABV = Baume
          */
-        val OG = targetStartingSG ?: sugarConcToSG(totalSugars!!, outputVolume)
-        val FG = targetFinalSG!!
-        Timber.d("Read the target final specific gravity to be %4.3f", FG)
+        val originalSpecificGravity = targetStartingSG ?: sugarConcToSG(totalSugars!!, outputVolume)
+        val finalSpecificGravity = targetFinalSG!!
+        Timber.d("Read the target final specific gravity to be %4.3f", finalSpecificGravity)
         //double brix = ( 135.997 * Math.pow(SG,3))  - ( 630.272*Math.pow(SG,2) ) + (111.14*SG) - 616.868;
-        val brix = 182.9622 * Math.pow(FG, 3.0) - 777.3009 * Math.pow(FG, 2.0) + 1264.517 * FG - 670.1832
+        val brix = 182.9622 *
+                Math.pow(finalSpecificGravity, 3.0) - 777.3009 *
+                Math.pow(finalSpecificGravity, 2.0) + 1264.517 *
+                finalSpecificGravity - 670.1832
         val baume = 145 / (145 - brix) // 145 * (1 - (1 / SG));
 
         /*
@@ -124,10 +127,10 @@ object BrewFormulae {
         BRIX = (((182.4601 × GRAVITY - 775.6821) × GRAVITY + 1262.7794) × GRAVITY - 669.5622)
         */
 
-        val abv_pct = calcAbvPct(OG, FG)
-        val abw_pct = 0.8 * baume
-        Timber.d("Estimated percent of Alcohol by Weight to be %4.3f", abw_pct)
-        Timber.d("Estimated percent of Alcohol by Volume to be %4.3f", abv_pct)
-        return abv_pct
+        val abvPct = calcAbvPct(originalSpecificGravity, finalSpecificGravity)
+        val abwPct = 0.8 * baume
+        Timber.d("Estimated percent of Alcohol by Weight to be %4.3f", abwPct)
+        Timber.d("Estimated percent of Alcohol by Volume to be %4.3f", abvPct)
+        return abvPct
     }
 }

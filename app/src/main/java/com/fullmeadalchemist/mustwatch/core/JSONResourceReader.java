@@ -51,7 +51,6 @@ import static com.fullmeadalchemist.mustwatch.core.UnitMapper.toVolume;
  */
 public class JSONResourceReader {
 
-    private static final String TAG = JSONResourceReader.class.getSimpleName();
     private String jsonString;
 
     /**
@@ -85,12 +84,12 @@ public class JSONResourceReader {
     }
 
     /**
-     * Build an object from the specified JSON resource using Gson.
+     * Build an object from the specified JSON resource.
      *
      * @param type The type of the object to build.
-     * @return An object of type T, with member fields populated using Gson.
+     * @return An object of type T, with member fields populated.
      */
-    public <T> T constructUsingGson(Class<T> type) {
+    public <T> T constructFromJson(Class<T> type) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Type volumeType = new TypeToken<Quantity<Volume>>() {
         }.getType();

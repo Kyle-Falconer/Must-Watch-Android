@@ -32,7 +32,7 @@ import javax.measure.quantity.Volume
 class Converters {
 
     companion object {
-        val SEPARATOR = " "
+        const val SEPARATOR = " "
     }
 
     @TypeConverter

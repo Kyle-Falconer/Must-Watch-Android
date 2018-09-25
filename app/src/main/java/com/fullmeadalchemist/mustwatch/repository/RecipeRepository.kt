@@ -47,7 +47,7 @@ class RecipeRepository {
     //                        Timber.i("Populating the database with Recipe data");
     //
     //                        JSONResourceReader reader = new JSONResourceReader(context.getResources(), R.raw.recipes);
-    //                        Recipe[] jsonObj = reader.constructUsingGson(Recipe[].class);
+    //                        Recipe[] jsonObj = reader.constructFromJson(Recipe[].class);
     //                        for (Recipe r : jsonObj) {
     //                            r.publicReadable = true;
     //                        }

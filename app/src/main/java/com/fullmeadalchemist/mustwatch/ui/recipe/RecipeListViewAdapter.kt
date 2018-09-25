@@ -27,7 +27,9 @@ import com.fullmeadalchemist.mustwatch.vo.Recipe
 import timber.log.Timber
 import java.util.*
 
-class RecipeListViewAdapter(var dataSet: List<Recipe>? = arrayListOf(), private val recipeClickCallback: RecipeClickCallback?) : RecyclerView.Adapter<RecipeListViewAdapter.ViewHolder>() {
+class RecipeListViewAdapter(var dataSet: List<Recipe>? = arrayListOf(),
+                            private val recipeClickCallback: RecipeClickCallback?)
+    : RecyclerView.Adapter<RecipeListViewAdapter.ViewHolder>() {
 
     private val defaultLocale = Locale.getDefault()
 

@@ -33,10 +33,10 @@ class MustWatchPreferences {
         currentUserID = null
         val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
         if (pSharedPref != null) {
-            val stored_id = pSharedPref.getLong(CURRENT_USER_ID, java.lang.Long.MIN_VALUE)
-            if (stored_id != java.lang.Long.MIN_VALUE) {
-                Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id)
-                currentUserID = stored_id
+            val storedId = pSharedPref.getLong(CURRENT_USER_ID, java.lang.Long.MIN_VALUE)
+            if (storedId != java.lang.Long.MIN_VALUE) {
+                Timber.d("Got User ID %d from shared preferences as the current User ID.", storedId)
+                currentUserID = storedId
             } else {
                 Timber.d("Found no User ID in shared preferences.")
             }
@@ -60,7 +60,7 @@ class MustWatchPreferences {
     }
 
     companion object {
-        private val CURRENT_USER_ID = "CURRENT_USER_ID"
+        private const val CURRENT_USER_ID = "CURRENT_USER_ID"
     }
 
 }

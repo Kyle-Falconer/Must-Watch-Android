@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_batches"
+            android:id="@+id/batchListFragment"
             android:icon="@drawable/ic_batches_icon"
             android:title="@string/batches" />
 
@@ -14,7 +14,7 @@
             <!--android:icon="@drawable/ic_group_black_24dp"-->
             <!--android:title="Groups" />-->
         <item
-            android:id="@+id/nav_recipes"
+            android:id="@+id/recipeListFragment"
             android:icon="@drawable/ic_recipe_icon"
             android:title="@string/recipes" />
 
@@ -25,7 +25,7 @@
             <!--android:title="Settings" />-->
 
         <item
-            android:id="@+id/nav_about"
+            android:id="@+id/aboutFragment"
             android:icon="@drawable/ic_info_black_24dp"
             android:title="@string/about" />
     </group>

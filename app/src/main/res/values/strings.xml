@@ -157,5 +157,7 @@
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
     <string name="no_ingredient">-</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 
 </resources>
