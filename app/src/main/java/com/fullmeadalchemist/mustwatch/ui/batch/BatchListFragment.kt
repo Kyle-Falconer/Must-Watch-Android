@@ -17,8 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.batch
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.NonNull
 import android.support.design.widget.FloatingActionButton
@@ -34,6 +32,7 @@ import com.crashlytics.android.answers.CustomEvent
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.Batch
+import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -48,19 +47,19 @@ class BatchListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
         val rootView = inflater.inflate(R.layout.batch_list, container, false)
         rootView.tag = TAG
 
         mAdapter = BatchListViewAdapter(object : BatchListViewAdapter.BatchClickCallback {
             override fun onClick(repo: Batch) {
-                findNavController().navigate(R.id.batchDetailFragment)
-                // navigationController.navigateToBatchDetail(repo.id)
+                val bundle = Bundle()
+                bundle.putLong(BATCH_ID, repo.id)
+                findNavController().navigate(R.id.batchDetailFragment, bundle)
             }
         })
 
-        viewModel.getCurrentUser().observe(this, Observer {user ->
-            if (user != null){
+        viewModel.getCurrentUser().observe(this, Observer { user ->
+            if (user != null) {
                 viewModel.getBatchesForUser(user.uid).observe(this, Observer<List<Batch>> { batches ->
                     // update UI
                     mAdapter.dataSet = batches
@@ -76,30 +75,23 @@ class BatchListFragment : Fragment() {
         // https://code.google.com/p/android/issues/detail?id=230298
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
-                //FloatingActionButton floater = recyclerView.findViewById(R.id.batches_fab);
-                if (fab == null) {
-                    Timber.e("The FloatingActionButton is null!")
-                    return
-                }
-                if (dy > 0 && fab!!.isShown) {
-                    Timber.d("hiding FAB")
-                    fab!!.hide()
-                } else if (dy < 20 && !fab!!.isShown) {
-                    Timber.d("showing FAB")
-                    fab!!.show()
+                fab?.let {
+                    if (dy > 0 && it.isShown) {
+                        Timber.d("hiding FAB")
+                        it.hide()
+                    } else if (dy < 20 && !it.isShown) {
+                        Timber.d("showing FAB")
+                        it.show()
+                    }
                 }
             }
         })
 
-        if (fab != null) {
-            fab!!.setOnClickListener { v ->
-                Timber.d("Floating Action Button was clicked!")
-                Answers.getInstance().logCustom(CustomEvent("FAB Clicked"))
+        fab?.setOnClickListener { v ->
+            Timber.d("Floating Action Button was clicked!")
+            Answers.getInstance().logCustom(CustomEvent("FAB Clicked"))
 
-                findNavController().navigate(R.id.batchFormFragment)
-            }
-        } else {
-            Timber.e("FloatingActionButton at R.id.batches_fab is null!")
+            findNavController().navigate(R.id.batchFormFragment)
         }
 
         mRecyclerView.setHasFixedSize(true)

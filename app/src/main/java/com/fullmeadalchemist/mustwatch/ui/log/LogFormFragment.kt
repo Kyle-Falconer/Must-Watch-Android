@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
 import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleTime
@@ -39,6 +40,9 @@ import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.*
 import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.util.*
@@ -48,14 +52,12 @@ class LogFormFragment : Fragment() {
 
     val viewModel: MainViewModel by sharedViewModel()
 
-    private var batchId: Long? = null
-
     private val timePickerMessageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             Timber.d("Received TIME_SET_EVENT")
             val hourOfDay = intent.getIntExtra(HOUR, 0)
             val minute = intent.getIntExtra(TimePickerFragment.MINUTE, 0)
-            if (viewModel.logEntry == null){
+            if (viewModel.logEntry == null) {
                 viewModel.logEntry = LogEntry()
             }
             viewModel.updateLogEntryTime(hourOfDay, minute)
@@ -82,11 +84,11 @@ class LogFormFragment : Fragment() {
         val bundle = this.arguments
         val batchId = bundle!!.getLong(BATCH_ID, java.lang.Long.MIN_VALUE)
         if (batchId != java.lang.Long.MIN_VALUE) {
-            if (viewModel.logEntry == null){
+            if (viewModel.logEntry == null) {
                 viewModel.logEntry = LogEntry()
             }
             viewModel.logEntry?.batchId = batchId
-            this.batchId = batchId
+            viewModel.selectedBatchId = batchId
             Timber.i("Created LogEntry with Batch ID %d", batchId)
 
         } else {
@@ -134,15 +136,15 @@ class LogFormFragment : Fragment() {
         }
 
         val submitButton = activity!!.findViewById<Button>(R.id.button_submit)
-        submitButton?.setOnClickListener { _ ->
+        submitButton?.setOnClickListener { view ->
             Timber.i("Submit button clicked!")
             viewModel.logEntry?.let {
-                val phTv = activity!!.findViewById<TextView>(R.id.ph)
+                val phTv = view.findViewById<TextView>(R.id.ph)
                 if (phTv != null) {
                     it.acidity = toFloat(phTv.text.toString().trim { it <= ' ' })
                 }
 
-                val sgTv = activity!!.findViewById<TextView>(R.id.sg)
+                val sgTv = view.findViewById<TextView>(R.id.sg)
                 if (sgTv != null) {
                     it.sg = toFloat(sgTv.text.toString().trim { it <= ' ' })
                 }
@@ -154,7 +156,20 @@ class LogFormFragment : Fragment() {
 
                 viewModel.addLogEntry(it)
             }
-//            navigationController.navigateToBatchDetail(this.batchId)
+            if (viewModel.selectedBatchId == null) {
+                // TODO: add metric event
+                // TODO: add option for User to send error logs
+                Timber.e("could not get the batch ID that this log entry is for")
+                alert("Something went wrong when trying to save this log entry.") {
+                    yesButton { Timber.w("yes button clicked") }
+                    noButton { Timber.w("no button clicked") }
+                }.show()
+
+            } else {
+                val bundle = Bundle()
+                bundle.putLong(BATCH_ID, viewModel.selectedBatchId!!)
+                view.findNavController().navigate(R.id.batchDetailFragment, bundle)
+            }
         }
     }
 

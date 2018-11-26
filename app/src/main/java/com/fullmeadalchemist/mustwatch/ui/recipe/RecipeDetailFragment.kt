@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.navigation.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.calcAbvPct
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding
@@ -62,6 +63,7 @@ class RecipeDetailFragment : Fragment() {
         val bundle = this.arguments
         if (bundle != null) {
             val recipeId = bundle.getLong(RECIPE_ID, java.lang.Long.MIN_VALUE)
+            viewModel.selectedRecipeId = recipeId
             Timber.v("Got Recipe ID %d from the NavigationController.", recipeId)
 
             if (recipeId != java.lang.Long.MIN_VALUE) {
@@ -130,6 +132,9 @@ class RecipeDetailFragment : Fragment() {
         val submitButton = activity!!.findViewById<Button>(R.id.button_create_batch_from_recipe)
         submitButton?.setOnClickListener { v ->
             Timber.i("Create From Recipe button clicked")
+            val bundle = Bundle()
+            bundle.putLong(Recipe.RECIPE_ID, viewModel.selectedRecipeId!!)
+            v.findNavController().navigate(R.id.batchFormFragment, bundle)
             // navigationController.navigateToCreateFromBatch(viewModel.recipe?.id)
         }
     }

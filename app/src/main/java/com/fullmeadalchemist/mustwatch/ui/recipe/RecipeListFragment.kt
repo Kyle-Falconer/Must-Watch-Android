@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.User
@@ -47,6 +48,9 @@ class RecipeListFragment : Fragment() {
             override fun onClick(recipe: Recipe) {
                 Timber.e("Navigation to Recipe #${recipe.id} not yet implemented")
 //                navigationController.navigateToRecipeDetail(recipe.id)
+                val bundle = Bundle()
+                bundle.putLong(Recipe.RECIPE_ID, recipe.id)
+                rootView.findNavController().navigate(R.id.recipeDetailFragment, bundle)
             }
         })
 

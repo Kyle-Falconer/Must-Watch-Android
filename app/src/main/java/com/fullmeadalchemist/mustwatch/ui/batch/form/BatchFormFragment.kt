@@ -224,7 +224,7 @@ class BatchFormFragment : Fragment() {
                                 viewModel.batch.value?.userId = it.uid
                             }
                         })
-
+                        dataBinding.name.setText(recipe.name)
                         dataBinding.status.setText(viewModel.batch.value?.status.toString())
                         updateUiDateTime()
                         viewModel.getRecipeIngredients(recipeId).observe(this, Observer<List<BatchIngredient>> { recipeIngredients ->
@@ -346,7 +346,7 @@ class BatchFormFragment : Fragment() {
 
         val submitButton = activity!!.findViewById<Button>(R.id.button_submit)
         if (submitButton != null) {
-            submitButton.setOnClickListener { _ ->
+            submitButton.setOnClickListener { view ->
                 Timber.i("Submit button clicked!")
                 FORM_MODE = if (viewModel.batch.value?.id == null) MODES.CREATE else MODES.EDIT
 
@@ -374,29 +374,33 @@ class BatchFormFragment : Fragment() {
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(datePickerMessageReceiver)
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(timePickerMessageReceiver)
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(ingredientPickerMessageReceiver)
-                                Snackbar.make(activity!!.findViewById(R.id.container), "Saved batch!", Snackbar.LENGTH_LONG).show()
+                                Snackbar.make(view, "Saved batch!", Snackbar.LENGTH_LONG).show()
                                 Answers.getInstance().logCustom(CustomEvent("Batch create success"))
                                 Timber.e("Navigation to batch detail of batch #${savedBatchId} not yet supported")
-                                //navigationController.navigateFromAddBatch(savedBatchId)
+
+                                val bundle = Bundle()
+                                bundle.putLong(BATCH_ID, savedBatchId)
+                                view.findNavController().navigate(R.id.batchDetailFragment, bundle)
                             } else {
                                 Answers.getInstance().logCustom(CustomEvent("Batch create failed"))
-                                Snackbar.make(activity!!.findViewById(R.id.container), "Failed to save batch!", Snackbar.LENGTH_LONG).show()
+                                Snackbar.make(view, "Failed to save batch!", Snackbar.LENGTH_LONG).show()
                             }
                         })
                     } else {
                         Timber.d("We are in EDIT mode for batch #%s", batch.id)
                         Timber.d("Current batch state:\n%s", batch.toString())
-                        viewModel.updateBatch()
+                        viewModel.updateBatch(batch)
                         LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(datePickerMessageReceiver)
                         LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(timePickerMessageReceiver)
                         LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(ingredientPickerMessageReceiver)
-                        Snackbar.make(activity!!.findViewById(R.id.container), "Updated batch!", Snackbar.LENGTH_LONG).show()
+
+                        Snackbar.make(view, "Updated batch!", Snackbar.LENGTH_LONG).show()
                         Answers.getInstance().logCustom(CustomEvent("Batch edit success"))
 
-                        Timber.e("Navigation to batch detail of batch #${batch.id} not yet supported")
-//                    navigationController.navigateFromEditBatch(viewModel.batch.value?.id)
+                        val bundle = Bundle()
+                        bundle.putLong(BATCH_ID, batch.id)
+                        view.findNavController().navigate(R.id.batchDetailFragment, bundle)
                     }
-
                 }
 
             }

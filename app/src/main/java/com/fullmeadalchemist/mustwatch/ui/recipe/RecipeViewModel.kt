@@ -32,6 +32,7 @@ class RecipeViewModel(    private val recipeRepository: RecipeRepository,
                           private val userRepository: UserRepository) : ViewModel() {
 
     private val recipes: LiveData<List<Recipe>>? = null
+    var selectedRecipeId : Long? = null
     var recipe: Recipe? = null
 
     val currentUserId: LiveData<User>

@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.estimateBatchSG
@@ -47,8 +48,8 @@ import java.util.*
 
 class BatchDetailFragment : Fragment() {
 
-    protected lateinit var logsRecyclerView: RecyclerView
-    protected lateinit var logsAdapter: LogRecyclerViewAdapter
+    private lateinit var logsRecyclerView: RecyclerView
+    private lateinit var logsAdapter: LogRecyclerViewAdapter
 
 
     val viewModel: BatchDetailViewModel by sharedViewModel()
@@ -90,8 +91,6 @@ class BatchDetailFragment : Fragment() {
                     updateBatchUiInfo()
                     updateIngredientUiInfo()
                 } else {
-
-
                     viewModel.getBatch(batchId).observe(this, Observer<Batch> { batch ->
                         if (batch != null) {
                             binding.batch = batch
@@ -123,7 +122,6 @@ class BatchDetailFragment : Fragment() {
             }
         } else {
             Timber.i("No Batch ID was received. Redirecting to the Batch Creation form.")
-            //navigationController.navigateToAddBatch()
             findNavController().navigate(R.id.batchFormFragment)
         }
 
@@ -138,38 +136,38 @@ class BatchDetailFragment : Fragment() {
     }
 
     private fun updateBatchUiInfo() {
-        viewModel.batch?.let {
-            binding.createDateDate.text = calendarToLocaleDate(it.createDate)
-            binding.createDateTime.text = calendarToLocaleTime(it.createDate)
+        viewModel.batch?.let {batch->
+            binding.createDateDate.text = calendarToLocaleDate(batch.createDate)
+            binding.createDateTime.text = calendarToLocaleTime(batch.createDate)
 
-            if (it.outputVolume != null) {
-                val volumeAmount = it.outputVolume!!.value as Double
+            if (batch.outputVolume != null) {
+                val volumeAmount = batch.outputVolume!!.value as Double
                 val f = DecimalFormat("#.##")
                 binding.outputVolumeAmount.text = f.format(volumeAmount)
-                val unitString = resources.getString(unitToStringResource(it.outputVolume!!.unit))
+                val unitString = resources.getString(unitToStringResource(batch.outputVolume!!.unit))
                 binding.outputVolumeAmountUnit.text = unitString
             }
 
-            it.targetABV?.let {
-                val abv_pct = it * 100
+            batch.targetABV?.let {
+                val abvPercent = it * 100
                 val f = DecimalFormat("0.##")
-                binding.targetABV.setText(String.format(defaultLocale, "%s%%", f.format(abv_pct.toDouble())))
+                binding.targetABV.text = String.format(defaultLocale, "%s%%", f.format(abvPercent.toDouble()))
             }
 
-            it.status?.let {
-                binding.status.text = it.toString()
+            batch.status?.let { status ->
+                binding.status.text = status.toString()
             }
 
-            if (it.targetSgStarting != null) {
-                val sgStartingValue = estimateBatchSG(it)
+            if (batch.targetSgStarting != null) {
+                val sgStartingValue = estimateBatchSG(batch)
                 if (sgStartingValue != null) {
                     val f = DecimalFormat("#.###")
                     binding.targetSgStarting.text = f.format(sgStartingValue)
                 }
             }
 
-            if (it.targetSgFinal != null) {
-                val sgFinalValue = it.targetSgFinal
+            if (batch.targetSgFinal != null) {
+                val sgFinalValue = batch.targetSgFinal
                 val f = DecimalFormat("#.###")
                 binding.targetSgFinal.text = f.format(sgFinalValue)
             }
@@ -192,7 +190,7 @@ class BatchDetailFragment : Fragment() {
 
     private fun initClickListeners() {
         val submitButton = activity!!.findViewById<Button>(R.id.button_edit_batch)
-        submitButton?.setOnClickListener { _ ->
+        submitButton?.setOnClickListener {view ->
             var batchIdToEdit = 0L
             viewModel.batch?.let {
                 batchIdToEdit = it.id
@@ -201,11 +199,10 @@ class BatchDetailFragment : Fragment() {
 
             val bundle = Bundle()
             bundle.putLong("batch_id", batchIdToEdit)
-            findNavController().navigate(R.id.batchFormFragment, bundle)
-//            navigationController.navigateToEditBatch(batchIdToEdit)
+            view.findNavController().navigate(R.id.batchFormFragment, bundle)
         }
         val addLogButton = activity!!.findViewById<Button>(R.id.button_add_log_entry)
-        addLogButton?.setOnClickListener { _ ->
+        addLogButton?.setOnClickListener {view ->
             var batchIdToEdit = 0L
             viewModel.batch?.let {
                 batchIdToEdit = it.id
@@ -214,9 +211,8 @@ class BatchDetailFragment : Fragment() {
 
             //val nagArgs = BatchDetailFragmentDirections.action_batchDetailFragment_to_batchFormFragment()
             val bundle = Bundle()
-            bundle.putLong("batch_id", batchIdToEdit)
-            findNavController().navigate(R.id.logFormFragment, bundle)
-//            navigationController.navigateToAddLog(batchIdToEdit)
+            bundle.putLong(BATCH_ID, batchIdToEdit)
+            view.findNavController().navigate(R.id.logFormFragment, bundle)
         }
     }
 }

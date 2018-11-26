@@ -16,17 +16,36 @@
 
 package com.fullmeadalchemist.mustwatch.ui.meta
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
+import org.jetbrains.anko.sdk15.coroutines.onClick
+import timber.log.Timber
 
 class AboutFragment : Fragment() {
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.about_fragment, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val gitHubView : View? = activity?.findViewById(R.id.github_ref)
+        val githubProjectLink = resources.getString(R.string.github_url)
+        if (gitHubView == null){
+            Timber.e("Couldn't find the GitHub view")
+        }
+        gitHubView?.onClick {
+            Timber.d("opening the link to the GitHub project page")
+            val browserIntent =  Intent(Intent.ACTION_VIEW, Uri.parse(githubProjectLink))
+            startActivity(browserIntent)
+        }
     }
 }

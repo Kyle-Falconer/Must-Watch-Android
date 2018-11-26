@@ -23,6 +23,8 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     var logEntry: LogEntry? = null
+    var selectedBatchId : Long? = null
+    var batch : Batch? = null
 
     val isFirstLaunch: LiveData<Boolean>
         get() = preferences.isFirstLaunch()

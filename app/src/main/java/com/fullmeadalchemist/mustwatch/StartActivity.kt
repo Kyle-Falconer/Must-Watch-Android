@@ -147,10 +147,10 @@ class StartActivity : AppCompatActivity() {
                     }
                 })
 
-                var haveAddedBatches = false
+                //var haveAddedBatches = false
                 batchRepository.getBatches(user).observe(this@StartActivity, Observer<List<Batch>> { batches ->
-                    if (batches != null && batches.isEmpty() && !haveAddedBatches) {
-                        haveAddedBatches = true
+                    if (batches != null && batches.isEmpty()) {//&& !haveAddedBatches) {
+                        //haveAddedBatches = true
                         Timber.d("Got user with no batches; generating batches...")
                         val dummyBatches = DemoGenerators.generateDummyBatchesWithData(user.uid, 5)
                         batchRepository.addBatches(dummyBatches)

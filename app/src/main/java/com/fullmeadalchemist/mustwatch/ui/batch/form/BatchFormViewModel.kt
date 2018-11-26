@@ -71,11 +71,11 @@ class BatchFormViewModel(
         }
     }
 
-    fun updateBatch() {
-        if (batch.value!!.ingredients == null) {
-            batch.value!!.ingredients = ArrayList()
+    fun updateBatch(batch: Batch) {
+        if (batch.ingredients == null) {
+            batch.ingredients = ArrayList()
         }
-        //        batchRepository.updateBatch(batch);
+        batchRepository.updateBatch(batch)
     }
 
     fun saveNewBatch(batch: Batch): LiveData<Long> {

@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/batchFormFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.batch.form.BatchFormFragment"
-        android:label="BatchFormFragment"
+        android:label="@string/BatchFormFragmentTitle"
         tools:layout="@layout/batch_form_fragment">
         <action
             android:id="@+id/action_batchFormFragment_to_timePickerFragment"
@@ -43,11 +43,11 @@
     <fragment
         android:id="@+id/logListFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.log.LogListFragment"
-        android:label="LogListFragment" />
+        android:label="@string/LogListFragmentTitle" />
     <fragment
         android:id="@+id/recipeListFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.recipe.RecipeListFragment"
-        android:label="RecipeListFragment"
+        android:label="@string/RecipeListFragmentTitle"
         tools:layout="@layout/recipe_list" >
         <action
             android:id="@+id/action_recipeListFragment_to_recipeDetailFragment"
@@ -56,25 +56,25 @@
     <fragment
         android:id="@+id/addIngredientDialog"
         android:name="com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog"
-        android:label="AddIngredientDialog"
+        android:label="@string/AddIngredientDialogTitle"
         tools:layout="@layout/ingredient_dialog" />
     <fragment
         android:id="@+id/timePickerFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment"
-        android:label="TimePickerFragment" />
+        android:label="@string/TimePickerFragmentTitle" />
     <fragment
         android:id="@+id/datePickerFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment"
-        android:label="DatePickerFragment" />
+        android:label="@string/DatePickerFragmentTitle" />
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.meta.AboutFragment"
-        android:label="about_fragment"
+        android:label="@string/AboutFragmentTitle"
         tools:layout="@layout/about_fragment" />
     <fragment
         android:id="@+id/batchListFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.batch.BatchListFragment"
-        android:label="BatchListFragment"
+        android:label="@string/BatchListFragmentTitle"
         tools:layout="@layout/batch_list" >
         <action
             android:id="@+id/action_batchListFragment_to_userProfileFragment"
@@ -95,7 +95,7 @@
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.recipe.RecipeDetailFragment"
-        android:label="RecipeDetailFragment"
+        android:label="@string/RecipeDetailFragmentTitle"
         tools:layout="@layout/recipe_detail_fragment" >
         <action
             android:id="@+id/action_recipeDetailFragment_to_batchFormFragment"
@@ -104,12 +104,11 @@
     <fragment
         android:id="@+id/batchDetailFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailFragment"
-        android:label="BatchDetailFragment">
+        android:label="@string/BatchDetailFragmentTitle">
         <action
             android:id="@+id/action_batchDetailFragment_to_batchFormFragment"
             app:destination="@id/batchFormFragment" />
-        <argument
-            android:name="batch_id"/>
+        <argument android:name="batch_id" />
         <action
             android:id="@+id/action_batchDetailFragment_to_logFormFragment"
             app:destination="@id/logFormFragment" />
@@ -120,7 +119,7 @@
     <fragment
         android:id="@+id/logFormFragment"
         android:name="com.fullmeadalchemist.mustwatch.ui.log.LogFormFragment"
-        android:label="LogFormFragment" >
+        android:label="@string/LogFormFragmentTitle" >
         <argument
             android:name="batch_id" />
     </fragment>

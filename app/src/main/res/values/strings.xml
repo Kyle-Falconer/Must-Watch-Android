@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Full Mead Alchemist</string>
-    <string name="copyright">© 2017 Full Mead Alchemist, LLC.</string>
+    <string name="copyright">© 2017–2018 Full Mead Alchemist, LLC.</string>
     <string name="save_batch">Save Batch</string>
     <string name="add_log_entry">Add Log Entry</string>
     <string name="edit_batch_title">Editing Batch #%d</string>
@@ -157,7 +157,23 @@
     ================================================================= -->
     <string name="CAMPDEN">Campden</string>
     <string name="no_ingredient">-</string>
+
+
     <string name="open">open</string>
     <string name="close">close</string>
+
+    <string name="BatchFormFragmentTitle">Batch Edit</string>
+    <string name="LogListFragmentTitle">Logs</string>
+    <string name="RecipeListFragmentTitle">Recipes</string>
+    <string name="AddIngredientDialogTitle">Add  or Edit Ingredient</string>
+    <string name="TimePickerFragmentTitle">Time</string>
+    <string name="DatePickerFragmentTitle">Date</string>
+    <string name="AboutFragmentTitle">About</string>
+    <string name="BatchListFragmentTitle">Batches</string>
+    <string name="RecipeDetailFragmentTitle">Recipe Details</string>
+    <string name="BatchDetailFragmentTitle">Batch Details</string>
+    <string name="LogFormFragmentTitle">Log Edit</string>
+    <string name="github">GitHub</string>
+    <string name="github_project_description">This project\'s source code is available on GitHub.\n\nPlease report any issues you experience or feature requests in the Issues section on the project page.</string>
 
 </resources>
