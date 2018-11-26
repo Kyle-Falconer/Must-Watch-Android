@@ -165,4 +165,17 @@ class Converters {
     fun toIngredientTypeString(typeEnum: Ingredient.IngredientType?): String? {
         return typeEnum?.toString()
     }
+
+    @TypeConverter
+    fun fromUUID(uuid: UUID?) :String? {
+        return uuid?.toString()
+    }
+
+    @TypeConverter
+    fun toUUID(uuid: String?) :UUID? {
+        if (TextUtils.isEmpty(uuid)){
+            return null
+        }
+        return UUID.fromString(uuid)
+    }
 }

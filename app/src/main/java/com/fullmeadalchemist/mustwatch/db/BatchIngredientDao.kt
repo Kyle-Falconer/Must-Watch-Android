@@ -29,7 +29,6 @@ interface BatchIngredientDao {
     @Query("SELECT * FROM batch_ingredient " + "WHERE batch_id = :batch_id")
     fun getIngredientsForBatch(batch_id: Long): LiveData<List<BatchIngredient>>
 
-
     @Query("SELECT * FROM batch_ingredient " + "WHERE recipe_id = :recipe_id")
     fun getIngredientsForRecipe(recipe_id: Long): LiveData<List<BatchIngredient>>
 

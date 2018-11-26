@@ -23,17 +23,22 @@ import android.arch.persistence.room.Index
 import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 
 @Entity(tableName = "group_membership",
         primaryKeys = ["group_id", "user_id"],
-        indices = arrayOf(Index(value = ["user_id"])),
+        indices = [Index(value = ["user_id"])],
         foreignKeys = [
-            ForeignKey(entity = Group::class, parentColumns = ["id"], childColumns = ["group_id"]),
-            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"])
+            ForeignKey(entity = Group::class,
+                    parentColumns = ["id"],
+                    childColumns = ["group_id"]),
+            ForeignKey(entity = User::class,
+                    parentColumns = ["uid"],
+                    childColumns = ["user_id"])
         ])
 data class GroupMembership(@Expose @NonNull @SerializedName("group_id") @ColumnInfo(name = "group_id") var id: Long = 0,
-                           @Expose @NonNull @SerializedName("user_id") @ColumnInfo(name = "user_id") var userId: Long = 0,
+                           @Expose @NonNull @SerializedName("user_id") @ColumnInfo(name = "user_id") var userId: UUID,
                            @ColumnInfo(name = "access_read") var accessRead: Boolean = false,
                            @ColumnInfo(name = "access_admin") var accessAdmin: Boolean = false) {
 }

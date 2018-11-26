@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="com.fullmeadalchemist.mustwatch.ui.batch.BatchViewModel" />
+            type="com.fullmeadalchemist.mustwatch.ui.common.MainViewModel" />
     </data>
 
     <ScrollView
@@ -120,7 +120,8 @@
                     android:contentDescription="Add Yeast"
                     android:text="Add Yeast"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/add_sugar_button"
+                    android:layout_marginLeft="8dp" />
 
                 <Button
                     android:id="@+id/add_nutrient_button"

@@ -35,8 +35,8 @@ interface GroupDao {
     @Query("SELECT * FROM groups WHERE name LIKE :name LIMIT 1")
     fun findByName(name: String): LiveData<Group>
 
-    @Query("SELECT id, name, email FROM user "
-            + "INNER JOIN group_membership on group_membership.user_id = user.id "
+    @Query("SELECT uid, name, email FROM user "
+            + "INNER JOIN group_membership on group_membership.user_id = user.uid "
             + "WHERE group_membership.group_id = :groupId")
     fun loadAllMembersInGroup(groupId: Long?): LiveData<List<User>>
 

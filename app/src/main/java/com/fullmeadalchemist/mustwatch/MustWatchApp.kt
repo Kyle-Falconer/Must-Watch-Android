@@ -16,69 +16,39 @@
 
 package com.fullmeadalchemist.mustwatch
 
-
-import android.app.Activity
 import android.support.multidex.MultiDexApplication
-import android.support.v4.app.Fragment
 import com.crashlytics.android.Crashlytics
-import com.facebook.stetho.Stetho
-import com.fullmeadalchemist.mustwatch.di.AppModule
-import com.fullmeadalchemist.mustwatch.di.ApplicationComponent
-import com.fullmeadalchemist.mustwatch.di.DaggerApplicationComponent
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.support.HasSupportFragmentInjector
-import io.fabric.sdk.android.Fabric
-import timber.log.Timber
-import javax.inject.Inject
 import com.crashlytics.android.core.CrashlyticsCore
+import com.facebook.stetho.Stetho
+import com.fullmeadalchemist.mustwatch.BuildConfig.DEBUG
+import com.fullmeadalchemist.mustwatch.core.appModule
+import com.jakewharton.threetenabp.AndroidThreeTen
+import io.fabric.sdk.android.Fabric
+import org.koin.android.ext.android.startKoin
+import timber.log.Timber
 
 
-
-
-class MustWatchApp : MultiDexApplication(), HasActivityInjector, HasSupportFragmentInjector {
-
-    @Inject
-    lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
-
-    @Inject
-    lateinit var dispatchingAndroidFragmentInjector: DispatchingAndroidInjector<Fragment>
-
-    val component: ApplicationComponent by lazy {
-        DaggerApplicationComponent
-                .builder()
-                .application(this)
-                .appModule(AppModule())
-                .build()
-    }
+class MustWatchApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
+        if (DEBUG) {
             Stetho.initializeWithDefaults(this)
             Timber.plant(Timber.DebugTree())
         }
         initFabric()
-        component.inject(this)
+        startKoin(this, listOf(appModule))
+        AndroidThreeTen.init(this)
     }
 
-    private fun initFabric(){
+    private fun initFabric() {
         val crashlyticsKit = Crashlytics.Builder()
                 .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build()
 
         // Initialize Fabric with the debug-disabled crashlytics.
         Fabric.with(this, crashlyticsKit)
-    }
-
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return dispatchingAndroidActivityInjector
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingAndroidFragmentInjector
     }
 
     companion object {

@@ -20,20 +20,11 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import android.support.annotation.NonNull
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import java.util.*
 
 
-@Entity(indices = arrayOf(Index(value = ["email"], unique = true)))
-data class User(@field:ColumnInfo(name = "name") var name: String?,
-                @field:ColumnInfo(name = "email") var email: String?) {
-
-    @Expose
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    @SerializedName("id")
-    @ColumnInfo(name = "id")
-    var id: Long = 0
-
-}
+@Entity(indices = [Index(value = ["email"], unique = true)])
+data class User(
+        @PrimaryKey @field:ColumnInfo(name = "uid") var uid: UUID = UUID.randomUUID(),
+        @field:ColumnInfo(name = "name") var name: String?,
+        @field:ColumnInfo(name = "email") var email: String?)

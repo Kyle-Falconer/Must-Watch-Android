@@ -20,7 +20,7 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import android.content.Context
+import com.fullmeadalchemist.mustwatch.db.AppDatabase.Companion.DATABASE_NAME
 import com.fullmeadalchemist.mustwatch.vo.*
 
 @Database(version = 1,
@@ -55,19 +55,19 @@ abstract class AppDatabase : RoomDatabase() {
 
         const val DATABASE_NAME = "mustwatch-db"
 
-        // Singleton instance of the AppDatabase
-        // see https://stackoverflow.com/a/45943282/940217
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-                }
-
-        private fun buildDatabase(context: Context) =
-                Room.databaseBuilder(context.applicationContext,
-                        AppDatabase::class.java, AppDatabase.DATABASE_NAME)
-                        .build()
+//        // Singleton instance of the AppDatabase
+//        // see https://stackoverflow.com/a/45943282/940217
+//        @Volatile
+//        private var INSTANCE: AppDatabase? = null
+//
+//        fun getInstance(context: Context): AppDatabase =
+//                INSTANCE ?: synchronized(this) {
+//                    INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+//                }
+//
+//        private fun buildDatabase(context: Context) =
+//                Room.databaseBuilder(context.applicationContext,
+//                        AppDatabase::class.java, AppDatabase.DATABASE_NAME)
+//                        .build()
     }
 }

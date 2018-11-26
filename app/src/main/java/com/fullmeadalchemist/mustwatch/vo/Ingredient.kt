@@ -24,7 +24,7 @@ import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-@Entity(indices = arrayOf(Index(value = ["id"], unique = true)))
+@Entity(indices = [Index(value = ["id"], unique = true)])
 data class Ingredient(@Expose @SerializedName("type") @ColumnInfo(name = "type") var type: IngredientType? = null,
                       @Expose @SerializedName("combined_sugars_total_pct") @ColumnInfo(name = "combined_sugars_total_pct") var totalPct: Float? = null,
                       @Expose @SerializedName("density__kg_per_m3") @ColumnInfo(name = "density__kg_per_m3") var density: Float? = null,

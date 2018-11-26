@@ -25,11 +25,11 @@ import java.util.*
 
 
 @Entity(tableName = "log_entry",
-        indices = arrayOf(Index(value = ["batch_id"])),
-        foreignKeys = arrayOf(ForeignKey(entity = Batch::class, parentColumns = arrayOf("id"), childColumns = arrayOf("batch_id"))))
+        indices = [Index(value = ["batch_id"])],
+        foreignKeys = [ForeignKey(entity = Batch::class, parentColumns = arrayOf("id"), childColumns = arrayOf("batch_id"))])
 @TypeConverters(Converters::class)
 data class LogEntry(@ColumnInfo(name = "batch_id") var batchId: Long = 0,
-                    @ColumnInfo(name = "entry_date") var entryDate: Calendar? = null,
+                    @ColumnInfo(name = "entry_date") var entryDate: Calendar = Calendar.getInstance(),
                     @ColumnInfo(name = "sg") var sg: Float? = null,
                     @ColumnInfo(name = "acidity") var acidity: Float? = null,
                     @ColumnInfo(name = "note") var note: String? = null) {

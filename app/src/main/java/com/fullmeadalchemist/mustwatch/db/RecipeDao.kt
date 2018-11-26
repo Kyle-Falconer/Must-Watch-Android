@@ -20,6 +20,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
+import java.util.*
 
 @Dao
 interface RecipeDao {
@@ -31,10 +32,10 @@ interface RecipeDao {
     operator fun get(recipe_id: Long?): LiveData<Recipe>
 
     @Query("SELECT * FROM recipe WHERE creator_user_id = :user_id")
-    fun getRecipesForCreator(user_id: Long): LiveData<List<Recipe>>
+    fun getRecipesForCreator(user_id: UUID): LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipe WHERE owner_user_id = :user_id")
-    fun getRecipesForOwner(user_id: Long): LiveData<List<Recipe>>
+    fun getRecipesForOwner(user_id: UUID): LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipe WHERE owner_group_id = :group_id")
     fun getRecipesForGroup(group_id: Long): LiveData<List<Recipe>>
@@ -44,7 +45,7 @@ interface RecipeDao {
 
     // FIXME: pull from groups this user has read+ access to as well
     @Query("SELECT * FROM recipe WHERE creator_user_id = :user_id OR owner_user_id = :user_id OR public_readable=1")
-    fun getRecipesForUser(user_id: Long): LiveData<List<Recipe>>
+    fun getRecipesForUser(user_id: UUID): LiveData<List<Recipe>>
 
     @Insert
     fun insert(recipe: Recipe): Long

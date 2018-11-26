@@ -23,6 +23,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 
 import com.fullmeadalchemist.mustwatch.vo.User
+import java.util.*
 
 @Dao
 interface UserDao {
@@ -30,17 +31,20 @@ interface UserDao {
     @get:Query("SELECT * FROM user")
     val all: List<User>
 
-    @Query("SELECT * FROM user WHERE id = :userId LIMIT 1")
-    fun load(userId: Long): LiveData<User>
+    @Query("SELECT * FROM user WHERE uid = :userId LIMIT 1")
+    fun load(userId: UUID): LiveData<User>
 
-    @Query("SELECT * FROM user WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
+    @Query("SELECT * FROM user WHERE uid = :userId LIMIT 1")
+    fun loadById(userId: UUID): User
+
+    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
+    fun loadAllByIds(userIds: Array<UUID>): List<User>
 
     @Query("SELECT * FROM user WHERE email LIKE :email LIMIT 1")
     fun findByEmail(email: String): LiveData<User>
 
     @Insert
-    fun insert(user: User): Long?
+    fun insert(user: User): Long
 
     @Insert
     fun insertAll(vararg users: User)

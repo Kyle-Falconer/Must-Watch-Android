@@ -20,6 +20,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
+import java.util.*
 
 
 @Dao
@@ -28,19 +29,19 @@ interface BatchDao {
     val all: LiveData<List<Batch>>
 
     @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    fun getAll(user_id: Long): LiveData<List<Batch>>
+    fun getAll(user_id: UUID): LiveData<List<Batch>>
 
     @Query("SELECT * FROM batch WHERE id = :batch_id LIMIT 1")
     operator fun get(batch_id: Long?): LiveData<Batch>
 
     @Query("SELECT * FROM batch WHERE user_id = :user_id")
-    fun loadBatchesForUser(user_id: Long): LiveData<List<Batch>>
+    fun loadBatchesForUser(user_id: UUID): LiveData<List<Batch>>
 
     @Query("SELECT * FROM batch_ingredient WHERE batch_id=:batch_id")
     fun getIngredientsForBatch(batch_id: Long): LiveData<List<BatchIngredient>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsertBatchIngredients(batchIngredients: List<BatchIngredient>): LongArray
+    fun upsertBatchIngredients(batchIngredients: List<BatchIngredient>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(batch: Batch): Long

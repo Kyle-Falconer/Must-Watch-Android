@@ -18,6 +18,7 @@ package com.fullmeadalchemist.mustwatch.repository
 
 
 import android.arch.lifecycle.LiveData
+import com.fullmeadalchemist.mustwatch.db.AppDatabase
 import com.fullmeadalchemist.mustwatch.db.LogEntryDao
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
 import io.reactivex.Observable
@@ -27,21 +28,23 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class LogEntryRepository {
+interface LogEntryRepository {
+    fun addLogEntry(logEntry: LogEntry)
 
-    @Inject
-    lateinit var logEntryDao: LogEntryDao
+    fun getLogEntries(batchId: Long?): LiveData<List<LogEntry>>
+}
 
-    fun addLogEntry(logEntry: LogEntry) {
+class LogEntryRepositoryImpl(private val database: AppDatabase) : LogEntryRepository {
+
+    override fun addLogEntry(logEntry: LogEntry) {
         Timber.d("Adding LogEntry to db: %s", logEntry.toString())
-        Observable.fromCallable<Any> { logEntryDao.insert(logEntry) }
+        Observable.fromCallable<Any> { database.logEntryDao().insert(logEntry) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
     }
 
-    fun getLogEntries(batchId: Long?): LiveData<List<LogEntry>> {
-        return logEntryDao.loadAllByBatchIds(batchId)
+    override fun getLogEntries(batchId: Long?): LiveData<List<LogEntry>> {
+        return database.logEntryDao().loadAllByBatchIds(batchId)
     }
 }

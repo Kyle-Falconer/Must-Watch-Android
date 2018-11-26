@@ -20,42 +20,33 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.fullmeadalchemist.mustwatch.repository.*
-import com.fullmeadalchemist.mustwatch.vo.Batch
-import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
-import com.fullmeadalchemist.mustwatch.vo.Ingredient
-import com.fullmeadalchemist.mustwatch.vo.Recipe
-import javax.inject.Inject
+import com.fullmeadalchemist.mustwatch.vo.*
+import java.util.*
 
-
-class BatchFormViewModel : ViewModel() {
-
-    @Inject
-    lateinit var batchRepository: BatchRepository
-    @Inject
-    lateinit var batchIngredientRepository: BatchIngredientRepository
-    @Inject
-    lateinit var recipeRepository: RecipeRepository
-    @Inject
-    lateinit var ingredientRepository: IngredientRepository
-    @Inject
-    lateinit var userRepository: UserRepository
+class BatchFormViewModel(
+        private val batchRepository: BatchRepository,
+        private val batchIngredientRepository: BatchIngredientRepository,
+        private val recipeRepository: RecipeRepository,
+        private val ingredientRepository: IngredientRepository,
+        private val userRepository: UserRepository
+) : ViewModel() {
 
     var batch = MutableLiveData<Batch>()
 
-    val currentUserId: LiveData<Long>
-        get() = userRepository.currentUserId
+    val currentUserId: LiveData<User>
+        get() = userRepository.getCurrentUser()
 
     val sugars: LiveData<List<Ingredient>>
-        get() = ingredientRepository.sugarEntries
+        get() = ingredientRepository.getSugars()
 
     val nutrients: LiveData<List<Ingredient>>
-        get() = ingredientRepository.nutrientEntries
+        get() = ingredientRepository.getNutrients()
 
     val yeasts: LiveData<List<Ingredient>>
-        get() = ingredientRepository.yeastEntries
+        get() = ingredientRepository.getYeasts()
 
     val stabilizers: LiveData<List<Ingredient>>
-        get() = ingredientRepository.stabilizerEntries
+        get() = ingredientRepository.getStabilizers()
 
     fun getBatch(id: Long?): LiveData<Batch> {
         return batchRepository.getBatch(id)
@@ -63,7 +54,7 @@ class BatchFormViewModel : ViewModel() {
 
     fun addBatch(batch: Batch) {
         if (batch.ingredients == null) {
-            batch.ingredients = ArrayList()
+            batch.ingredients = arrayListOf()
         }
         batchRepository.addBatch(batch)
     }
@@ -103,9 +94,9 @@ class BatchFormViewModel : ViewModel() {
         return batchRepository.getBatchIngredients(batchId)
     }
 
-    fun getRecipes(userId: Long?): LiveData<List<Recipe>> {
+    fun getRecipes(userId: UUID?): LiveData<List<Recipe>> {
         return if (userId == null) {
-            recipeRepository.publicRecipes
+            recipeRepository.getPublicRecipes()
         } else {
             recipeRepository.getRecipes(userId)
         }

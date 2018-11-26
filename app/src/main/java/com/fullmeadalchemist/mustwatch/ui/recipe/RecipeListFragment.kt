@@ -18,7 +18,6 @@ package com.fullmeadalchemist.mustwatch.ui.recipe
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,19 +27,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.vo.Recipe
-import dagger.android.support.AndroidSupportInjection
+import com.fullmeadalchemist.mustwatch.vo.User
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class RecipeListFragment : Fragment() {
     protected var mRecyclerView: RecyclerView? = null
     lateinit var mAdapter: RecipeListViewAdapter
 
-    private var viewModel: RecipeViewModel? = null
+    val viewModel: RecipeViewModel by sharedViewModel()
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,13 +50,14 @@ class RecipeListFragment : Fragment() {
             }
         })
 
-        viewModel = ViewModelProviders.of(activity!!).get(RecipeViewModel::class.java)
-        viewModel!!.currentUserId.observe(this, Observer<Long> { userId ->
-            viewModel!!.getRecipes(userId).observe(this, Observer<List<Recipe>> { recipes ->
-                // update UI
-                mAdapter.dataSet = recipes
-                mAdapter.notifyDataSetChanged()
-            })
+        viewModel.currentUserId.observe(this, Observer<User> { user ->
+            user?.uid?.let { userId ->
+                viewModel.getRecipes(userId).observe(this, Observer<List<Recipe>> { recipes ->
+                    // update UI
+                    mAdapter.dataSet = recipes
+                    mAdapter.notifyDataSetChanged()
+                })
+            }
         })
 
         mRecyclerView = rootView.findViewById(R.id.recipe_list)

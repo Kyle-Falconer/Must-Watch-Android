@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.fullmeadalchemist.mustwatch.ui.recipe.detail
+package com.fullmeadalchemist.mustwatch.ui.recipe
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -33,6 +32,7 @@ import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.Recipe.Companion.RECIPE_ID
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
@@ -41,15 +41,15 @@ import java.util.*
 class RecipeDetailFragment : Fragment() {
 
     lateinit var dataBinding: RecipeDetailFragmentBinding
-    lateinit var viewModel: RecipeDetailViewModel
     private val defaultLocale = Locale.getDefault()
+
+    val viewModel: RecipeViewModel by sharedViewModel()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.recipe_detail_fragment,
                 container, false)
-
-        viewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel::class.java)
         return dataBinding.root
     }
 

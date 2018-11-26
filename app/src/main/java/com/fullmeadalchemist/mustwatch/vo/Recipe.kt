@@ -20,19 +20,29 @@ import android.arch.persistence.room.*
 import android.support.annotation.NonNull
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.util.*
 import javax.measure.Quantity
 import javax.measure.quantity.Volume
 
 @Entity(tableName = "recipe",
-        indices = [Index(value = ["creator_user_id"]), Index(value = ["owner_user_id"]), Index(value = ["owner_group_id"])],
+        indices = [
+            Index(value = ["creator_user_id"]),
+            Index(value = ["owner_user_id"]),
+            Index(value = ["owner_group_id"])],
         foreignKeys = [
-            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["creator_user_id"]),
-            ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["owner_user_id"]),
-            ForeignKey(entity = Group::class, parentColumns = ["id"], childColumns = ["owner_group_id"])
+            ForeignKey(entity = User::class,
+                    parentColumns = ["uid"],
+                    childColumns = ["creator_user_id"]),
+            ForeignKey(entity = User::class,
+                    parentColumns = ["uid"],
+                    childColumns = ["owner_user_id"]),
+            ForeignKey(entity = Group::class,
+                    parentColumns = ["id"],
+                    childColumns = ["owner_group_id"])
         ])
 data class Recipe(@Expose @ColumnInfo(name = "name") var name: String? = null,
-                  @Expose @SerializedName("creator_user_id") @ColumnInfo(name = "creator_user_id") var creatorUserId: Long? = null,
-                  @Expose @SerializedName("owner_user_id") @ColumnInfo(name = "owner_user_id") var ownerUserId: Long? = null,
+                  @Expose @SerializedName("creator_user_id") @ColumnInfo(name = "creator_user_id") var creatorUserId: UUID? = null,
+                  @Expose @SerializedName("owner_user_id") @ColumnInfo(name = "owner_user_id") var ownerUserId: UUID? = null,
                   @Expose @SerializedName("owner_group_id") @ColumnInfo(name = "owner_group_id") var ownerGroupId: Long? = null,
                   @Expose @SerializedName("public_readable") @ColumnInfo(name = "public_readable") var publicReadable: Boolean = false,
                   @Expose @SerializedName("output_volume") @ColumnInfo(name = "output_volume") var outputVol: Quantity<Volume>? = null,

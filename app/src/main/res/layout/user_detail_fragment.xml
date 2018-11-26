@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="user"
             type="com.fullmeadalchemist.mustwatch.vo.User" />
@@ -19,6 +21,12 @@
             android:text="@string/user_profile_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:text="User Details" />
+
+        <TextView
+            android:id="@+id/uuidTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="d7d99249-17ee-4966-8eef-4c56081f1cc6" />
 
         <TextView
             android:id="@+id/nameTextView"

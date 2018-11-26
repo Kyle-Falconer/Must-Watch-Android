@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleDate
-import com.fullmeadalchemist.mustwatch.ui.common.NavigationController
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
 import timber.log.Timber
 import java.util.*
@@ -37,8 +36,7 @@ class LogRecyclerViewAdapter
  */
 (private val logEntryClickCallback: LogEntryClickCallback?, dataSet: List<LogEntry> = arrayListOf()) : RecyclerView.Adapter<LogRecyclerViewAdapter.ViewHolder>() {
     var dataSet: List<LogEntry>? = null
-    @Inject
-    lateinit var navigationController: NavigationController
+
     private val defaultLocale = Locale.getDefault()
 
 

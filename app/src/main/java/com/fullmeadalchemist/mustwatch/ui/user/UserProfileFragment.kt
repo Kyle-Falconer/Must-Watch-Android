@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.user
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -26,13 +25,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.databinding.UserDetailFragmentBinding
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.User
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class UserProfileFragment : Fragment() {
 
     lateinit var dataBinding: UserDetailFragmentBinding
-    private var viewModel: UserProfileViewModel? = null
+
+
+    val viewModel: MainViewModel by sharedViewModel()
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -44,21 +47,14 @@ class UserProfileFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(UserProfileViewModel::class.java)
 
-        viewModel?.currentUserId?.observe(this, Observer<Long?> { userId ->
-            if (userId != null) {
-                viewModel!!.getUser(userId).observe(this, Observer<User> { user ->
-                    Timber.d("Got user from db: %s", user)
-                    if (user != null) {
-                        if (user.id == 0L) {
-                            user.name = "Anonymous"
-                        }
-                        dataBinding.user = user
-                    }
-                })
+        viewModel.getCurrentUser().observe(this, Observer<User> { user ->
+            if (user != null) {
+                dataBinding.user = user
+
+                dataBinding.uuidTextView.text = user.uid.toString()
             } else {
-                Timber.e("Got a null user ID from the database.")
+                Timber.e("Got a null user from the database.")
             }
         })
 

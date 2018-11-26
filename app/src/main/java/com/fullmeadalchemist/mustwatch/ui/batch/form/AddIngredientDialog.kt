@@ -17,39 +17,21 @@
 package com.fullmeadalchemist.mustwatch.ui.batch.form
 
 
-import android.app.Dialog
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.core.ValueParsers.safeLongToInt
-import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
 import com.fullmeadalchemist.mustwatch.databinding.IngredientDialogBinding
-import com.fullmeadalchemist.mustwatch.repository.IngredientRepository
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
-import timber.log.Timber
-import java.util.*
-import javax.inject.Inject
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class AddIngredientDialog : Fragment() {
 
-    @Inject
-    lateinit var ingredientRepo: IngredientRepository
-
-    lateinit var viewModel: BatchFormViewModel
+    val viewModel: MainViewModel by sharedViewModel()
 
     lateinit var dataBinding: IngredientDialogBinding
 
@@ -60,8 +42,6 @@ class AddIngredientDialog : Fragment() {
          dataBinding = DataBindingUtil.inflate(inflater, R.layout.ingredient_dialog,
                  container, false) as IngredientDialogBinding
         dataBinding.setLifecycleOwner(this)
-
-        viewModel = ViewModelProviders.of(this).get(BatchFormViewModel::class.java)
 
         return dataBinding.root
 //        return LayoutInflater.from(activity).inflate(R.layout.ingredient_dialog, null)

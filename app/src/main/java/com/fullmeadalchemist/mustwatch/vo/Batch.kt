@@ -29,10 +29,13 @@ import javax.measure.quantity.Volume
 @Entity(tableName = "batch",
         indices = [Index(value = ["user_id"])],
         foreignKeys = [
-            ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("user_id"), onDelete = ForeignKey.CASCADE)
+            ForeignKey(entity = User::class,
+                    parentColumns = arrayOf("uid"),
+                    childColumns = arrayOf("user_id"),
+                    onDelete = ForeignKey.CASCADE)
         ])
 @TypeConverters(Converters::class)
-data class Batch(@ColumnInfo(name = "user_id") var userId: Long? = null,
+data class Batch(@ColumnInfo(name = "user_id") var userId: UUID? = null,
                  @ColumnInfo(name = "name") var name: String? = null,
                  @ColumnInfo(name = "target_sg_starting") var targetSgStarting: Double? = null,
                  @ColumnInfo(name = "target_sg_final") var targetSgFinal: Double? = null,

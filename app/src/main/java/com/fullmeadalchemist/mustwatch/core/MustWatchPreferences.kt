@@ -17,50 +17,69 @@
 package com.fullmeadalchemist.mustwatch.core
 
 import android.app.Application
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import com.fullmeadalchemist.mustwatch.MustWatchApp
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
-import javax.inject.Inject
+import java.util.*
 
-class MustWatchPreferences {
+interface MustWatchPreferences {
+    fun getCurrentUserId(): UUID?
+    fun setCurrentUserId(uid: UUID)
+    fun isFirstLaunch(): LiveData<Boolean>
+}
 
-    @Inject
-    lateinit var application: Application
+class MustWatchPreferencesImpl(private val application: Application) : MustWatchPreferences {
 
-    private var currentUserID: Long? = null
+    private var currentUserID: UUID? = null
 
-    fun getCurrentUserId(): Long? {
+    override fun getCurrentUserId(): UUID? {
         currentUserID = null
         val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
         if (pSharedPref != null) {
-            val storedId = pSharedPref.getLong(CURRENT_USER_ID, java.lang.Long.MIN_VALUE)
-            if (storedId != java.lang.Long.MIN_VALUE) {
-                Timber.d("Got User ID %d from shared preferences as the current User ID.", storedId)
-                currentUserID = storedId
+            val storedUid = pSharedPref.getString(CURRENT_USER_ID, null)
+            if (storedUid != null) {
+                Timber.d("Got User ID %s from shared preferences as the current User ID.", storedUid)
+                currentUserID = UUID.fromString(storedUid)
             } else {
                 Timber.d("Found no User ID in shared preferences.")
             }
+        } else {
+            Timber.e("Could not get shared preferences")
         }
-        Timber.e("Could not get shared preferences")
         return currentUserID
     }
 
-    fun setCurrentUserId(id: Long?) {
-        if (id == null) {
-            Timber.w("Attempted to set current user to null")
-            return
-        }
+    override fun setCurrentUserId(uid: UUID) {
         val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
         if (pSharedPref != null) {
             val editor = pSharedPref.edit()
-            //editor.remove(CURRENT_USER_ID).commit();
-            editor.putLong(CURRENT_USER_ID, id).apply()
-            Timber.d("Stored User ID %d in shared preferences as the current User ID.", id)
+            editor.putString(CURRENT_USER_ID, uid.toString()).apply()
+            Timber.d("Stored User ID %s in shared preferences as the current User ID.", uid.toString())
         }
+    }
+
+    override fun isFirstLaunch(): LiveData<Boolean> {
+        val response = MutableLiveData<Boolean>()
+        doAsync {
+            val pSharedPref = application.getSharedPreferences(MustWatchApp.MUST_WATCH_SHARED_PREFS, Context.MODE_PRIVATE)
+            if (pSharedPref != null) {
+                val editor = pSharedPref.edit()
+                val isFirstLaunch = pSharedPref.getBoolean(FIRST_LAUNCH_KEY, true)
+                if (isFirstLaunch) {
+                    Timber.d("Detected that this is the first launch.")
+                    editor.putBoolean(FIRST_LAUNCH_KEY, false).apply()
+                }
+                response.postValue(isFirstLaunch)
+            }
+        }
+        return response
     }
 
     companion object {
         private const val CURRENT_USER_ID = "CURRENT_USER_ID"
+        private const val FIRST_LAUNCH_KEY = "FIRST_LAUNCH"
     }
-
 }

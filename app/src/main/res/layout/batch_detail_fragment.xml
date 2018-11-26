@@ -48,7 +48,7 @@
                 android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,6 +61,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Date Created"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -69,8 +70,8 @@
                     android:id="@+id/createDate_date"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="Mar 31, 2017" />
@@ -80,6 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="1dp"
+                    android:layout_marginLeft="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="7:44 AM" />
@@ -96,6 +98,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Status"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -105,6 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="fermenting" />
@@ -121,6 +125,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Output Volume"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -130,8 +135,8 @@
                     android:id="@+id/outputVolumeAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="6" />
@@ -141,6 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="1dp"
+                    android:layout_marginLeft="1dp"
                     android:maxLines="1"
                     android:text="Gallons"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
@@ -158,6 +164,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target ABV"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -167,6 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="15.4%" />
@@ -183,6 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target starting Specific Gravity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -192,6 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:maxLines="1"
                     android:text="@{safeUnbox(batch.targetSgStarting)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -209,6 +219,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Target final Specific Gravity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -218,6 +229,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:maxLines="1"
                     android:text="@{safeUnbox(batch.targetSgFinal)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -235,6 +247,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Starting pH level"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -244,6 +257,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:maxLines="1"
                     android:text="@{safeUnbox(batch.startingPh)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -261,6 +275,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:text="Starting Temperature"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -270,8 +285,8 @@
                     android:id="@+id/startingTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:maxLines="1"
                     android:text="@{safeUnbox(batch.startingTemp)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -282,6 +297,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="1dp"
+                    android:layout_marginLeft="1dp"
                     android:maxLines="1"
                     android:text="\u00B0F"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
@@ -301,6 +317,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/edit_batch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -311,8 +328,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/add_log_entry"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

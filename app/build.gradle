@@ -64,8 +64,10 @@ android {
     defaultConfig {
         applicationId "com.fullmeadalchemist.mustwatch"
 
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 28
+
+        multiDexEnabled true
 
         versionCode 2
         versionName "1.0"
@@ -131,7 +133,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:appcompat-v7:$support_version"
@@ -140,6 +142,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "android.arch.lifecycle:runtime:$arch_lifecycle_version"
     implementation "android.arch.lifecycle:extensions:$arch_lifecycle_version"
+    implementation "android.arch.lifecycle:reactivestreams:$arch_lifecycle_version"
     implementation "android.arch.persistence.room:runtime:$arch_persistence_version"
     implementation "android.arch.persistence.room:rxjava2:$arch_persistence_version"
     implementation 'javax.inject:javax.inject:1'
@@ -147,6 +150,20 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    //
+    // Anko
+    // https://github.com/Kotlin/anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk15-coroutines:$anko_version"
+    implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+    // Appcompat-v7 (Anko Layouts)
+    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
+
+    //
+    // JSR-310  Android backport
+    // https://github.com/JakeWharton/ThreeTenABP
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
 
     //
     // UNITS OF MEASUREMENT (JSR 363)
@@ -162,15 +179,28 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
 
-    //
-    // Dagger
-    // https://google.github.io/dagger/
-    implementation "com.google.dagger:dagger:2.16"
-    kapt "com.google.dagger:dagger-compiler:2.16"
+//    //
+//    // Dagger
+//    // https://google.github.io/dagger/
+//    implementation "com.google.dagger:dagger:2.16"
+//    kapt "com.google.dagger:dagger-compiler:2.16"
+//
+//    // Dagger Android
+//    kapt "com.google.dagger:dagger-android-processor:2.16"
+//    implementation "com.google.dagger:dagger-android-support:2.16"
 
-    // Dagger Android
-    kapt "com.google.dagger:dagger-android-processor:2.16"
-    implementation "com.google.dagger:dagger-android-support:2.16"
+    //
+    // Koin
+    // https://github.com/InsertKoinIO/koin
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-scope:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+//    implementation "org.koin:koin-androidx-scope:$koin_version"
+//    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    testImplementation "org.koin:koin-test:$koin_version"
+
 
     kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
     kapt "android.arch.persistence.room:compiler:$arch_persistence_version"
@@ -202,9 +232,9 @@ dependencies {
 //    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
 //        transitive = true
 //    }
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 
-    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha06"
-    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha06"
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha07"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha07"
 
 }

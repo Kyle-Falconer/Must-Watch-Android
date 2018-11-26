@@ -20,113 +20,70 @@ package com.fullmeadalchemist.mustwatch.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.fullmeadalchemist.mustwatch.core.MustWatchPreferences
-import com.fullmeadalchemist.mustwatch.db.UserDao
+import com.fullmeadalchemist.mustwatch.db.AppDatabase
 import com.fullmeadalchemist.mustwatch.vo.User
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
+import java.util.*
 
-/**
- * Repository that handles User objects.
- */
-@Singleton
-class UserRepository {
+interface UserRepository {
+    fun addUser(user: User): LiveData<UUID>
 
-    @Inject
-    lateinit var prefs: MustWatchPreferences
-    @Inject
-    lateinit var userDao: UserDao
+    fun getUser(userId: UUID): LiveData<User>
 
-    private var user: User? = null
+    fun setCurrentUser(user: User)
 
-    val currentUserId: LiveData<Long>
-        get() {
-            val userIdLiveData = MutableLiveData<Long>()
-            val stored_id = prefs.getCurrentUserId()
-            if (stored_id != null) {
-                Timber.d("Got User ID %d from shared preferences as the current User ID.", stored_id)
-                userIdLiveData.postValue(stored_id)
-                return userIdLiveData
+    fun getCurrentUser(): LiveData<User>
+}
+
+class UserRepositoryImpl(private val prefs: MustWatchPreferences, private val database: AppDatabase) : UserRepository {
+
+    private var currentUser = MutableLiveData<User>()
+
+    override fun getCurrentUser(): LiveData<User> {
+        doAsync {
+            val storedId = prefs.getCurrentUserId()
+            if (storedId != null && (currentUser.value?.uid != storedId)) {
+                Timber.d("Got User ID %s from shared preferences as the current User ID.", storedId.toString())
+                currentUser.postValue(database.userDao().loadById(storedId))
             }
-
-            if (this.user == null) {
+            if (storedId == null) {
                 Timber.i("No User found locally. Preparing an Anonymous User.")
-                val anon = User(null, null)
-                return addUser(anon)
+                val anon = User(UUID.randomUUID(), null, null)
+                setCurrentUser(anon)
             }
-            this.user?.let {
-                prefs.setCurrentUserId(it.id)
-                userIdLiveData.postValue(it.id)
-            }
-
-            return userIdLiveData
-
         }
-
-    //    public Observable<Long> addUser2(User user) {
-    //        Log.d(TAG, "Adding user to db: " + user.toString());
-    //        MutableLiveData<Long> userLiveData = new MutableLiveData<>();
-    //        return Observable.fromCallable(() -> userDao.insert(user))
-    //                .subscribeOn(Schedulers.io())
-    //                .observeOn(AndroidSchedulers.mainThread());
-    //    }
+        return currentUser
+    }
 
 
-    fun addUser(user: User): LiveData<Long> {
+    override fun addUser(user: User): LiveData<UUID> {
         Timber.d("Adding user to db:\n%s", user.toString())
-        val userLiveData = MutableLiveData<Long>()
-        Observable.fromCallable<Any> { userDao.insert(user) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ uid ->
-                    val uid_value = uid as Long
-                    prefs.setCurrentUserId(uid_value)
-                    userLiveData.postValue(uid_value)
-                }, { e ->
-                    Timber.e(e, "Failed to add user")
-                })
+        val userLiveData = MutableLiveData<UUID>()
+        doAsync {
+            try {
+                val id: Long = database.userDao().insert(user)
+                prefs.setCurrentUserId(user.uid)
+                userLiveData.postValue(user.uid)
+            } catch (e: Exception) {
+                Timber.e("Failed to add user")
+            }
+        }
         return userLiveData
     }
 
-    fun getUser(userId: Long): LiveData<User> {
-        Timber.d("Getting user from User ID %d", userId)
-        return userDao.load(userId)
+    override fun getUser(userId: UUID): LiveData<User> {
+        Timber.d("Getting user from User ID %s", userId.toString())
+        return database.userDao().load(userId)
     }
 
-    //    public LiveData<User> getCurrentUserId2() {
-    //        Long stored_id = prefs.getCurrentUserID();
-    //        if (stored_id != null) {
-    //            Log.d(TAG, String.format("Got User ID %d from shared preferences as the current User ID.", stored_id));
-    //            return getUser(stored_id);
-    //        }
-    //
-    //        if (this.user == null) {
-    //            Log.i(TAG, "No User found locally. Preparing an Anonymous User.");
-    //            User anon = new User(null, null);
-    //            MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    //            addUser2(anon).subscribe(id -> {
-    //                Log.i(TAG, String.format("Got ID %d for Anonymous user.", id));
-    //                anon.id = id;
-    //                userLiveData.setValue(anon);
-    //                setCurrentUser(userLiveData.getValue());
-    //            }, e -> {
-    //                Log.e(TAG, "failed to add Anonymous User to the  database");
-    //            });
-    //            return userLiveData;
-    //        }
-    //        MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    //        userLiveData.setValue(this.user);
-    //        return userLiveData;
-    //    }
 
-    private fun setCurrentUser(user: User) {
+    override fun setCurrentUser(user: User) {
         Timber.d("Setting current User to: %s", user.toString())
-        user.id?.let {
-            prefs.setCurrentUserId(it)
+        prefs.setCurrentUserId(user.uid)
+        doAsync {
+            database.userDao().insert(user)
         }
-        this.user = user
+        currentUser.postValue(user)
     }
 }

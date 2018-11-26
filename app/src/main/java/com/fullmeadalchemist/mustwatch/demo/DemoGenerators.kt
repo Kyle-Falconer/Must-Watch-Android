@@ -71,9 +71,9 @@ object DemoGenerators {
 
     private val recipe: String
         get() {
-            val recipe_index = randInt(0, RECIPE_LABELS.size - 1)
+            val recipeIndex = randInt(0, RECIPE_LABELS.size - 1)
             val rNo = randInt(0, 100)
-            return String.format("%s #%s", RECIPE_LABELS[recipe_index], rNo)
+            return String.format("%s #%s", RECIPE_LABELS[recipeIndex], rNo)
         }
 
     val randVolume: Quantity<Volume>
@@ -89,7 +89,7 @@ object DemoGenerators {
         }
 
     @SuppressLint("DefaultLocale")
-    fun generateDummyBatchesWithData(userId: Long?, numBatches: Int): List<Batch> {
+    fun generateDummyBatchesWithData(userId: UUID, numBatches: Int): List<Batch> {
         val batches = ArrayList<Batch>()
         for (i in 0 until numBatches) {
             val b = Batch()
@@ -156,7 +156,7 @@ object DemoGenerators {
      * @param max Maximum value.  Must be greater than min.
      * @return Integer between min and max, inclusive.
      */
-    fun randInt(min: Int, max: Int): Int {
+    private fun randInt(min: Int, max: Int): Int {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextInt(min, max + 1)
         } else {
@@ -165,7 +165,7 @@ object DemoGenerators {
         }
     }
 
-    fun randFloat(low: Float, high: Float): Float {
+    private fun randFloat(low: Float, high: Float): Float {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextFloat() * (high - low) + low
         } else {
@@ -174,7 +174,7 @@ object DemoGenerators {
         }
     }
 
-    fun randDouble(low: Double, high: Double): Double {
+    private fun randDouble(low: Double, high: Double): Double {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextDouble() * (high - low) + low
         } else {

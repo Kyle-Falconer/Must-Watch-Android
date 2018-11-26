@@ -16,23 +16,23 @@
 
 package com.fullmeadalchemist.mustwatch.repository
 
-import com.fullmeadalchemist.mustwatch.db.BatchIngredientDao
+import com.fullmeadalchemist.mustwatch.db.AppDatabase
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import javax.inject.Inject
 
 
-class BatchIngredientRepository {
+interface BatchIngredientRepository {
+    fun addBatchIngredients(ingredients: List<BatchIngredient>)
+}
 
-    @Inject
-    lateinit var batchIngredientDao: BatchIngredientDao
+class BatchIngredientRepositoryImpl(private val database: AppDatabase) : BatchIngredientRepository{
 
-    fun addBatchIngredients(ingredients: List<BatchIngredient>) {
+    override fun addBatchIngredients(ingredients: List<BatchIngredient>) {
         Timber.d("Adding %s BatchIngredient objects to the db", ingredients.size)
-        Observable.fromCallable<Any> { batchIngredientDao.insertAll(ingredients) }
+        Observable.fromCallable<Any> { database.batchIngredientDao().insertAll(ingredients) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()

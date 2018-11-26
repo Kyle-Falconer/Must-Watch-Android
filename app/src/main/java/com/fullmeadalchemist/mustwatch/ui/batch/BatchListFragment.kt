@@ -32,31 +32,23 @@ import androidx.navigation.fragment.findNavController
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.fullmeadalchemist.mustwatch.R
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.Batch
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
-import dagger.android.support.AndroidSupportInjection
-
 
 
 class BatchListFragment : Fragment() {
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: BatchListViewAdapter
-
-    private var viewModel: BatchViewModel? = null
     private var fab: FloatingActionButton? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(BatchViewModel::class.java)
-    }
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+    val viewModel: MainViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+
         val rootView = inflater.inflate(R.layout.batch_list, container, false)
         rootView.tag = TAG
 
@@ -67,10 +59,14 @@ class BatchListFragment : Fragment() {
             }
         })
 
-        viewModel?.batches?.observe(this, Observer<List<Batch>> { batches ->
-            // update UI
-            mAdapter.dataSet = batches
-            mAdapter.notifyDataSetChanged()
+        viewModel.getCurrentUser().observe(this, Observer {user ->
+            if (user != null){
+                viewModel.getBatchesForUser(user.uid).observe(this, Observer<List<Batch>> { batches ->
+                    // update UI
+                    mAdapter.dataSet = batches
+                    mAdapter.notifyDataSetChanged()
+                })
+            }
         })
 
         fab = rootView.findViewById(R.id.batches_fab)
@@ -94,7 +90,6 @@ class BatchListFragment : Fragment() {
                 }
             }
         })
-
 
         if (fab != null) {
             fab!!.setOnClickListener { v ->

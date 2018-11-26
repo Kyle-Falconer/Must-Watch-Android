@@ -22,7 +22,7 @@
 
         <variable
             name="viewmodel"
-            type="com.fullmeadalchemist.mustwatch.ui.batch.BatchViewModel" />
+            type="com.fullmeadalchemist.mustwatch.ui.common.MainViewModel" />
     </data>
 
     <LinearLayout

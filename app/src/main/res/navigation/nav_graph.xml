@@ -94,7 +94,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
-        android:name="com.fullmeadalchemist.mustwatch.ui.recipe.detail.RecipeDetailFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.recipe.RecipeDetailFragment"
         android:label="RecipeDetailFragment"
         tools:layout="@layout/recipe_detail_fragment" >
         <action
@@ -119,7 +119,7 @@
     </fragment>
     <fragment
         android:id="@+id/logFormFragment"
-        android:name="com.fullmeadalchemist.mustwatch.ui.log.form.LogFormFragment"
+        android:name="com.fullmeadalchemist.mustwatch.ui.log.LogFormFragment"
         android:label="LogFormFragment" >
         <argument
             android:name="batch_id" />

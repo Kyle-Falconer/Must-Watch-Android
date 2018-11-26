@@ -25,6 +25,7 @@ import com.fullmeadalchemist.mustwatch.repository.UserRepository
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
+import com.fullmeadalchemist.mustwatch.vo.User
 
 import javax.inject.Inject
 
@@ -34,8 +35,8 @@ constructor(private val batchRepository: BatchRepository, private val userReposi
 
     var batch: Batch? = null
 
-    val currentUserId: LiveData<Long>
-        get() = userRepository.currentUserId
+    val currentUser: LiveData<User>
+        get() = userRepository.getCurrentUser()
 
     fun getBatch(id: Long?): LiveData<Batch> {
         return batchRepository.getBatch(id)

@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.batch.detail
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -40,6 +39,7 @@ import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
@@ -50,7 +50,9 @@ class BatchDetailFragment : Fragment() {
     protected lateinit var logsRecyclerView: RecyclerView
     protected lateinit var logsAdapter: LogRecyclerViewAdapter
 
-    private lateinit var viewModel: BatchDetailViewModel
+
+    val viewModel: BatchDetailViewModel by sharedViewModel()
+
     private lateinit var binding: BatchDetailFragmentBinding
     private val defaultLocale = Locale.getDefault()
 
@@ -60,7 +62,6 @@ class BatchDetailFragment : Fragment() {
         binding.setLifecycleOwner(this)
 //        binding = DataBindingUtil.inflate(inflater, R.layout.batch_detail_fragment, container, false)
 //                as BatchDetailFragmentBinding
-        viewModel = ViewModelProviders.of(this).get(BatchDetailViewModel::class.java)
 
         logsAdapter = LogRecyclerViewAdapter(object : LogRecyclerViewAdapter.LogEntryClickCallback {
             override fun onClick(entry: LogEntry) {

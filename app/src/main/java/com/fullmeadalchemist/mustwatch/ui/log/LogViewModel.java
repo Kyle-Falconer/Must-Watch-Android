@@ -24,6 +24,7 @@ import com.fullmeadalchemist.mustwatch.repository.LogEntryRepository;
 import com.fullmeadalchemist.mustwatch.repository.UserRepository;
 import com.fullmeadalchemist.mustwatch.vo.Batch;
 import com.fullmeadalchemist.mustwatch.vo.LogEntry;
+import com.fullmeadalchemist.mustwatch.vo.User;
 
 import java.util.List;
 
@@ -35,8 +36,11 @@ public class LogViewModel extends ViewModel {
     private UserRepository userRepository;
     private LogEntryRepository logEntryRepository;
 
+    protected LogEntry logEntry;
     @Inject
-    public LogViewModel(BatchRepository batchRepository, UserRepository userRepository, LogEntryRepository logEntryRepository) {
+    public LogViewModel(BatchRepository batchRepository,
+                        UserRepository userRepository,
+                        LogEntryRepository logEntryRepository) {
         this.batchRepository = batchRepository;
         this.userRepository = userRepository;
         this.logEntryRepository = logEntryRepository;
@@ -46,8 +50,12 @@ public class LogViewModel extends ViewModel {
         batchRepository.addBatch(batch);
     }
 
-    public LiveData<Long> getCurrentUserId() {
-        return userRepository.getCurrentUserId();
+    public LiveData<User> getCurrentUser() {
+        return userRepository.getCurrentUser();
+    }
+
+    public void saveLogEntry() {
+        logEntryRepository.addLogEntry(logEntry);
     }
 
     public LiveData<List<LogEntry>> getLogEntries(Long batchId) {

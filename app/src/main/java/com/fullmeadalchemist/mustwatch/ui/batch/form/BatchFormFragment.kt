@@ -44,6 +44,7 @@ import com.fullmeadalchemist.mustwatch.core.UnitMapper.*
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toDouble
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
 import com.fullmeadalchemist.mustwatch.databinding.BatchFormFragmentBinding
+import com.fullmeadalchemist.mustwatch.ui.batch.detail.BatchDetailViewModel
 import com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.Companion.AMOUNT
 import com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.Companion.INGREDIENT
 import com.fullmeadalchemist.mustwatch.ui.batch.form.AddIngredientDialog.Companion.INGREDIENT_SET_EVENT
@@ -65,7 +66,8 @@ import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Ingredient.IngredientType.*
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.Recipe.Companion.RECIPE_ID
-import dagger.android.support.AndroidSupportInjection
+import com.fullmeadalchemist.mustwatch.vo.User
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import systems.uom.common.Imperial.GALLON_UK
 import systems.uom.common.Imperial.OUNCE_LIQUID
 import systems.uom.common.USCustomary.FAHRENHEIT
@@ -89,7 +91,8 @@ class BatchFormFragment : Fragment() {
     lateinit var dataBinding: BatchFormFragmentBinding
     internal var abbreviationMap: MutableMap<String, String> = HashMap()
     private var FORM_MODE: MODES? = null
-    lateinit var viewModel: BatchFormViewModel
+
+    val viewModel: BatchFormViewModel by sharedViewModel()
 
     private val timePickerMessageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -174,8 +177,6 @@ class BatchFormFragment : Fragment() {
         abbreviationMap[resources.getString(R.string.OUNCE)] = unitToTextAbbr(OUNCE)
         abbreviationMap[resources.getString(R.string.POUND)] = unitToTextAbbr(POUND)
 
-        viewModel = ViewModelProviders.of(this).get(BatchFormViewModel::class.java)
-
         val bundle = this.arguments
         if (bundle != null) {
             val batchId = bundle.getLong(BATCH_ID, java.lang.Long.MIN_VALUE)
@@ -217,12 +218,10 @@ class BatchFormFragment : Fragment() {
                         viewModel.batch.value?.targetSgFinal = recipe.finalSG
                         viewModel.batch.value?.status = PLANNING
                         viewModel.batch.value?.createDate = Calendar.getInstance()
-                        viewModel.currentUserId.observe(this, Observer<Long> { userId ->
-                            if (userId != null) {
-                                Timber.d("Setting batch user ID to %s", userId)
-                                viewModel.batch.value?.userId = userId
-                            } else {
-                                Timber.e("Could not set the Batch User ID, since it's null?!")
+                        viewModel.currentUserId.observe(this, Observer<User> { user ->
+                            user?.let {
+                                Timber.d("Setting batch user ID to %s", it.uid)
+                                viewModel.batch.value?.userId = it.uid
                             }
                         })
 
@@ -248,12 +247,10 @@ class BatchFormFragment : Fragment() {
             Timber.i("No Batch ID was received. Acting as a Batch Creation form.")
             viewModel.batch.value = Batch()
             viewModel.batch.value?.createDate = Calendar.getInstance()
-            viewModel.currentUserId.observe(this, Observer<Long> { userId ->
-                if (userId != null) {
-                    Timber.d("Setting batch user ID to %s", userId)
-                    viewModel.batch.value?.userId = userId
-                } else {
-                    Timber.e("Could not set the Batch User ID, since it's null?!")
+            viewModel.currentUserId.observe(this, Observer<User> { user ->
+                user?.let {
+                    Timber.d("Setting batch user ID to %s", it.uid)
+                    viewModel.batch.value?.userId = it.uid
                 }
             })
 //            dataBinding.batch = viewModel.batch
@@ -261,11 +258,6 @@ class BatchFormFragment : Fragment() {
         return dataBinding.root
     }
 
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

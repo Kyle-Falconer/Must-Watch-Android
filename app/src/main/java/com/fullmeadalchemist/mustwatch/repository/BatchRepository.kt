@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2017-2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,85 +19,96 @@ package com.fullmeadalchemist.mustwatch.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.text.TextUtils
-import com.fullmeadalchemist.mustwatch.db.BatchDao
+import com.fullmeadalchemist.mustwatch.db.AppDatabase
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.User
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
-import javax.inject.Inject
+import java.util.*
 
-class BatchRepository {
+interface BatchRepository {
+    fun addBatch(batch: Batch): LiveData<Long>
+    fun addBatches(batches: List<Batch>): LiveData<List<Long>>
+    fun getBatch(id: Long?): LiveData<Batch>
+    fun getBatches(user: User): LiveData<List<Batch>>
+    fun getBatchesForUserId(userId: UUID): LiveData<List<Batch>>
+    fun updateBatch(batch: Batch): LiveData<Int>
+    fun getBatchIngredients(batchId: Long): LiveData<List<BatchIngredient>>
+    fun upsertBatchIngredients(batch: Batch)
+}
 
-    @Inject
-    lateinit var batchDao: BatchDao
+class BatchRepositoryImpl(private val database: AppDatabase) : BatchRepository {
 
     // FIXME: get only Batches from current user
     //return batchDao.loadBatchesForUser();
     val batches: LiveData<List<Batch>>
-        get() = batchDao.all
+        get() = database.batchDao().all
 
-    fun addBatch(batch: Batch): LiveData<Long> {
+    override fun addBatch(batch: Batch): LiveData<Long> {
         val batchIdLiveData = MutableLiveData<Long>()
         Timber.d("Adding batch to db:\n%s", batch.toString())
-        Observable.fromCallable<Any> { batchDao.insert(batch) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { batchId ->
-                    val bid = batchId as Long
-                    batchIdLiveData.value = bid
-                    batch.id = bid
-                    upsertBatchIngredients(batch)
-                }
+        doAsync {
+            try {
+                val bid: Long = database.batchDao().insert(batch)
+                batchIdLiveData.postValue(bid)
+                batch.id = bid
+                upsertBatchIngredients(batch)
+            } catch (e: Exception) {
+                Timber.e("Failed to add batches:\n%s", e.toString())
+            }
+        }
         return batchIdLiveData
     }
 
-    fun addBatches(batches: List<Batch>): LiveData<List<Long>> {
+    override fun addBatches(batches: List<Batch>): LiveData<List<Long>> {
         val batchIdsLiveData = MutableLiveData<List<Long>>()
         Timber.d("Adding %d batches to db:\n%s", batches.size, TextUtils.join("\n", batches))
-        Observable.fromCallable<Any> { batchDao.insertAll(*batches.toTypedArray()) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ l ->
-                    batchIdsLiveData.setValue(l as List<Long>)
-                })
-
+        doAsync {
+            try {
+                batchIdsLiveData.postValue(database.batchDao().insertAll(*batches.toTypedArray()))
+            } catch (e: Exception) {
+                Timber.e("Failed to add batches:\n%s", e.toString())
+            }
+        }
         return batchIdsLiveData
     }
 
-    fun getBatch(id: Long?): LiveData<Batch> {
-        return batchDao.get(id)
+    override fun getBatch(id: Long?): LiveData<Batch> {
+        return database.batchDao()[id]
     }
 
-    fun getBatches(user: User): LiveData<List<Batch>> {
-        return batchDao.getAll(user.id)
+    override fun getBatches(user: User): LiveData<List<Batch>> {
+        return database.batchDao().getAll(user.uid)
+    }
+
+    override fun getBatchesForUserId(userId: UUID): LiveData<List<Batch>> {
+        return database.batchDao().getAll(userId)
     }
 
     /**
      * @param batch the Batch object to be updated
      * @return Observable number of rows updated
      */
-    fun updateBatch(batch: Batch): LiveData<Int> {
+    override fun updateBatch(batch: Batch): LiveData<Int> {
         val updatedLiveData = MutableLiveData<Int>()
-        Observable.fromCallable<Any> { batchDao.updateBatch(batch) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ v ->
-                    updatedLiveData.setValue(v as Int)
-                }, { e ->
-                    Timber.e("Failed to update batch:\n%s", e.toString())
-                })
+        doAsync {
+            try {
+                updatedLiveData.postValue(database.batchDao().updateBatch(batch))
+            } catch (e: Exception) {
+                Timber.e("Failed to update batch:\n%s", e.toString())
+            }
+        }
+
         upsertBatchIngredients(batch)
         return updatedLiveData
     }
 
-    fun getBatchIngredients(batchId: Long): LiveData<List<BatchIngredient>> {
-        return batchDao.getIngredientsForBatch(batchId)
+    override fun getBatchIngredients(batchId: Long): LiveData<List<BatchIngredient>> {
+        return database.batchDao().getIngredientsForBatch(batchId)
     }
 
-    private fun upsertBatchIngredients(batch: Batch?) {
+    override fun upsertBatchIngredients(batch: Batch) {
         if (batch?.ingredients == null) {
             Timber.w("Batch Ingredients is null")
             return
@@ -107,20 +118,20 @@ class BatchRepository {
             return
         }
 
+        val updatedBatchIngredientIds = MutableLiveData<List<Long>>()
         batch.ingredients?.let {
             for (batchIngredient in it) {
                 batchIngredient.batchId = batch.id
             }
-            Observable.fromCallable<Any> { batchDao.upsertBatchIngredients(it) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ ret ->
-                        ret?.let {
-                            Timber.d("Inserted %d BatchIngredients into the database", -1)
-                        }
-                    }, { e ->
-                        Timber.e("Failed to insert batch ingredients:\n%s", e.toString())
-                    })
+            doAsync {
+                try {
+                    val batchIds = database.batchDao().upsertBatchIngredients(it)
+                    updatedBatchIngredientIds.postValue(batchIds)
+                    Timber.d("Inserted %d BatchIngredients into the database", batchIds.size)
+                } catch (e: Exception) {
+                    Timber.e("Failed to update batch:\n%s", e.toString())
+                }
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2017-2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,26 @@ import android.arch.lifecycle.ViewModel
 
 import com.fullmeadalchemist.mustwatch.repository.RecipeRepository
 import com.fullmeadalchemist.mustwatch.repository.UserRepository
+import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
+import com.fullmeadalchemist.mustwatch.vo.User
+import java.util.*
 
 import javax.inject.Inject
 
-class RecipeViewModel : ViewModel() {
-    @Inject lateinit var recipeRepository: RecipeRepository
-    @Inject lateinit var userRepository: UserRepository
+class RecipeViewModel(    private val recipeRepository: RecipeRepository,
+                          private val userRepository: UserRepository) : ViewModel() {
 
     private val recipes: LiveData<List<Recipe>>? = null
+    var recipe: Recipe? = null
 
-    val currentUserId: LiveData<Long>
-        get() = userRepository.currentUserId
+    val currentUserId: LiveData<User>
+        get() = userRepository.getCurrentUser()
 
-    fun getRecipes(userId: Long?): LiveData<List<Recipe>> {
+
+    fun getRecipes(userId: UUID?): LiveData<List<Recipe>> {
         return if (userId == null) {
-            recipeRepository.publicRecipes
+            recipeRepository.getPublicRecipes()
         } else {
             recipeRepository.getRecipes(userId)
         }
@@ -44,6 +48,15 @@ class RecipeViewModel : ViewModel() {
 
     fun addRecipe(recipe: Recipe) {
         recipeRepository.addRecipe(recipe)
+    }
+
+
+    fun getRecipe(id: Long?): LiveData<Recipe> {
+        return recipeRepository.getRecipe(id!!)
+    }
+
+    fun getRecipeIngredients(recipeId: Long?): LiveData<List<BatchIngredient>> {
+        return recipeRepository.getRecipeIngredients(recipeId)
     }
 
 }

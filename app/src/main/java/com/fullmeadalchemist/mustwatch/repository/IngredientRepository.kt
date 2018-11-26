@@ -17,53 +17,71 @@
 package com.fullmeadalchemist.mustwatch.repository
 
 import android.arch.lifecycle.LiveData
+import com.fullmeadalchemist.mustwatch.db.AppDatabase
 import com.fullmeadalchemist.mustwatch.db.IngredientDao
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class IngredientRepository {
+interface IngredientRepository {
+    fun addIngredients(ingredients: List<Ingredient>)
 
-    @Inject
-    lateinit var ingredientDao: IngredientDao
+    fun addIngredients(ingredients: Array<Ingredient>)
 
-    val sugarEntries: LiveData<List<Ingredient>>
-        get() = ingredientDao.allSugars
+    fun getIngredientById(id: String): LiveData<Ingredient>
 
-    val nutrientEntries: LiveData<List<Ingredient>>
-        get() = ingredientDao.allNutrients
+    fun getSugars(): LiveData<List<Ingredient>>
 
-    val yeastEntries: LiveData<List<Ingredient>>
-        get() = ingredientDao.allYeasts
+    fun getNutrients(): LiveData<List<Ingredient>>
 
-    val stabilizerEntries: LiveData<List<Ingredient>>
-        get() = ingredientDao.allStabilizers
+    fun getYeasts(): LiveData<List<Ingredient>>
 
-    val all: LiveData<List<Ingredient>>
-        get() = ingredientDao.all
+    fun getStabilizers(): LiveData<List<Ingredient>>
 
-    fun addIngredients(ingredients: List<Ingredient>) {
+    fun getAllIngredients(): LiveData<List<Ingredient>>
+}
+
+class IngredientRepositoryImpl(private val database: AppDatabase) : IngredientRepository {
+
+    override fun getSugars(): LiveData<List<Ingredient>> {
+        return database.ingredientDao().allSugars
+    }
+
+    override fun getNutrients(): LiveData<List<Ingredient>> {
+        return database.ingredientDao().allNutrients
+    }
+
+    override fun getYeasts(): LiveData<List<Ingredient>> {
+        return database.ingredientDao().allYeasts
+    }
+
+    override fun getStabilizers(): LiveData<List<Ingredient>> {
+        return database.ingredientDao().allStabilizers
+    }
+
+    override fun getAllIngredients(): LiveData<List<Ingredient>> {
+        return database.ingredientDao().all
+    }
+
+    override fun addIngredients(ingredients: List<Ingredient>) {
         Timber.d("Adding %s Ingredient objects to the db", ingredients.size)
-        Observable.fromCallable<Any> { ingredientDao.insertAll(*ingredients.toTypedArray()) }
+        Observable.fromCallable<Any> { database.ingredientDao().insertAll(*ingredients.toTypedArray()) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
     }
 
-    fun addIngredients(ingredients: Array<Ingredient>) {
+    override fun addIngredients(ingredients: Array<Ingredient>) {
         Timber.d("Adding %s Ingredient objects to the db", ingredients.size)
-        Observable.fromCallable<Any> { ingredientDao.insertAll(*ingredients) }
+        Observable.fromCallable<Any> { database.ingredientDao().insertAll(*ingredients) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
     }
 
-    fun getIngredientById(id: String): LiveData<Ingredient> {
-        return ingredientDao.getById(id)
+    override fun getIngredientById(id: String): LiveData<Ingredient> {
+        return database.ingredientDao().getById(id)
     }
 }

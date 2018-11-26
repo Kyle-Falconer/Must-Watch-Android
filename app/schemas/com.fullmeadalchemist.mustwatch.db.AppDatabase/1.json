@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4b02fa2980c5e4717ce1d5ff48610ac7",
+    "identityHash": "550135442343e74a41e33683f71eb17f",
     "entities": [
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `email` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `name` TEXT, `email` TEXT, PRIMARY KEY(`uid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -29,9 +29,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "uid"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -47,7 +47,7 @@
       },
       {
         "tableName": "batch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` INTEGER, `name` TEXT, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` TEXT, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` TEXT, `name` TEXT, `target_sg_starting` REAL, `target_sg_final` REAL, `target_abv` REAL, `starting_ph` REAL, `starting_temp_c` REAL, `output_volume` TEXT, `status` TEXT, `create_date` INTEGER, `notes` TEXT, FOREIGN KEY(`user_id`) REFERENCES `User`(`uid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -58,7 +58,7 @@
           {
             "fieldPath": "userId",
             "columnName": "user_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -147,7 +147,7 @@
               "user_id"
             ],
             "referencedColumns": [
-              "id"
+              "uid"
             ]
           }
         ]
@@ -263,7 +263,7 @@
       },
       {
         "tableName": "log_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `batch_id` INTEGER NOT NULL, `entry_date` INTEGER, `sg` REAL, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `batch_id` INTEGER NOT NULL, `entry_date` INTEGER NOT NULL, `sg` REAL, `acidity` REAL, `note` TEXT, FOREIGN KEY(`batch_id`) REFERENCES `batch`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -281,7 +281,7 @@
             "fieldPath": "entryDate",
             "columnName": "entry_date",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "sg",
@@ -369,7 +369,7 @@
       },
       {
         "tableName": "group_membership",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `access_read` INTEGER NOT NULL, `access_admin` INTEGER NOT NULL, PRIMARY KEY(`group_id`, `user_id`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` INTEGER NOT NULL, `user_id` TEXT NOT NULL, `access_read` INTEGER NOT NULL, `access_admin` INTEGER NOT NULL, PRIMARY KEY(`group_id`, `user_id`), FOREIGN KEY(`group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`user_id`) REFERENCES `User`(`uid`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -380,7 +380,7 @@
           {
             "fieldPath": "userId",
             "columnName": "user_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -433,7 +433,7 @@
               "user_id"
             ],
             "referencedColumns": [
-              "id"
+              "uid"
             ]
           }
         ]
@@ -493,7 +493,7 @@
       },
       {
         "tableName": "recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `creator_user_id` INTEGER, `owner_user_id` INTEGER, `owner_group_id` INTEGER, `public_readable` INTEGER NOT NULL, `output_volume` TEXT, `carbonation` REAL, `min_days_to_ferment` INTEGER, `max_days_to_ferment` INTEGER, `min_days_to_age` INTEGER, `starting_sg` REAL, `final_sg` REAL, `notes` TEXT, `url_found` TEXT, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `creator_user_id` TEXT, `owner_user_id` TEXT, `owner_group_id` INTEGER, `public_readable` INTEGER NOT NULL, `output_volume` TEXT, `carbonation` REAL, `min_days_to_ferment` INTEGER, `max_days_to_ferment` INTEGER, `min_days_to_age` INTEGER, `starting_sg` REAL, `final_sg` REAL, `notes` TEXT, `url_found` TEXT, FOREIGN KEY(`creator_user_id`) REFERENCES `User`(`uid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_user_id`) REFERENCES `User`(`uid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`owner_group_id`) REFERENCES `groups`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -510,13 +510,13 @@
           {
             "fieldPath": "creatorUserId",
             "columnName": "creator_user_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "ownerUserId",
             "columnName": "owner_user_id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -627,7 +627,7 @@
               "creator_user_id"
             ],
             "referencedColumns": [
-              "id"
+              "uid"
             ]
           },
           {
@@ -638,7 +638,7 @@
               "owner_user_id"
             ],
             "referencedColumns": [
-              "id"
+              "uid"
             ]
           },
           {
@@ -657,7 +657,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4b02fa2980c5e4717ce1d5ff48610ac7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"550135442343e74a41e33683f71eb17f\")"
     ]
   }
 }

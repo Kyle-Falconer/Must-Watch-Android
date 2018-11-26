@@ -28,14 +28,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fullmeadalchemist.mustwatch.R
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
+import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class LogListFragment : Fragment() {
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: LogRecyclerViewAdapter
 
-    private var viewModel: LogViewModel? = null
+    val viewModel: MainViewModel by sharedViewModel()
     private var fab: FloatingActionButton? = null
 
 
@@ -48,16 +51,18 @@ class LogListFragment : Fragment() {
         //            navigationController.navigateToEditBatch(batch.id);
         //        });
 
-        val batchId: Long? = null
-        viewModel = ViewModelProviders.of(this).get(LogViewModel::class.java)
-        viewModel!!.getLogEntries(batchId).observe(this, Observer<List<LogEntry>> { logEntries ->
-            // update UI
-            if (logEntries != null) {
-                Timber.d("Got %d log entries for batch #%d", logEntries.size, batchId)
-            }
-            mAdapter.dataSet = logEntries
-            mAdapter.notifyDataSetChanged()
-        })
+        val bundle = this.arguments
+        if (bundle != null) {
+            val batchId = bundle.getLong(Batch.BATCH_ID, java.lang.Long.MIN_VALUE)
+            viewModel.getLogEntries(batchId).observe(this, Observer<List<LogEntry>> { logEntries ->
+                // update UI
+                if (logEntries != null) {
+                    Timber.d("Got %d log entries for batch #%d", logEntries.size, batchId)
+                }
+                mAdapter.dataSet = logEntries
+                mAdapter.notifyDataSetChanged()
+            })
+        }
 
         fab = rootView.findViewById(R.id.logs_fab)
         mRecyclerView = rootView.findViewById(R.id.recyclerView)
@@ -103,7 +108,6 @@ class LogListFragment : Fragment() {
     }
 
     companion object {
-
         private val TAG = LogListFragment::class.java.simpleName
     }
 }
