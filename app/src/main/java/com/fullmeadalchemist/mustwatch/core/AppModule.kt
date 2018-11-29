@@ -22,7 +22,7 @@ val appModule = module {
 
     single<AppDatabase>() { Room.databaseBuilder(androidApplication(), AppDatabase::class.java, AppDatabase.DATABASE_NAME).build()}
 
-    viewModel { MainViewModel(get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { BatchDetailViewModel(get(), get(), get()) }
     viewModel { BatchFormViewModel(get(), get(), get(), get(), get()) }
     viewModel { RecipeViewModel(get(), get()) }

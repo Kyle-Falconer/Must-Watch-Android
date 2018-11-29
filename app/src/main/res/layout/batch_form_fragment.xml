@@ -72,8 +72,8 @@
                     android:maxLines="1"
                     android:textAlignment="textStart"
                     tools:text="Mar 31, 2017"
-                    android:layout_marginLeft="24dp" />
-                android:text="@{viewmodel.batch.createDate}"/>
+                    android:layout_marginLeft="24dp"
+                    android:text="@{viewmodel.batch.createDate}"/>
 
                 <TextView
                     android:id="@+id/createDateTime"
@@ -86,11 +86,11 @@
                     tools:text="7:44 AM" />
             </LinearLayout>
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content" />
+
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

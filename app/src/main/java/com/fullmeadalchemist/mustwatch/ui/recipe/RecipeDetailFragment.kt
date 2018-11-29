@@ -20,16 +20,17 @@ import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.navigation.findNavController
 import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.calcAbvPct
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding
-import com.fullmeadalchemist.mustwatch.ui.common.BatchIngredientView
+import com.fullmeadalchemist.mustwatch.ui.common.IngredientListViewAdapter
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.Recipe.Companion.RECIPE_ID
@@ -44,6 +45,9 @@ class RecipeDetailFragment : Fragment() {
     lateinit var dataBinding: RecipeDetailFragmentBinding
     private val defaultLocale = Locale.getDefault()
 
+    lateinit var ingredientListViewAdapter: IngredientListViewAdapter
+    lateinit var ingredientsRecyclerView: RecyclerView
+
     val viewModel: RecipeViewModel by sharedViewModel()
 
 
@@ -51,6 +55,20 @@ class RecipeDetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.recipe_detail_fragment,
                 container, false)
+
+        ingredientListViewAdapter = IngredientListViewAdapter(object : IngredientListViewAdapter.IngredientClickCallback {
+            override fun onClick(repo: BatchIngredient) {
+                Timber.w("Clicking on a BatchIngredient in this list is not yet supported")
+            }
+        })
+
+        ingredientsRecyclerView = dataBinding.root.findViewById(R.id.ingredients_list)
+        ingredientsRecyclerView.setHasFixedSize(true)
+        val llm = LinearLayoutManager(context)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        ingredientsRecyclerView.layoutManager = llm
+        ingredientsRecyclerView.adapter = ingredientListViewAdapter
+
         return dataBinding.root
     }
 
@@ -71,7 +89,15 @@ class RecipeDetailFragment : Fragment() {
                     Timber.v("Reusing viewmodel data")
                     dataBinding.recipe = viewModel.recipe
                     updateRecipeUiInfo()
-                    updateRecipeIngredientUiInfo()
+                    viewModel.getRecipeIngredients(recipeId).observe(this, Observer<List<BatchIngredient>> { recipeIngredients ->
+                        if (recipeIngredients != null) {
+                            Timber.v("Loaded %s Recipe ingredients", recipeIngredients.size)
+                            ingredientListViewAdapter.dataSet = recipeIngredients
+                            ingredientListViewAdapter.notifyDataSetChanged()
+                        } else {
+                            Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Recipe %s", recipeId)
+                        }
+                    })
                 } else {
                     Timber.v("Going to the RecipeRepository to get the Recipe with id %s", recipeId)
                     viewModel.getRecipe(recipeId).observe(this, Observer<Recipe> { recipe ->
@@ -85,8 +111,8 @@ class RecipeDetailFragment : Fragment() {
                             viewModel.getRecipeIngredients(recipeId).observe(this, Observer<List<BatchIngredient>> { recipeIngredients ->
                                 if (recipeIngredients != null) {
                                     Timber.v("Loaded %s Recipe ingredients", recipeIngredients.size)
-                                    viewModel.recipe?.ingredients = recipeIngredients
-                                    updateRecipeIngredientUiInfo()
+                                    ingredientListViewAdapter.dataSet = recipeIngredients
+                                    ingredientListViewAdapter.notifyDataSetChanged()
                                 } else {
                                     Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Recipe %s", recipeId)
                                 }
@@ -110,20 +136,6 @@ class RecipeDetailFragment : Fragment() {
                 val abv_pct = calcAbvPct(it.startingSG as Double, it.finalSG as Double)
                 val f = DecimalFormat("0.##")
                 dataBinding.targetABV.text = String.format(defaultLocale, "%s%%", f.format(abv_pct))
-            }
-        }
-    }
-
-    private fun updateRecipeIngredientUiInfo() {
-        viewModel.recipe?.ingredients?.let {
-            // FIXME: this is not performant and looks ghetto.
-            Timber.d("Found %s BatchIngredients for this Recipe; adding them to the ingredientsList", it.size)
-            val ingredientsList = activity!!.findViewById<LinearLayout>(R.id.ingredients_list)
-            ingredientsList.removeAllViews()
-            for (ingredient in it) {
-                val ingredientText = BatchIngredientView(activity)
-                ingredientText.setBatchIngredient(ingredient)
-                ingredientsList.addView(ingredientText)
             }
         }
     }

@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.measure.Quantity;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Volume;
 
 import tec.units.ri.quantity.Quantities;
@@ -86,7 +87,16 @@ public class BindingUtils {
         if (volumeQuantity == null) {
             view.setText(R.string.none);
         } else {
-            view.setText(volumeQuantity.toString());
+            double volumeValue = volumeQuantity.getValue().doubleValue();
+
+            if (volumeValue < 0.01) {
+                view.setText("-");
+            } else {
+                DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                view.setText(String.format("%s %s",
+                        decimalFormat.format(volumeValue),
+                        volumeQuantity.getUnit()));
+            }
         }
     }
 
@@ -96,6 +106,32 @@ public class BindingUtils {
         String num = view.getText().toString();
         Quantity<Volume> vol = (Quantity<Volume>) Quantities.getQuantity(num);
         return vol;
+    }
+
+    @BindingAdapter("android:text")
+    public static void setMass(TextView view, Quantity<Mass> massQuantity) {
+        if (massQuantity == null) {
+            view.setText(R.string.none);
+        } else {
+            double massValue = massQuantity.getValue().doubleValue();
+
+            if (massValue < 0.01) {
+                view.setText("-");
+            } else {
+                DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                view.setText(String.format("%s %s",
+                        decimalFormat.format(massValue),
+                        massQuantity.getUnit()));
+            }
+        }
+    }
+
+    @InverseBindingAdapter(attribute = "android:text")
+    public static Quantity<Mass> getMass(TextView view) {
+        // FIXME: make safer?
+        String num = view.getText().toString();
+        Quantity<Mass> mass = (Quantity<Mass>) Quantities.getQuantity(num);
+        return mass;
     }
 
     @BindingAdapter("android:text")

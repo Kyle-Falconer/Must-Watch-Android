@@ -79,7 +79,7 @@ class Converters {
         }
 
         Timber.v("Parsing Amount<Volume> from string %s", volText)
-        val value = java.lang.Double.parseDouble(valueTexts[0])
+        val value = valueTexts[0].toDouble()
         val unitText = valueTexts[1]
 
         val unit: Unit<Volume>
@@ -117,7 +117,7 @@ class Converters {
         }
 
         Timber.v("Parsing Amount<Mass> from string %s", massText)
-        val value = java.lang.Double.parseDouble(valueTexts[0])
+        val value = valueTexts[0].toDouble()
         val unitText = valueTexts[1]
 
         val unit: Unit<Mass>

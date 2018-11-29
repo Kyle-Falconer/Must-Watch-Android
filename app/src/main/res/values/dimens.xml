@@ -7,4 +7,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_padding">8dp</dimen>
     <dimen name="touch_target_size">48dp</dimen>
+    <dimen name="default_element_spacing">20dp</dimen>
 </resources>

@@ -102,20 +102,11 @@ class BatchListViewAdapter
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val batchLabelTextView: TextView
-        val batchNumberTextView: TextView
-        val batchCreateDateTextView: TextView
-        val batchStatusTextView: TextView
-        val batchTargetAbvTextView: TextView
-        val outputVolumeTextView: TextView
-
-        init {
-            batchLabelTextView = v.findViewById(R.id.name)
-            batchNumberTextView = v.findViewById(R.id.batch_id)
-            batchStatusTextView = v.findViewById(R.id.batchCardStatusTextView)
-            batchTargetAbvTextView = v.findViewById(R.id.batchCardTargetAbvTextView)
-            outputVolumeTextView = v.findViewById(R.id.batchCardOutputVolTextView)
-            batchCreateDateTextView = v.findViewById(R.id.batchCardCreateDateTextView)
-        }
+        val batchLabelTextView: TextView = v.findViewById(R.id.name)
+        val batchNumberTextView: TextView = v.findViewById(R.id.batch_id)
+        val batchCreateDateTextView: TextView = v.findViewById(R.id.batchCardCreateDateTextView)
+        val batchStatusTextView: TextView = v.findViewById(R.id.batchCardStatusTextView)
+        val batchTargetAbvTextView: TextView = v.findViewById(R.id.batchCardTargetAbvTextView)
+        val outputVolumeTextView: TextView = v.findViewById(R.id.batchCardOutputVolTextView)
     }
 }

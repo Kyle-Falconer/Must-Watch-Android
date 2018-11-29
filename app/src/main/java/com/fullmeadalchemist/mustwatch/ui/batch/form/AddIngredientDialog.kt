@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Full Mead Alchemist, LLC.
+ * Copyright (c) 2017-2018 Full Mead Alchemist, LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,130 +16,151 @@
 
 package com.fullmeadalchemist.mustwatch.ui.batch.form
 
-
-import android.databinding.DataBindingUtil
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.TextView
 import com.fullmeadalchemist.mustwatch.R
-import com.fullmeadalchemist.mustwatch.databinding.IngredientDialogBinding
+import com.fullmeadalchemist.mustwatch.core.ValueParsers.safeLongToInt
+import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
 import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.Ingredient
+import org.jetbrains.anko.sdk15.coroutines.onClick
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class AddIngredientDialog : Fragment() {
 
+    private var ingredientsSpinner: Spinner? = null
+    private var unitsSpinner: Spinner? = null
+    private var qtyTextView: TextView? = null
+    private var okButton: Button? = null
+    private var cancelButton: Button? = null
+
+
     val viewModel: MainViewModel by sharedViewModel()
 
-    lateinit var dataBinding: IngredientDialogBinding
+    private var spinnerItems: List<Ingredient>? = null
 
-    internal var spinnerItems: List<Ingredient>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-         dataBinding = DataBindingUtil.inflate(inflater, R.layout.ingredient_dialog,
-                 container, false) as IngredientDialogBinding
-        dataBinding.setLifecycleOwner(this)
-
-        return dataBinding.root
-//        return LayoutInflater.from(activity).inflate(R.layout.ingredient_dialog, null)
+        return inflater.inflate(R.layout.ingredient_dialog, container, false)
     }
 
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        val view = LayoutInflater.from(activity).inflate(R.layout.ingredient_dialog, null)
-//
-//        val typeString = arguments!!.getString(INGREDIENT_TYPE)
-//        var type: Ingredient.IngredientType?
-//        type = Ingredient.IngredientType.fromString(typeString!!)
-//        if (type == null) {
-//            type = Ingredient.IngredientType.SUGAR
-//        }
-//        Timber.d("Got INGREDIENT_TYPE=%s", type)
-//        spinnerItems = ArrayList()
-//        val ingredientsSpinnerObjects: LiveData<List<Ingredient>>
-//        var unitsSpinnerResource = 0
-//        when (type) {
-//            Ingredient.IngredientType.YEAST -> {
-//                unitsSpinnerResource = R.array.mass_units_list
-//                ingredientsSpinnerObjects = ingredientRepo.yeastEntries
-//            }
-//            Ingredient.IngredientType.NUTRIENT -> {
-//                unitsSpinnerResource = R.array.mass_units_list
-//                ingredientsSpinnerObjects = ingredientRepo.nutrientEntries
-//            }
-//            Ingredient.IngredientType.STABILIZER -> {
-//                unitsSpinnerResource = R.array.mass_units_list
-//                ingredientsSpinnerObjects = ingredientRepo.stabilizerEntries
-//            }
-//            Ingredient.IngredientType.SUGAR -> {
-//                unitsSpinnerResource = R.array.sugar_units_list
-//                ingredientsSpinnerObjects = ingredientRepo.sugarEntries
-//            }
-//        }
-//
-//        ingredientsSpinnerObjects.observe(this, Observer<List<Ingredient>> { ingredients ->
-//            if (ingredients != null) {
-//                Timber.d("updating ingredients spinner with %d objects", ingredients.size)
-//                spinnerItems = ingredients
-//                val stringifiedIngredients = ArrayList<String>(ingredients.size)
-//                for (ingredient in ingredients) {
-//                    if (ingredient != null) {
-//                        val resID = resources.getIdentifier(ingredient.id,
-//                                "string", this.activity!!.packageName)
-//                        stringifiedIngredients.add(getString(resID))
-//                    } else {
-//                        Timber.e("Got a null ingredient from the database!?")
-//                    }
-//                }
-//                val ingredientsSpinner = view.findViewById<Spinner>(R.id.ingredients_spinner)
-//                val ingredientsAdapter = ArrayAdapter<String>(activity!!, android.R.layout.simple_spinner_item, stringifiedIngredients)
-//                ingredientsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                ingredientsSpinner.adapter = ingredientsAdapter
-//            }
-//        })
-//
-//        val unitsSpinner = view.findViewById<Spinner>(R.id.quantity_unit_spinner)
-//        val unitsAdapter = ArrayAdapter.createFromResource(activity!!,
-//                unitsSpinnerResource, android.R.layout.simple_spinner_item)
-//        unitsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        unitsSpinner.adapter = unitsAdapter
-//
-//        return AlertDialog.Builder(activity!!).setView(view).setPositiveButton(android.R.string.ok) { dialog, which ->
-//            val spinner = view.findViewById<Spinner>(R.id.ingredients_spinner)
-//            val selectedItemId = safeLongToInt(spinner.selectedItemId)
-//            val selectedIngredient = spinnerItems!![selectedItemId]
-//            Timber.d("Registered spinner number %d selected, corresponding to ingredient %s", selectedItemId, selectedIngredient.id)
-//
-//            val qtyAmount = view.findViewById<TextView>(R.id.quantity_amount)
-//            val qtyAmountValueText = qtyAmount.text.toString()
-//
-//            val qtyValue = toFloat(qtyAmountValueText, 0.0f)
-//
-//            //Spinner unitsSpinner = view.findViewById(R.id.quantity_unit_spinner);
-//            val selectedUnit = unitsSpinner.selectedItem.toString()
-//
-//            Timber.d("Ingredient selected: %s, %s %s", selectedIngredient.id, qtyValue, selectedUnit)
-//
-//            val intent = Intent(INGREDIENT_SET_EVENT)
-//            intent.putExtra(INGREDIENT, selectedIngredient.id)
-//            intent.putExtra(AMOUNT, qtyValue)
-//            intent.putExtra(UNIT, selectedUnit)
-//            LocalBroadcastManager.getInstance(activity!!).sendBroadcast(intent)
-//        }.setNegativeButton(android.R.string.cancel, null).create()
-//    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        activity?.let { a ->
+            ingredientsSpinner = a.findViewById(R.id.ingredients_spinner)
+            unitsSpinner = a.findViewById(R.id.quantity_unit_spinner)
+            qtyTextView = a.findViewById(R.id.quantity_amount)
+
+            okButton = a.findViewById(R.id.saveButton)
+            cancelButton = a.findViewById(R.id.cancelButton)
+
+            val typeString = arguments!!.getString(INGREDIENT_TYPE)
+            var type: Ingredient.IngredientType?
+            type = Ingredient.IngredientType.fromString(typeString!!)
+            if (type == null) {
+                type = Ingredient.IngredientType.SUGAR
+            }
+            Timber.d("Got INGREDIENT_TYPE=%s", type)
+            spinnerItems = arrayListOf()
+            val ingredientsSpinnerObjects: LiveData<List<Ingredient>>
+            var unitsSpinnerResource = 0
+            when (type) {
+                Ingredient.IngredientType.YEAST -> {
+                    unitsSpinnerResource = R.array.mass_units_list
+                    ingredientsSpinnerObjects = viewModel.getYeasts()
+                }
+                Ingredient.IngredientType.NUTRIENT -> {
+                    unitsSpinnerResource = R.array.mass_units_list
+                    ingredientsSpinnerObjects = viewModel.getNutrients()
+                }
+                Ingredient.IngredientType.STABILIZER -> {
+                    unitsSpinnerResource = R.array.mass_units_list
+                    ingredientsSpinnerObjects = viewModel.getStabilizers()
+                }
+                Ingredient.IngredientType.SUGAR -> {
+                    unitsSpinnerResource = R.array.sugar_units_list
+                    ingredientsSpinnerObjects = viewModel.getSugars()
+                }
+            }
+
+            ingredientsSpinnerObjects.observe(this, Observer<List<Ingredient>> { ingredients ->
+                if (ingredients != null) {
+                    Timber.d("updating ingredients spinner with %d objects", ingredients.size)
+                    spinnerItems = ingredients
+                    val stringifiedIngredients = ArrayList<String>(ingredients.size)
+                    for (ingredient in ingredients) {
+                        val resID = resources.getIdentifier(ingredient.id,
+                                "string", this.activity!!.packageName)
+                        stringifiedIngredients.add(getString(resID))
+                    }
+                    val ingredientsAdapter = ArrayAdapter<String>(activity!!, android.R.layout.simple_spinner_item, stringifiedIngredients)
+                    ingredientsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    ingredientsSpinner?.adapter = ingredientsAdapter
+                }
+            })
+
+            val unitsAdapter = ArrayAdapter.createFromResource(activity!!,
+                    unitsSpinnerResource, android.R.layout.simple_spinner_item)
+            unitsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            unitsSpinner?.adapter = unitsAdapter
+
+
+        }
+        initClickListeners()
+    }
+
+    private fun initClickListeners() {
+
+        okButton?.onClick { view ->
+            Timber.d("ok button was pressed")
+            ingredientsSpinner?.let { spinner ->
+
+                val selectedItemId = safeLongToInt(spinner.selectedItemId)
+                val selectedIngredient = spinnerItems?.get(selectedItemId)
+                Timber.d("Registered spinner number %d selected, corresponding to ingredient %s", selectedItemId, selectedIngredient?.id)
+
+                val qtyAmountValueText = qtyTextView?.text.toString()
+                val qtyValue = toFloat(qtyAmountValueText, 0.0f)
+                val selectedUnit = unitsSpinner?.selectedItem.toString()
+                Timber.d("Ingredient selected: %s, %s %s", selectedIngredient?.id, qtyValue, selectedUnit)
+
+
+                val intent = Intent(INGREDIENT_SET_EVENT)
+                intent.putExtra(INGREDIENT, selectedIngredient?.id)
+                intent.putExtra(AMOUNT, qtyValue)
+                intent.putExtra(UNIT, selectedUnit)
+                LocalBroadcastManager.getInstance(activity!!).sendBroadcast(intent)
+                fragmentManager?.popBackStack()
+            }
+        }
+
+        cancelButton?.onClick {
+            Timber.d("cancel button was pressed")
+            fragmentManager?.popBackStack()
+        }
+    }
 
     companion object {
-
-        val INGREDIENT_TYPE = "INGREDIENT_TYPE"
-        val INGREDIENT_SET_EVENT = "INGREDIENT_SET_EVENT"
+        const val INGREDIENT_TYPE = "INGREDIENT_TYPE"
+        const val INGREDIENT_SET_EVENT = "INGREDIENT_SET_EVENT"
 
         // Broadcast keys
-        val INGREDIENT = "INGREDIENT"
-        val AMOUNT = "AMOUNT"
-        val UNIT = "UNIT"
+        const val INGREDIENT = "INGREDIENT"
+        const val AMOUNT = "AMOUNT"
+        const val UNIT = "UNIT"
     }
-
-
 }

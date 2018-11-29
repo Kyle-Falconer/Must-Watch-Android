@@ -175,5 +175,6 @@
     <string name="LogFormFragmentTitle">Log Edit</string>
     <string name="github">GitHub</string>
     <string name="github_project_description">This project\'s source code is available on GitHub.\n\nPlease report any issues you experience or feature requests in the Issues section on the project page.</string>
+    <string name="save_button_text">add</string>
 
 </resources>

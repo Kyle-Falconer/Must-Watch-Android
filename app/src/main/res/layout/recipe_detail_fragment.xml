@@ -32,11 +32,10 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Joe's Quick Grape Mead" />
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/ingredients_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,7 +87,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:text="@{safeUnbox(recipe.carbonation) == 0 ? @string/none : safeUnbox(recipe.carbonation) }"
+                    android:text="@{recipe.carbonation}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="none" />
             </LinearLayout>

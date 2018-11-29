@@ -35,9 +35,15 @@ import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.core.ValueParsers.toFloat
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment
 import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.*
+import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.Companion.DATE_SET_EVENT
+import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.Companion.DAY_OF_MONTH
+import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.Companion.MONTH
+import com.fullmeadalchemist.mustwatch.ui.common.DatePickerFragment.Companion.YEAR
 import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment
-import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.*
+import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.Companion.HOUR
+import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.Companion.MINUTE
+import com.fullmeadalchemist.mustwatch.ui.common.TimePickerFragment.Companion.TIME_SET_EVENT
 import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import com.fullmeadalchemist.mustwatch.vo.LogEntry
 import org.jetbrains.anko.noButton
@@ -138,23 +144,23 @@ class LogFormFragment : Fragment() {
         val submitButton = activity!!.findViewById<Button>(R.id.button_submit)
         submitButton?.setOnClickListener { view ->
             Timber.i("Submit button clicked!")
-            viewModel.logEntry?.let {
+            viewModel.logEntry?.let {log ->
                 val phTv = view.findViewById<TextView>(R.id.ph)
                 if (phTv != null) {
-                    it.acidity = toFloat(phTv.text.toString().trim { it <= ' ' })
+                    log.acidity = toFloat(phTv.text.toString().trim { it <= ' ' })
                 }
 
                 val sgTv = view.findViewById<TextView>(R.id.sg)
                 if (sgTv != null) {
-                    it.sg = toFloat(sgTv.text.toString().trim { it <= ' ' })
+                    log.sg = toFloat(sgTv.text.toString().trim { it <= ' ' })
                 }
 
                 val noteTv = activity!!.findViewById<TextView>(R.id.notes)
                 if (noteTv != null) {
-                    it.note = noteTv.text.toString().trim { it <= ' ' }
+                    log.note = noteTv.text.toString().trim { it <= ' ' }
                 }
 
-                viewModel.addLogEntry(it)
+                viewModel.addLogEntry(log)
             }
             if (viewModel.selectedBatchId == null) {
                 // TODO: add metric event

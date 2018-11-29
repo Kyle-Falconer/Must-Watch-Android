@@ -46,7 +46,8 @@ data class Batch(@ColumnInfo(name = "user_id") var userId: UUID? = null,
                  @ColumnInfo(name = "status") var status: BatchStatusEnum? = null,
                  @ColumnInfo(name = "create_date") var createDate: Calendar? = null,
                  @ColumnInfo(name = "notes") var notes: String? = null,
-                 @Ignore @SerializedName("ingredients") @Expose var ingredients: List<BatchIngredient>? = null) : BaseObservable() {
+                 @Ignore @SerializedName("ingredients") @Expose var ingredients: MutableList<BatchIngredient> = mutableListOf())
+    : BaseObservable() {
 
     @Expose
     @NonNull
