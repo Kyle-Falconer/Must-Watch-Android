@@ -73,11 +73,10 @@ public class UnitMapper {
                 break;
             case "oz_fl_us":
             case "fl oz":
-                unit = FLUID_OUNCE;
-                break;
+            case "fl_oz":
             case "oz_fl_uk":
             case "oz_fl":
-                unit = OUNCE_LIQUID;
+                unit = FLUID_OUNCE;
                 break;
             case "tsp":
                 unit = TEASPOON;
@@ -175,10 +174,8 @@ public class UnitMapper {
                 unitString = "L";
                 break;
             case "fl oz":
-                unitString = "oz_fl_us";
-                break;
             case "oz_fl":
-                unitString = "oz_fl_uk";
+                unitString = "oz_fl";
                 break;
             case "gal_uk":
                 unitString = "gal_uk";
@@ -283,11 +280,10 @@ public class UnitMapper {
             case "gal_uk":
                 resId = R.string.GALLON_LIQUID_UK;
                 break;
+            case "oz_fl":
             case "oz_fl_us":
-                resId = R.string.OUNCE_LIQUID_US;
-                break;
             case "oz_fl_uk":
-                resId = R.string.OUNCE_LIQUID_UK;
+                resId = R.string.OUNCE_LIQUID_US;
                 break;
             case "g":
                 resId = R.string.GRAM;

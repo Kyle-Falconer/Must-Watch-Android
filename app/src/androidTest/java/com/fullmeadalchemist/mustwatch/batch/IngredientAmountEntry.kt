@@ -45,12 +45,12 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 
 @RunWith(AndroidJUnit4::class)
-class Entry {
+class IngredientAmountEntry {
 
-    @Rule
+    @get:Rule
     var mActivityRule = ActivityTestRule<StartActivity>(StartActivity::class.java)
 
-    private var res: Resources? = null
+    lateinit var res: Resources
 
     @Before
     fun initValidString() {
@@ -59,39 +59,34 @@ class Entry {
 
     @Test
     fun changeText_volumeFlOzUs() {
-        changeText_volume(res!!.getString(R.string.OUNCE_LIQUID_US))
-    }
-
-    @Test
-    fun changeText_volumeFlOzUk() {
-        changeText_volume(res!!.getString(R.string.OUNCE_LIQUID_UK))
+        changeText_volume(res.getString(R.string.OUNCE_LIQUID_US))
     }
 
     @Test
     fun changeText_volumeGalUs() {
-        changeText_volume(res!!.getString(R.string.GALLON_LIQUID_US))
+        changeText_volume(res.getString(R.string.GALLON_LIQUID_US))
     }
 
     @Test
     fun changeText_volumeGalUk() {
-        changeText_volume(res!!.getString(R.string.GALLON_LIQUID_UK))
+        changeText_volume(res.getString(R.string.GALLON_LIQUID_UK))
     }
 
     @Test
     fun changeText_volumeLiter() {
-        changeText_volume(res!!.getString(R.string.LITER))
+        changeText_volume(res.getString(R.string.LITER))
     }
 
 
     fun changeText_volume(volumeResourceString: String) {
-        val volumeScalarToBetyped: String = Integer.toString(randInt(1, 20))
+        val volumeScalarToBeTyped: String = Integer.toString(randInt(1, 20))
 
         // Navigate to the Add Batch screen
         onView(withId(R.id.batches_fab)).perform().perform(click())
 
         // Type add a volume amount and unit
         onView(withId(R.id.outputVolumeAmount))
-                .perform(typeText(volumeScalarToBetyped), closeSoftKeyboard())
+                .perform(typeText(volumeScalarToBeTyped), closeSoftKeyboard())
         onView(withId(R.id.outputVolumeAmountUnit)).perform(click())
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`(volumeResourceString))).perform(click())
 
@@ -102,7 +97,7 @@ class Entry {
 
         // Check that the text was changed in the Batch detail view
         onView(withId(R.id.outputVolumeAmount))
-                .check(matches(withText(volumeScalarToBetyped)))
+                .check(matches(withText(volumeScalarToBeTyped)))
         onView(withId(R.id.outputVolumeAmountUnit))
                 .check(matches(withText(volumeResourceString)))
 
@@ -112,11 +107,10 @@ class Entry {
                 .perform(click())
 
         // verify the volume amount is correct
-        onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBetyped)))
+        onView(withId(R.id.outputVolumeAmount)).check(matches(withText(volumeScalarToBeTyped)))
 
         // verify the volume unit is correct
         onView(withId(R.id.outputVolumeAmountUnit)).check(matches(withSpinnerText(volumeResourceString)))
     }
-
 }
 

@@ -153,7 +153,6 @@ class BatchFormFragment : Fragment() {
         abbreviationMap[resources.getString(R.string.GALLON_DRY_US)] = unitToTextAbbr(GALLON_DRY)
         abbreviationMap[resources.getString(R.string.GALLON_LIQUID_UK)] = unitToTextAbbr(GALLON_UK)
         abbreviationMap[resources.getString(R.string.OUNCE_LIQUID_US)] = unitToTextAbbr(FLUID_OUNCE)
-        abbreviationMap[resources.getString(R.string.OUNCE_LIQUID_UK)] = unitToTextAbbr(OUNCE_LIQUID)
         abbreviationMap[resources.getString(R.string.TEASPOON)] = unitToTextAbbr(TEASPOON)
         abbreviationMap[resources.getString(R.string.GRAM)] = unitToTextAbbr(GRAM)
         abbreviationMap[resources.getString(R.string.KILOGRAM)] = unitToTextAbbr(KILOGRAM)
@@ -162,38 +161,37 @@ class BatchFormFragment : Fragment() {
 
 
         val bundle = this.arguments
-        if (bundle != null) {
-            val batchId = bundle.getLong(BATCH_ID, java.lang.Long.MIN_VALUE)
-            val recipeId = bundle.getLong(RECIPE_ID, java.lang.Long.MIN_VALUE)
-            if (batchId != java.lang.Long.MIN_VALUE) {
-                Timber.i("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId)
-                viewModel.getBatch(batchId).observe(this, Observer<Batch> { batch ->
-                    if (batch != null) {
-                        viewModel.batch = batch
-                        dataBinding.batch = batch
-                        if (batch.status != null) {
-                            dataBinding.status.setText(batch.status.toString())
-                        } else {
-                            dataBinding.status.setText(PLANNING.toString())
-                        }
-                        updateUiDateTime()
 
-                        viewModel.getBatchIngredients(batchId).observe(this, Observer<List<BatchIngredient>> { batchIngredients ->
-                            if (batchIngredients != null) {
-                                Timber.v("Loaded %s Batch ingredients", batchIngredients.size)
-                                ingredientListViewAdapter.dataSet = batchIngredients
-                                ingredientListViewAdapter.notifyDataSetChanged()
-                            } else {
-                                Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId)
-                            }
-                            Timber.i("Loaded Batch with ID %d:\n%s", batch.id, batch)
-                        })
-                        updateSpinners(viewModel.batch)
+        val batchId = bundle?.getLong(BATCH_ID, java.lang.Long.MIN_VALUE)
+        val recipeId = bundle?.getLong(RECIPE_ID, java.lang.Long.MIN_VALUE)
+        if (batchId != java.lang.Long.MIN_VALUE) {
+            Timber.i("Got Batch ID %d from the NavigationController. Acting as a Batch Editor.", batchId)
+            viewModel.getBatch(batchId).observe(this, Observer<Batch> { batch ->
+                if (batch != null) {
+                    viewModel.batch = batch
+                    dataBinding.batch = batch
+                    if (batch.status != null) {
+                        dataBinding.status.setText(batch.status.toString())
                     } else {
-                        Timber.e("Got a null Batch!")
+                        dataBinding.status.setText(PLANNING.toString())
                     }
-                })
-            }
+                    updateUiDateTime()
+
+                    viewModel.getBatchIngredients(batchId!!).observe(this, Observer<List<BatchIngredient>> { batchIngredients ->
+                        if (batchIngredients != null) {
+                            Timber.v("Loaded %s Batch ingredients", batchIngredients.size)
+                            ingredientListViewAdapter.dataSet = batchIngredients
+                            ingredientListViewAdapter.notifyDataSetChanged()
+                        } else {
+                            Timber.w("Received nothing from the RecipeRepository when trying to get ingredients for Batch %s", batchId)
+                        }
+                        Timber.i("Loaded Batch with ID %d:\n%s", batch.id, batch)
+                    })
+                    updateSpinners(viewModel.batch)
+                } else {
+                    Timber.e("Got a null Batch!")
+                }
+            })
         } else {
             Timber.i("No Batch ID was received. Acting as a Batch Creation form.")
             viewModel.batch = Batch()
@@ -229,7 +227,7 @@ class BatchFormFragment : Fragment() {
         if (viewModel.batch != null) {
             // We're in "edit" mode, so set the title accordingly
             FORM_MODE = MODES.EDIT
-            val formTitle = activity!!.findViewById<TextView>(R.id.batchFormTitleTV)
+            val formTitle = dataBinding.root.findViewById<TextView>(R.id.batchFormTitleTV)
             if (formTitle != null) {
                 var title = resources.getString(R.string.edit_batch_title)
                 title = String.format(title, viewModel.batch?.id)
@@ -240,7 +238,7 @@ class BatchFormFragment : Fragment() {
         }
         updateUiDateTime()
 
-        val dateField = activity!!.findViewById<TextView>(R.id.createDateDate)
+        val dateField = dataBinding.root.findViewById<TextView>(R.id.createDateDate)
         dateField?.setOnClickListener { _ ->
             Timber.i("Date was clicked!")
             val newFragment = DatePickerFragment()
@@ -255,7 +253,7 @@ class BatchFormFragment : Fragment() {
             newFragment.show(activity!!.supportFragmentManager, "datePicker")
         }
 
-        val timeField = activity!!.findViewById<TextView>(R.id.createDateTime)
+        val timeField = dataBinding.root.findViewById<TextView>(R.id.createDateTime)
         timeField?.setOnClickListener { _ ->
             Timber.i("Time was clicked!")
             val newFragment = TimePickerFragment()
@@ -269,7 +267,7 @@ class BatchFormFragment : Fragment() {
             newFragment.show(activity!!.supportFragmentManager, "timePicker")
         }
 
-        val addSugarButton = activity!!.findViewById<Button>(R.id.add_sugar_button)
+        val addSugarButton = dataBinding.root.findViewById<Button>(R.id.add_sugar_button)
         addSugarButton?.setOnClickListener { v ->
             Timber.i("addSugarButton was clicked!")
             val args = Bundle()
@@ -277,7 +275,7 @@ class BatchFormFragment : Fragment() {
             v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
-        val addNutrientButton = activity!!.findViewById<Button>(R.id.add_nutrient_button)
+        val addNutrientButton = dataBinding.root.findViewById<Button>(R.id.add_nutrient_button)
         addNutrientButton?.setOnClickListener { v ->
             Timber.i("addNutrientButton was clicked!")
             val args = Bundle()
@@ -285,7 +283,7 @@ class BatchFormFragment : Fragment() {
             v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
-        val addYeastButton = activity!!.findViewById<Button>(R.id.add_yeast_button)
+        val addYeastButton = dataBinding.root.findViewById<Button>(R.id.add_yeast_button)
         addYeastButton?.setOnClickListener { v ->
             Timber.i("addYeastButton was clicked!")
             val args = Bundle()
@@ -293,7 +291,7 @@ class BatchFormFragment : Fragment() {
             v.findNavController().navigate(R.id.addIngredientDialog, args)
         }
 
-        val addStabilizerButton = activity!!.findViewById<Button>(R.id.add_stabilizer_button)
+        val addStabilizerButton = dataBinding.root.findViewById<Button>(R.id.add_stabilizer_button)
         addStabilizerButton?.setOnClickListener { v ->
             Timber.i("addStabilizerButton was clicked!")
             val args = Bundle()
@@ -312,7 +310,7 @@ class BatchFormFragment : Fragment() {
         if (submitButton != null) {
             submitButton.setOnClickListener { view ->
                 Timber.i("Submit button clicked!")
-                FORM_MODE = if (viewModel.batch?.id == null) MODES.CREATE else MODES.EDIT
+                FORM_MODE = if (viewModel.batch?.id == null || viewModel.batch?.id == 0L) MODES.CREATE else MODES.EDIT
 
                 viewModel.batch?.let { batch ->
                     batch.name = dataBinding.name.text.toString().trim { it <= ' ' }
@@ -334,13 +332,14 @@ class BatchFormFragment : Fragment() {
                         Timber.d("Current batch state:\n%s", viewModel.batch?.toString())
                         viewModel.saveNewBatch(batch).observe(this, Observer<Long> { savedBatchId ->
                             if (savedBatchId != null) {
+                                viewModel.batch?.id = savedBatchId
                                 Timber.i("Successfully saved Batch, which now has ID=%s", savedBatchId)
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(datePickerMessageReceiver)
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(timePickerMessageReceiver)
                                 LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(ingredientPickerMessageReceiver)
                                 Snackbar.make(view, "Saved batch!", Snackbar.LENGTH_LONG).show()
                                 Answers.getInstance().logCustom(CustomEvent("Batch create success"))
-                                Timber.e("Navigation to batch detail of batch #${savedBatchId} not yet supported")
+                                Timber.e("Navigation to batch detail of batch #$savedBatchId not yet supported")
 
                                 val bundle = Bundle()
                                 bundle.putLong(BATCH_ID, savedBatchId)

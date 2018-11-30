@@ -194,8 +194,8 @@ class BatchDetailFragment : Fragment() {
     }
 
     private fun initClickListeners() {
-        val submitButton = binding.root.findViewById<Button>(R.id.button_edit_batch)
-        submitButton?.setOnClickListener {view ->
+        val editButton = binding.root.findViewById<Button>(R.id.button_edit_batch)
+        editButton?.setOnClickListener {view ->
             var batchIdToEdit = 0L
             viewModel.batch?.let {
                 batchIdToEdit = it.id

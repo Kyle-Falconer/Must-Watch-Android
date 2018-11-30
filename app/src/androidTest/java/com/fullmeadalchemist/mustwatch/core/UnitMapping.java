@@ -66,7 +66,6 @@ public class UnitMapping {
     private Quantity<Volume> usgalVol;
     private Quantity<Volume> usgalDryVol;
     private Quantity<Volume> flozVol;
-    private Quantity<Volume> flozukVol;
     private Quantity<Volume> teaspoonMass;
     private Quantity<Mass> gramMass;
     private Quantity<Mass> kgMass;
@@ -86,7 +85,6 @@ public class UnitMapping {
         usgalDryVol = Quantities.getQuantity(32, GALLON_DRY);
         flozVol = Quantities.getQuantity(32, FLUID_OUNCE);
         ukgalVol = Quantities.getQuantity(32, GALLON_UK);
-        flozukVol = Quantities.getQuantity(32, OUNCE_LIQUID);
 
         gramMass = Quantities.getQuantity(2, GRAM);
         kgMass = Quantities.getQuantity(2, KILOGRAM);
@@ -119,11 +117,7 @@ public class UnitMapping {
 
         String flozAbbr = qtyToTextAbbr(flozVol);
         assertThat(flozAbbr, is(not(nullValue())));
-        assertThat(flozAbbr, is("oz_fl_us"));
-
-        String flozukAbbr = qtyToTextAbbr(flozukVol);
-        assertThat(flozukAbbr, is(not(nullValue())));
-        assertThat(flozukAbbr, is("oz_fl_uk"));
+        assertThat(flozAbbr, is("oz_fl"));
 
         String ukgalAbbr = qtyToTextAbbr(ukgalVol);
         assertThat(ukgalAbbr, is(not(nullValue())));
@@ -172,17 +166,13 @@ public class UnitMapping {
         assertThat(usgalDryAbbr, is(not(nullValue())));
         assertThat(unitToTextAbbr(usgalDryAbbr), is("gal_dry_us"));
 
-        Unit<?> usflozUnit = textAbbrToVolUnit("oz_fl_us");
+        Unit<?> usflozUnit = textAbbrToVolUnit("oz_fl");
         assertThat(usflozUnit, is(not(nullValue())));
-        assertThat(unitToTextAbbr(usflozUnit), is("oz_fl_us"));
+        assertThat(unitToTextAbbr(usflozUnit), is("oz_fl"));
 
         Unit<?> ukgalUnit = textAbbrToVolUnit("gal_uk");
         assertThat(ukgalUnit, is(not(nullValue())));
         assertThat(unitToTextAbbr(ukgalUnit), is("gal_uk"));
-
-        Unit<?> ukflozUnit = textAbbrToVolUnit("oz_fl_uk");
-        assertThat(ukflozUnit, is(not(nullValue())));
-        assertThat(unitToTextAbbr(ukflozUnit), is("oz_fl_uk"));
 
         Unit<?> tspUnit = textAbbrToVolUnit("tsp");
         assertThat(tspUnit, is(not(nullValue())));
