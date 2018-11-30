@@ -1,4 +1,4 @@
-![CircleCI](https://circleci.com/gh/Kyle-Falconer/Must-Watch-Android.svg?style=shield&circle-token=:circle-token)
+[![CircleCI](https://circleci.com/gh/Kyle-Falconer/Must-Watch-Android/tree/master.svg?style=svg)](https://circleci.com/gh/Kyle-Falconer/Must-Watch-Android/tree/master)
 [![Build Status](https://app.bitrise.io/app/e4ed5d2e79273bed/status.svg?token=3ePaSPJ6p4PcBNwHBXsMwA&branch=master)](https://app.bitrise.io/app/e4ed5d2e79273bed)
 
 # Full Mead Alchemist (Android)
