@@ -19,23 +19,16 @@ package com.fullmeadalchemist.mustwatch.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.fullmeadalchemist.mustwatch.db.AppDatabase
-import com.fullmeadalchemist.mustwatch.db.BatchIngredientDao
-import com.fullmeadalchemist.mustwatch.db.RecipeDao
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 
 interface RecipeRepository {
     fun getPublicRecipes(): LiveData<List<Recipe>>
 
-    fun getRecipes(userId: UUID): LiveData<List<Recipe>>
+    fun getRecipes(userId: UUID?): LiveData<List<Recipe>>
 
     fun addRecipe(recipe: Recipe): LiveData<Long>
 
@@ -76,9 +69,12 @@ class RecipeRepositoryImpl(private val database: AppDatabase) : RecipeRepository
         return database.recipeDao().publicRecipes
     }
 
-    override fun getRecipes(userId: UUID): LiveData<List<Recipe>> {
-        // FIXME: get only Recipes accessible to current user
-        return database.recipeDao().getRecipesForUser(userId)
+    override fun getRecipes(userId: UUID?): LiveData<List<Recipe>> {
+        return if (userId == null) {
+            database.recipeDao().publicRecipes
+        } else {
+            database.recipeDao().getRecipesForUser(userId)
+        }
     }
 
     override fun addRecipe(recipe: Recipe): LiveData<Long> {
@@ -114,8 +110,8 @@ class RecipeRepositoryImpl(private val database: AppDatabase) : RecipeRepository
         }
     }
 
-    override fun getRecipe(uid: Long): LiveData<Recipe> {
-        return database.recipeDao()[uid]
+    override fun getRecipe(id: Long): LiveData<Recipe> {
+        return database.recipeDao()[id]
     }
 
     /**

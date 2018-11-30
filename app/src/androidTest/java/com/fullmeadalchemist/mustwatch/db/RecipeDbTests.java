@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.fullmeadalchemist.mustwatch.util.LiveDataTestUtil.getValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,14 +42,15 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class RecipeDbTests extends DbTest {
 
-    private long uid;
+    private UUID uid;
 
     @Before
     public void init() {
         Resources res = InstrumentationRegistry.getTargetContext().getResources();
 
-        User user = TestUtil.createUser();
-        uid = db.userDao().insert(user);
+        User user = TestUtil.INSTANCE.createUser();
+        uid = user.getUid();
+        db.userDao().insert(user);
 
         JSONResourceReader ingredientsReader = new JSONResourceReader(res, R.raw.ingredients);
         Ingredient[] ingredients = ingredientsReader.constructFromJson(Ingredient[].class);
@@ -62,7 +64,7 @@ public class RecipeDbTests extends DbTest {
 
     @Test
     public void insertAndLoad() throws InterruptedException {
-        final Batch batch = TestUtil.createBatch(uid);
+        final Batch batch = TestUtil.INSTANCE.createBatch(uid);
         db.batchDao().insert(batch);
 
         final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(uid));

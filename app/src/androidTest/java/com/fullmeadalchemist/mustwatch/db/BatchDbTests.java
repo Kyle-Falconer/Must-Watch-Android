@@ -42,15 +42,15 @@ public class BatchDbTests extends DbTest {
     @Test
     public void insertAndLoad() throws InterruptedException {
 
-        final User user = TestUtil.createUser();
+        final User user = TestUtil.INSTANCE.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
         assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.getId());
+        final Batch batch = TestUtil.INSTANCE.createBatch(loaded_user.getUid());
         db.batchDao().insert(batch);
 
-        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
+        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getUid()));
         assertThat(loaded_batch.size(), is(1));
         assertThat(loaded_batch.get(0).getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
     }
@@ -58,16 +58,16 @@ public class BatchDbTests extends DbTest {
     @Test
     public void insertAndLoad10LogEntries() throws InterruptedException {
         int n = 10;
-        final User user = TestUtil.createUser();
+        final User user = TestUtil.INSTANCE.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
         assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.getId());
+        final Batch batch = TestUtil.INSTANCE.createBatch(loaded_user.getUid());
         db.batchDao().insert(batch);
 
         // loadLogEntriesForBatch
-        final List<Batch> loaded_batches = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
+        final List<Batch> loaded_batches = getValue(db.batchDao().loadBatchesForUser(loaded_user.getUid()));
         assertThat(loaded_batches.size(), is(1));
         final Batch loaded_batch = loaded_batches.get(0);
         assertThat(loaded_batch.getCreateDate().getTime(), is(batch.getCreateDate().getTime()));
@@ -86,15 +86,15 @@ public class BatchDbTests extends DbTest {
     @Test
     public void insertAndLoadWithTwoIngredients() throws InterruptedException {
 
-        final User user = TestUtil.createUser();
+        final User user = TestUtil.INSTANCE.createUser();
         db.userDao().insert(user);
         final User loaded_user = getValue(db.userDao().findByEmail(user.getEmail()));
         assertThat(loaded_user.getName(), is(user.getName()));
 
-        final Batch batch = TestUtil.createBatch(loaded_user.getId());
+        final Batch batch = TestUtil.INSTANCE.createBatch(loaded_user.getUid());
         db.batchDao().insert(batch);
 
-        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getId()));
+        final List<Batch> loaded_batch = getValue(db.batchDao().loadBatchesForUser(loaded_user.getUid()));
         assertThat(loaded_batch.size(), is(1));
 
         Batch added_batch = loaded_batch.get(0);

@@ -37,6 +37,7 @@ interface BatchRepository {
     fun getBatchIngredients(batchId: Long): LiveData<List<BatchIngredient>>
     fun upsertBatchIngredients(batch: Batch)
     fun addIngredient(batchIngredient: BatchIngredient): LiveData<Long>
+    fun addIngredients(batchIngredients: List<BatchIngredient>?): LiveData<List<Long>>
 }
 
 class BatchRepositoryImpl(private val database: AppDatabase) : BatchRepository {
@@ -116,6 +117,22 @@ class BatchRepositoryImpl(private val database: AppDatabase) : BatchRepository {
                 updatedLiveData.postValue( database.batchIngredientDao().insert(batchIngredient))
             } catch (e: Exception) {
                 Timber.e("Failed to add batchIngredient:\n%s", e.toString())
+            }
+        }
+        return updatedLiveData
+    }
+
+    override fun addIngredients(batchIngredients: List<BatchIngredient>?): LiveData<List<Long>> {
+        val updatedLiveData = MutableLiveData<List<Long>>()
+        doAsync {
+            try {
+                if (batchIngredients == null){
+                    updatedLiveData.postValue(null)
+                } else {
+                    updatedLiveData.postValue(database.batchIngredientDao().insertAll(batchIngredients))
+                }
+            } catch (e: Exception) {
+                Timber.e("Failed to add batchIngredients:\n%s", e.toString())
             }
         }
         return updatedLiveData

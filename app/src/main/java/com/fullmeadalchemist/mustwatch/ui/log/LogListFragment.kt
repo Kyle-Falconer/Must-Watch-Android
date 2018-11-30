@@ -47,7 +47,7 @@ class LogListFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.log_list, container, false)
         rootView.tag = TAG
 
-        //        mAdapter = new LogRecyclerViewAdapter(null, batch -> {
+        //        adapter = new LogRecyclerViewAdapter(null, batch -> {
         //            navigationController.navigateToEditBatch(batch.id);
         //        });
 

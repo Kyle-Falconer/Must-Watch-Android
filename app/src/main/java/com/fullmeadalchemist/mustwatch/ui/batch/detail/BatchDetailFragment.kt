@@ -34,6 +34,7 @@ import com.fullmeadalchemist.mustwatch.core.FormatUtils.calendarToLocaleTime
 import com.fullmeadalchemist.mustwatch.core.UnitMapper.unitToStringResource
 import com.fullmeadalchemist.mustwatch.databinding.BatchDetailFragmentBinding
 import com.fullmeadalchemist.mustwatch.ui.common.IngredientListViewAdapter
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.ui.log.LogRecyclerViewAdapter
 import com.fullmeadalchemist.mustwatch.vo.Batch
 import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
@@ -53,8 +54,7 @@ class BatchDetailFragment : Fragment() {
     private lateinit var ingredientListViewAdapter: IngredientListViewAdapter
     private lateinit var ingredientsRecyclerView:RecyclerView
 
-
-    val viewModel: BatchDetailViewModel by sharedViewModel()
+    val viewModel: MainViewModel by sharedViewModel()
 
     private lateinit var binding: BatchDetailFragmentBinding
     private val defaultLocale = Locale.getDefault()
@@ -63,27 +63,32 @@ class BatchDetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         binding = BatchDetailFragmentBinding.inflate(inflater, container, false)
         binding.setLifecycleOwner(this)
-//        binding = DataBindingUtil.inflate(inflater, R.layout.batch_detail_fragment, container, false)
-//                as BatchDetailFragmentBinding
 
-        logsAdapter = LogRecyclerViewAdapter(object : LogRecyclerViewAdapter.LogEntryClickCallback {
-            override fun onClick(entry: LogEntry) {
-                Timber.i(String.format("Log entry clicked:\n%s", entry.toString()))
-            }
-        })
 
         ingredientListViewAdapter = IngredientListViewAdapter(object : IngredientListViewAdapter.IngredientClickCallback {
             override fun onClick(repo: BatchIngredient) {
                 Timber.w("Clicking on a BatchIngredient in this list is not yet supported")
             }
         })
-
         ingredientsRecyclerView = binding.root.findViewById(R.id.ingredients_list)
         ingredientsRecyclerView.setHasFixedSize(true)
-        val llm = LinearLayoutManager(context)
-        llm.orientation = LinearLayoutManager.VERTICAL
-        ingredientsRecyclerView.layoutManager = llm
+        val ingredientsLlm = LinearLayoutManager(context)
+        ingredientsLlm.orientation = LinearLayoutManager.VERTICAL
+        ingredientsRecyclerView.layoutManager = ingredientsLlm
         ingredientsRecyclerView.adapter = ingredientListViewAdapter
+
+
+        logsAdapter = LogRecyclerViewAdapter(object : LogRecyclerViewAdapter.LogEntryClickCallback {
+            override fun onClick(entry: LogEntry) {
+                Timber.i(String.format("Log entry clicked:\n%s", entry.toString()))
+            }
+        })
+        logsRecyclerView = binding.root.findViewById(R.id.logs_list)
+        logsRecyclerView.setHasFixedSize(true)
+        val logsLlm = LinearLayoutManager(context)
+        logsLlm.orientation = LinearLayoutManager.VERTICAL
+        logsRecyclerView.layoutManager = logsLlm
+        logsRecyclerView.adapter = logsAdapter
 
         return binding.root
     }
@@ -102,7 +107,6 @@ class BatchDetailFragment : Fragment() {
             if (batchId != java.lang.Long.MIN_VALUE) {
                 if (viewModel.batch != null) {
                     Timber.v("Reusing viewmodel data")
-                    this.binding
                     binding.batch = viewModel.batch
                     updateBatchUiInfo()
                     viewModel.getBatchIngredients(batchId).observe(this, Observer<List<BatchIngredient>> { batchIngredients ->
@@ -137,26 +141,17 @@ class BatchDetailFragment : Fragment() {
                             Timber.w("Received a null Batch from the RecipeDetailViewModel.")
                         }
                     })
-                    viewModel.getLogsForBatch(batchId).observe(this, Observer<List<LogEntry>> { batches ->
-                        // update UI
-                        logsAdapter.dataSet = batches
-                        logsAdapter.notifyDataSetChanged()
-                    })
                 }
+                viewModel.getLogEntries(batchId).observe(this, Observer<List<LogEntry>> { batches ->
+                    // update UI
+                    logsAdapter.dataSet = batches
+                    logsAdapter.notifyDataSetChanged()
+                })
             }
         } else {
             Timber.i("No Batch ID was received. Redirecting to the Batch Creation form.")
             findNavController().navigate(R.id.batchFormFragment)
         }
-
-        logsRecyclerView = activity!!.findViewById(R.id.logs_list)
-        logsRecyclerView.setHasFixedSize(true)
-
-        val llm = LinearLayoutManager(context)
-        llm.orientation = LinearLayoutManager.VERTICAL
-
-        logsRecyclerView.layoutManager = llm
-        logsRecyclerView.adapter = logsAdapter
     }
 
     private fun updateBatchUiInfo() {
@@ -165,7 +160,7 @@ class BatchDetailFragment : Fragment() {
             binding.createDateTime.text = calendarToLocaleTime(batch.createDate)
 
             if (batch.outputVolume != null) {
-                val volumeAmount = batch.outputVolume!!.value as Double
+                val volumeAmount = batch.outputVolume?.value?.toDouble()
                 val f = DecimalFormat("#.##")
                 binding.outputVolumeAmount.text = f.format(volumeAmount)
                 val unitString = resources.getString(unitToStringResource(batch.outputVolume!!.unit))
@@ -199,7 +194,7 @@ class BatchDetailFragment : Fragment() {
     }
 
     private fun initClickListeners() {
-        val submitButton = activity!!.findViewById<Button>(R.id.button_edit_batch)
+        val submitButton = binding.root.findViewById<Button>(R.id.button_edit_batch)
         submitButton?.setOnClickListener {view ->
             var batchIdToEdit = 0L
             viewModel.batch?.let {
@@ -211,7 +206,7 @@ class BatchDetailFragment : Fragment() {
             bundle.putLong(BATCH_ID, batchIdToEdit)
             view.findNavController().navigate(R.id.batchFormFragment, bundle)
         }
-        val addLogButton = activity!!.findViewById<Button>(R.id.button_add_log_entry)
+        val addLogButton = binding.root.findViewById<Button>(R.id.button_add_log_entry)
         addLogButton?.setOnClickListener {view ->
             var batchIdToEdit = 0L
             viewModel.batch?.let {

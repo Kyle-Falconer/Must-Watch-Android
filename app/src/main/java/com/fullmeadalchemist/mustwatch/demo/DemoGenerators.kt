@@ -156,7 +156,7 @@ object DemoGenerators {
      * @param max Maximum value.  Must be greater than min.
      * @return Integer between min and max, inclusive.
      */
-    private fun randInt(min: Int, max: Int): Int {
+    fun randInt(min: Int, max: Int): Int {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextInt(min, max + 1)
         } else {
@@ -165,7 +165,7 @@ object DemoGenerators {
         }
     }
 
-    private fun randFloat(low: Float, high: Float): Float {
+    fun randFloat(low: Float, high: Float): Float {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextFloat() * (high - low) + low
         } else {
@@ -174,7 +174,7 @@ object DemoGenerators {
         }
     }
 
-    private fun randDouble(low: Double, high: Double): Double {
+    fun randDouble(low: Double, high: Double): Double {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return ThreadLocalRandom.current().nextDouble() * (high - low) + low
         } else {

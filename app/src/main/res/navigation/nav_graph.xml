@@ -51,7 +51,8 @@
         tools:layout="@layout/recipe_list" >
         <action
             android:id="@+id/action_recipeListFragment_to_recipeDetailFragment"
-            app:destination="@id/recipeDetailFragment" />
+            app:destination="@id/recipeDetailFragment"
+            app:popUpTo="@+id/recipeListFragment" />
     </fragment>
     <fragment
         android:id="@+id/addIngredientDialog"
@@ -99,7 +100,8 @@
         tools:layout="@layout/recipe_detail_fragment" >
         <action
             android:id="@+id/action_recipeDetailFragment_to_batchFormFragment"
-            app:destination="@id/batchFormFragment" />
+            app:destination="@id/batchFormFragment"
+            app:popUpTo="@+id/recipeDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/batchDetailFragment"

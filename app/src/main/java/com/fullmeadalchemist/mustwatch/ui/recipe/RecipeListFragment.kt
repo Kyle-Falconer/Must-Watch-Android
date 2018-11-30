@@ -17,7 +17,6 @@
 package com.fullmeadalchemist.mustwatch.ui.recipe
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -27,58 +26,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.fullmeadalchemist.mustwatch.R
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.User
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class RecipeListFragment : Fragment() {
-    protected var mRecyclerView: RecyclerView? = null
-    lateinit var mAdapter: RecipeListViewAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RecipeListViewAdapter
 
-    val viewModel: RecipeViewModel by sharedViewModel()
-
+    val viewModel: MainViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.recipe_list, container, false)
-        rootView.tag = TAG
 
-        mAdapter = RecipeListViewAdapter(null, object : RecipeListViewAdapter.RecipeClickCallback {
+        adapter = RecipeListViewAdapter(null, object : RecipeListViewAdapter.RecipeClickCallback {
             override fun onClick(recipe: Recipe) {
-                Timber.e("Navigation to Recipe #${recipe.id} not yet implemented")
-//                navigationController.navigateToRecipeDetail(recipe.id)
+                Timber.e("Navigating to the detail view for Recipe #${recipe.id}")
                 val bundle = Bundle()
                 bundle.putLong(Recipe.RECIPE_ID, recipe.id)
                 rootView.findNavController().navigate(R.id.recipeDetailFragment, bundle)
             }
         })
 
-        viewModel.currentUserId.observe(this, Observer<User> { user ->
+        viewModel.getCurrentUser().observe(this, Observer<User> { user ->
             user?.uid?.let { userId ->
                 viewModel.getRecipes(userId).observe(this, Observer<List<Recipe>> { recipes ->
-                    // update UI
-                    mAdapter.dataSet = recipes
-                    mAdapter.notifyDataSetChanged()
+                    adapter.dataSet = recipes
+                    adapter.notifyDataSetChanged()
                 })
             }
         })
 
-        mRecyclerView = rootView.findViewById(R.id.recipe_list)
-        mRecyclerView?.let {
-            val llm = LinearLayoutManager(context)
-            llm.orientation = LinearLayoutManager.VERTICAL
-
-            it.setHasFixedSize(true)
-            it.layoutManager = llm
-            it.adapter = mAdapter
-        }
+        recyclerView = rootView.findViewById(R.id.recipe_list)
+        val llm = LinearLayoutManager(context)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = llm
+        recyclerView.adapter = adapter
 
         return rootView
-    }
-
-    companion object {
-
-        private val TAG = RecipeListFragment::class.java.simpleName
     }
 }

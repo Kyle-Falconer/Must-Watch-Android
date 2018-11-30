@@ -20,9 +20,12 @@ class MainViewModel @Inject constructor(
         private val preferences: MustWatchPreferences
 ) : ViewModel() {
 
+    var cachedUserId : UUID? = null
     var logEntry: LogEntry? = null
     var selectedBatchId: Long? = null
+    var selectedRecipeId: Long? = null
     var batch: Batch? = null
+    var recipe: Recipe? = null
 
     val isFirstLaunch: LiveData<Boolean>
         get() = preferences.isFirstLaunch()
@@ -41,6 +44,10 @@ class MainViewModel @Inject constructor(
 
     internal fun getRecipe(recipeId: Long?): LiveData<Recipe> {
         return recipeRepository.getRecipe(recipeId!!)
+    }
+
+    internal fun getRecipes(uid: UUID?): LiveData<List<Recipe>> {
+        return recipeRepository.getRecipes(uid)
     }
 
     internal fun getRecipeIngredients(recipeId: Long?): LiveData<List<BatchIngredient>> {
@@ -114,10 +121,18 @@ class MainViewModel @Inject constructor(
         if (batchIngredient.batchId == null){
             batchIngredient.batchId = batch?.id
         }
-//        if (batch?.ingredients == null){
-//            batch?.ingredients = arrayListOf()
-//        }
-//        batch?.ingredients?.add(batchIngredient)
         return batchRepository.addIngredient(batchIngredient)
+    }
+
+    fun addIngredientsToBatch(batchIngredients: List<BatchIngredient>?) : LiveData<List<Long>> {
+        if (batchIngredients != null) {
+            for (ingredient in batchIngredients) {
+                if (ingredient.batchId == null) {
+                    ingredient.batchId = batch?.id
+                }
+            }
+        }
+
+        return batchRepository.addIngredients(batchIngredients)
     }
 }

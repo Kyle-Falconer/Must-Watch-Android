@@ -31,9 +31,13 @@ import com.fullmeadalchemist.mustwatch.R
 import com.fullmeadalchemist.mustwatch.core.BrewFormulae.calcAbvPct
 import com.fullmeadalchemist.mustwatch.databinding.RecipeDetailFragmentBinding
 import com.fullmeadalchemist.mustwatch.ui.common.IngredientListViewAdapter
+import com.fullmeadalchemist.mustwatch.ui.common.MainViewModel
+import com.fullmeadalchemist.mustwatch.vo.Batch
+import com.fullmeadalchemist.mustwatch.vo.Batch.Companion.BATCH_ID
 import com.fullmeadalchemist.mustwatch.vo.BatchIngredient
 import com.fullmeadalchemist.mustwatch.vo.Recipe
 import com.fullmeadalchemist.mustwatch.vo.Recipe.Companion.RECIPE_ID
+import org.jetbrains.anko.support.v4.toast
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -48,7 +52,7 @@ class RecipeDetailFragment : Fragment() {
     lateinit var ingredientListViewAdapter: IngredientListViewAdapter
     lateinit var ingredientsRecyclerView: RecyclerView
 
-    val viewModel: RecipeViewModel by sharedViewModel()
+    val viewModel: MainViewModel by sharedViewModel()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +89,7 @@ class RecipeDetailFragment : Fragment() {
             Timber.v("Got Recipe ID %d from the NavigationController.", recipeId)
 
             if (recipeId != java.lang.Long.MIN_VALUE) {
+                // TODO: verify the user has permissions to read this recipe
                 if (viewModel.recipe != null) {
                     Timber.v("Reusing viewmodel data")
                     dataBinding.recipe = viewModel.recipe
@@ -133,21 +138,67 @@ class RecipeDetailFragment : Fragment() {
     private fun updateRecipeUiInfo() {
         viewModel.recipe?.let {
             if (it.startingSG != null && it.finalSG != null) {
-                val abv_pct = calcAbvPct(it.startingSG as Double, it.finalSG as Double)
+                val abvPct = calcAbvPct(it.startingSG as Double, it.finalSG as Double)
                 val f = DecimalFormat("0.##")
-                dataBinding.targetABV.text = String.format(defaultLocale, "%s%%", f.format(abv_pct))
+                dataBinding.targetABV.text = String.format(defaultLocale, "%s%%", f.format(abvPct))
             }
         }
     }
 
     private fun initClickListeners() {
-        val submitButton = activity!!.findViewById<Button>(R.id.button_create_batch_from_recipe)
+        val submitButton = dataBinding.root.findViewById<Button>(R.id.button_create_batch_from_recipe)
         submitButton?.setOnClickListener { v ->
             Timber.i("Create From Recipe button clicked")
+
+            // TODO: show loading progress while we convert the recipe to a batch
+            viewModel.getCurrentUser().observe(this, Observer { user ->
+                val batch = Batch(
+                        user?.uid,
+                        viewModel.recipe?.name,
+                        viewModel.recipe?.startingSG,
+                        viewModel.recipe?.finalSG,
+                        null,
+                        null,
+                        null,
+                        viewModel.recipe?.outputVol,
+                        Batch.BatchStatusEnum.PLANNING,
+                        Calendar.getInstance(),
+                        viewModel.recipe?.notes
+                )
+
+                viewModel.saveNewBatch(batch).observe(this, Observer<Long> { newBatchId ->
+                    viewModel.getRecipeIngredients(viewModel.selectedRecipeId).observe(this, Observer { ingredients ->
+                        if (ingredients == null) {
+                            Timber.w("No ingredients found for this recipe. Nothing to insert.")
+                            navigateToBatchForm(newBatchId)
+                        } else {
+                            for (ingredient in ingredients){
+                                ingredient.batchId = newBatchId
+                            }
+                            Timber.d("Inserting ${ingredients.size} ingredients to batch with id $newBatchId")
+                            viewModel.addIngredientsToBatch(ingredients).observe(this, Observer { insertedRecipeIds ->
+                                insertedRecipeIds?.let { recipeIds ->
+                                    for (id in recipeIds){
+                                        Timber.d("Inserted recipe with ID: $id")
+                                    }
+                                    navigateToBatchForm(newBatchId)
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+        }
+    }
+
+    private fun navigateToBatchForm(batchId : Long?) {
+        if (batchId == null){
+            Timber.e("Failed to create a batch from this recipe!")
+        } else {
             val bundle = Bundle()
-            bundle.putLong(Recipe.RECIPE_ID, viewModel.selectedRecipeId!!)
-            v.findNavController().navigate(R.id.batchFormFragment, bundle)
-            // navigationController.navigateToCreateFromBatch(viewModel.recipe?.id)
+            bundle.putLong(BATCH_ID, batchId)
+            // TODO: somehow indicate that this is a new batch so that if the user backs out without saving, the batch is deleted.
+            dataBinding.root.findNavController().navigate(R.id.batchFormFragment, bundle)
         }
     }
 }

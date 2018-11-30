@@ -16,7 +16,6 @@
 
 package com.fullmeadalchemist.mustwatch
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.ActionBar
@@ -78,7 +77,6 @@ class StartActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         Timber.d("Navigating up")
-//        return NavigationUI.navigateUp(drawer_layout, nav_host_fragment.findNavController()) || super.onSupportNavigateUp()
         return NavigationUI.navigateUp(nav_host_fragment.findNavController(), drawer_layout) || super.onSupportNavigateUp()
     }
 
@@ -147,12 +145,10 @@ class StartActivity : AppCompatActivity() {
                     }
                 })
 
-                //var haveAddedBatches = false
                 batchRepository.getBatches(user).observe(this@StartActivity, Observer<List<Batch>> { batches ->
-                    if (batches != null && batches.isEmpty()) {//&& !haveAddedBatches) {
-                        //haveAddedBatches = true
+                    if (batches != null && batches.isEmpty()) {
                         Timber.d("Got user with no batches; generating batches...")
-                        val dummyBatches = DemoGenerators.generateDummyBatchesWithData(user.uid, 5)
+                        val dummyBatches = DemoGenerators.generateDummyBatchesWithData(user.uid, 10)
                         batchRepository.addBatches(dummyBatches)
                     } else if (batches != null) {
                         Timber.d("Got user with %s batches.",
